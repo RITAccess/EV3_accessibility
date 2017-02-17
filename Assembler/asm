@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Get users current PWD ( where the file was invoked )
+src=$(pwd)
+
+cd ~/Desktop/EV3/RBFAssembly/Assembler
+
+
+if [ "$#" -ne 1 ]; then
+	echo "EVasm: fatal error: no input files"
+	echo "assembly terminated."
+else
+	for var in "$@"
+	do
+		java -jar assembler.jar "$src"/"$var"
+	done
+fi
