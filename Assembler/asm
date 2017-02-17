@@ -7,7 +7,7 @@ cd ~/Desktop/EV3/RBFAssembly/Assembler
 
 
 if [ "$#" -ne 1 ]; then
-	echo "EVasm: fatal error: no input files"
+	echo "asm: fatal error: no input files"
 	echo "assembly terminated."
 else
 	for var in "$@"
