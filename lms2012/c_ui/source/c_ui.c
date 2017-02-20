@@ -5380,7 +5380,7 @@ void      cUiGraphDraw(DATA8 View,DATAF *pActual,DATAF *pLowest,DATAF *pHighest,
 
 //******* BYTE CODE SNIPPETS **************************************************
 
-
+// UI Commands
 /*! \page cUi User Interface
  *  <hr size="1"/>
  *  <b>     opUI_DRAW (CMD, ....)  </b>
