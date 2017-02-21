@@ -21,20 +21,20 @@ All functionality are derived from the .rbf files located within.
 ### Note to Developer(s)
 ##### File Structure
 Lego developed the Developer Firmware with the assumption that the lms2012 
-folder would be in the users home under the file project. In order to ensure
+folder would be in the users home under the file 'projects'. In order to ensure
 functionality, it is up to the developer to create a link in your home.
 
 Visually:
 
 	HOME
 	  |			
-	  +------ project = Linked to => EV3_accessibility
+	  +------ projects = Linked to => EV3_accessibility
 
 This way, during developement the scripts developed by lego will see
 
 	HOME
 	  |
-	  +-------- project
+	  +-------- projects
 				   |
 				   +-------- lms2012
 				   |
