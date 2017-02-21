@@ -63,4 +63,9 @@ Visually:
 									|
 									.
 									.
-									.
+									
+
+##### Setting Up Environment
+A more in depth example then the PracticalStuff file in /lms2012/lms2012/doc/PracticalStuff 
+can be found on the [Robotics@QUT](https://wiki.qut.edu.au/display/cyphy/EV3+Build+Environment+and+Compilation)
+webpage.
