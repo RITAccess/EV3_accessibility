@@ -959,14 +959,7 @@ void      cMath(void)
     {
       X8    =  *(DATA8*)PrimParPointer();
       Y8    =  *(DATA8*)PrimParPointer();
-      if (Y8 == (DATA8)0)
-      {
-        *(DATA8*)PrimParPointer()  =  (DATA8)0;
-      }
-      else
-      {
-        *(DATA8*)PrimParPointer()  =  X8 % Y8;
-      }
+      *(DATA8*)PrimParPointer()  =  X8 % Y8;
     }
     break;
 
@@ -974,14 +967,7 @@ void      cMath(void)
     {
       X16   =  *(DATA16*)PrimParPointer();
       Y16   =  *(DATA16*)PrimParPointer();
-      if (Y16 == (DATA16)0)
-      {
-        *(DATA16*)PrimParPointer()  =  (DATA16)0;
-      }
-      else
-      {
-        *(DATA16*)PrimParPointer()  =  X16 % Y16;
-      }
+      *(DATA16*)PrimParPointer()  =  X16 % Y16;
     }
     break;
 
@@ -989,14 +975,7 @@ void      cMath(void)
     {
       X32   =  *(DATA32*)PrimParPointer();
       Y32   =  *(DATA32*)PrimParPointer();
-      if (Y32 == (DATA32)0)
-      {
-        *(DATA32*)PrimParPointer()  =  (DATA32)0;
-      }
-      else
-      {
-        *(DATA32*)PrimParPointer()  =  X32 % Y32;
-      }
+      *(DATA32*)PrimParPointer()  =  X32 % Y32;
     }
     break;
 

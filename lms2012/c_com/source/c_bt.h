@@ -38,7 +38,7 @@
 #define   MAX_NAME_SIZE                 32
 #define   MAX_BT_NAME_SIZE              248
 
-#define   MAX_BUNDLE_ID_SIZE            35
+#define   MAX_BUNDLE_ID_SIZE            24
 #define   MAX_BUNDLE_SEED_ID_SIZE       11
 
 
@@ -54,7 +54,6 @@ enum
   BT_HOST_CH6,
   NO_OF_BT_CHS
 };
-#define   NUMBER_OF_ATTACHED_SLAVES     (NO_OF_BT_CHS - BT_HOST_CH0)
 
 
 // Defines related to Device List

@@ -79,13 +79,10 @@ static char AccessNameTable[MAX_ACCESS_NAME_COUNT][MAX_ACCESS_NAME_LENGTH];
 // of available H/W and a description of the drivers to load. I.e. a simple and download-
 // able way of integrating new and more drivers. NO commandline stuff.
 
-#define HARDWARE_SEARCH_STRING_01         "ID 0846:9030 NetGear, Inc."
-#define WIFI_VENDOR_ID_01    "0846"
-#define WIFI_DONGLE_ID_01    "9030"
+#define HARDWARE_SEARCH_STRING          "ID 0846:9030 NetGear, Inc."
 
-#define HARDWARE_SEARCH_STRING_02         "ID 7392:7811 Edimax Technology Co., Ltd"
-#define WIFI_VENDOR_ID_02    "7392"
-#define WIFI_DONGLE_ID_02    "7811"
+#define WIFI_VENDOR_ID    "0846"
+#define WIFI_DONGLE_ID    "9030"
 
 
 // The following could be set to variable/editable strings via methodes, but for now....
@@ -382,16 +379,12 @@ int cWiFiStoreKnownApList(void) // At exit of main application
   PersistentFile = fopen(FileName, "wb");
   if ( PersistentFile != NULL )
   {
-    for(ArrayIterator = 0; ArrayIterator < ApTableSize; ArrayIterator++)
+    for(ArrayIterator = 0; ArrayIterator < ApStoreTableSize; ArrayIterator++)
     {
 
-    // if(((ApStoreTable[ArrayIterator].ap_flags) & KNOWN) == KNOWN) NOT USED only HARD known ones
-      if(((ApTable[ArrayIterator].ap_flags) & KNOWN) == KNOWN)
-      {
-        //memcpy(&OneApRecord, &(ApStoreTable[ArrayIterator]), sizeof(aps)); NOT USED only HARD known ones
-        memcpy(&OneApRecord, &(ApTable[ArrayIterator]), sizeof(aps));
+    	memcpy(&OneApRecord, &(ApStoreTable[ArrayIterator]), sizeof(aps));
 
-        OneApRecord.ap_flags &= AP_FLAG_ADJUST_FOR_STORAGE;
+    	OneApRecord.ap_flags &= AP_FLAG_ADJUST_FOR_STORAGE;
 
     	//#define DEBUG
     	#undef DEBUG
@@ -400,8 +393,7 @@ int cWiFiStoreKnownApList(void) // At exit of main application
          printf("OneApRecord.ap_flags before: %X\n\r", OneApRecord.ap_flags);
        #endif
 
-         fwrite(&OneApRecord, sizeof OneApRecord, 1, PersistentFile);
-      }
+    	fwrite(&OneApRecord, sizeof OneApRecord, 1, PersistentFile);
 
 		  #undef DEBUG
     	//#define DEBUG
@@ -415,8 +407,7 @@ int cWiFiStoreKnownApList(void) // At exit of main application
         printf("\r\nApStoreTable[%d].ap_flags = %d\r\n", (ArrayIterator), ApStoreTable[ArrayIterator].ap_flags);
       #endif
     }
-    //RetVal = ApStoreTableSize;NOT USED only HARD known ones
-    RetVal = ApTableSize;
+    RetVal = ApStoreTableSize;
     fclose(PersistentFile);
 
   }
@@ -1291,8 +1282,7 @@ RESULT cWiFiDeepDongleSearch(void)
   // detect the HardWare Dongle. No Drivers has to
   // be loaded before using :-)
 
-  RESULT Result = OK;
-  /*RESULT Result = FAIL;
+  RESULT Result = FAIL;
 
   FILE *FilePointer = NULL;
   char FindDongle[10];
@@ -1314,14 +1304,13 @@ RESULT cWiFiDeepDongleSearch(void)
       }
     }
     pclose(FilePointer);
-  }*/
+  }
   return Result;
 }
 
 RESULT cWiFiKnownDongleAttached(void)
 {
-  RESULT Result = OK;
-  /*FILE *pIdVendor = NULL;
+  FILE *pIdVendor = NULL;
   FILE *pIdProduct = NULL;
   char VendorBuffer[64];
   char ProductBuffer[64];
@@ -1354,7 +1343,7 @@ RESULT cWiFiKnownDongleAttached(void)
   if(Result != OK) // Not found - Do we have a hub?
   {
     Result = cWiFiDeepDongleSearch();
-  }*/
+  }
   return Result;
 }
 
@@ -1739,13 +1728,13 @@ unsigned char cWiFiGetFlags(int Index)  // Get Flags owned by ApTable[Index]
     return ApTable[Index].ap_flags;
 }
 
-void cWiFiClearAll()
+void cWiFiClearExceptZero()
 {
   int j;
 
   if(ApTableSize > 1)
   {
-    for(j = 0; j < ApTableSize; j++)
+    for(j = 1; j < ApTableSize; j++)
       ApTable[j].ap_flags &= (UBYTE)(~CONNECTED);
   }
 }
@@ -2018,16 +2007,6 @@ RESULT cWiFiMakeConnectionToAp(int Index)
                     // IP address shows (some) valid connection :-)
 }
 
-void cWiFiClearConnectFlags(void)
-{
-  int j;
-
-    if(ApTableSize > 1)
-    {
-      for(j = 0; j < ApTableSize; j++)
-        ApTable[j].ap_flags &= (UBYTE)(~CONNECTED);
-    }
-}
 
 RESULT cWiFiConnectToAp(int Index)
 {
@@ -2042,9 +2021,6 @@ RESULT cWiFiConnectToAp(int Index)
   #ifdef DEBUG
     printf("\r\ncWiFiConnectToAp(int Index = %d)\r\n", Index);
   #endif
-
-  // Kill any connection info
-  cWiFiClearConnectFlags();
 
   if(cWiFiMakeConnectionToAp(Index) == OK)
   {
@@ -2074,6 +2050,9 @@ RESULT cWiFiConnectToAp(int Index)
 
     // Mark the ACTUAL as CONNECTED (i.e. set flag)
     ApTable[0].ap_flags |= CONNECTED;
+
+    // Remove any "already connected" - i.e. remove flag(s)
+    cWiFiClearExceptZero();
 
     // This VERY Ap should now be stored as MOST WANTED @ next WiFi session
     cWiFiAddToKnownApList(0);
@@ -2380,7 +2359,7 @@ RESULT cWiFiStoreActualApList()           // Store the latest SCAN result(s)
       {
         // Merge ACTUAL- and KNOWN LIST into a prioritized list
         cWiFiMergeActualAndKnownTable();
-        cWiFiClearAll();   // Reset previous CONNECT-flag
+        cWiFiClearExceptZero();   // Reset previous CONNECT-flags except current connected
       }
     }
   }
@@ -2509,7 +2488,6 @@ RESULT cWiFiScanForAPs()
   BeaconTx = NO_TX;
   cWiFiStartTimer();      // Start the Timer
 
-  cWiFiClearAll();        // Reset previous CONNECT-flag
   cWiFiCleanUpOldStuff(); // Kill OLD portion in the list etc.
 
   if(cWiFiGetOnStatus() == OK)
@@ -2607,13 +2585,13 @@ RESULT cWiFiGetLogicalName(void)  // Get the Logical Name of the Interface
     size_t NumberOfBytes;
     while((getline(&OneLine, &NumberOfBytes, FilePointer) > 0) && OneLine)
     {
-      //if(strstr(OneLine, "IEEE 802"))
-      //{
+      if(strstr(OneLine, "IEEE 802"))
+      {
           OneLine[5] = 0x00;
-          strcpy(LogicalIfName, "wlan0"); // Fixed for now....
+          strcpy(LogicalIfName, OneLine);
           Result = OK;
-      //    break;
-      //}
+          break;
+      }
     }
     pclose(FilePointer);
   }
@@ -3395,31 +3373,11 @@ void cWiFiLoadAthHwModules(void)
   #else
     if(!(cWiFiCheckForLoadedModule("ath9k_htc")))
       system("/sbin/insmod /lib/modules/2.6.33-rc4/kernel/drivers/net/wireless/ath/ath9k/ath9k_htc.ko &> /dev/null");
-
-  //#define DEBUG
-    #undef DEBUG
-    #ifdef DEBUG
-      if(!(cWiFiCheckForLoadedModule("edimax01")))
-        system("/sbin/insmod /lib/modules/2.6.33-rc4/kernel/drivers/net/wireless/edimax01.ko");
-    #else
-      if(!(cWiFiCheckForLoadedModule("edimax01")))
-        system("/sbin/insmod /lib/modules/2.6.33-rc4/kernel/drivers/net/wireless/edimax01.ko &> /dev/null");
-    #endif
   #endif
 }
 
 void cWiFiUnLoadAthHwModules(void)
 {
-  //#define DEBUG
-    #undef DEBUG
-    #ifdef DEBUG
-      if(cWiFiCheckForLoadedModule("edimax01"))
-        system("/sbin/rmmod edimax01.ko");
-    #else
-      if(cWiFiCheckForLoadedModule("edimax01"))
-          system("/sbin/rmmod edimax01.ko &> /dev/null");
-    #endif
-
   //#define DEBUG
   #undef DEBUG
   #ifdef DEBUG
