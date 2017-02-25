@@ -23,10 +23,6 @@ The reason for the Linux installation requirement is due to the case-sensitive f
 
 #### Initial Getting Started
 
-Use Git to clone this repo:
-
-    git clone https://github.com/mindboards/ev3sources.git
-
 The scripts in the EV3 sources expect the source code to live in a projects folder in your home directory. You will need to create a  projects symlink to the ev3sources folder that was created when you cloned the Git repo.
 
 To import this project in Eclipse, check out the [Wiki article][6]

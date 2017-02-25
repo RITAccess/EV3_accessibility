@@ -1,2 +1,0 @@
-/home/alejandro/projects/lms2012/d_uart/Linuxmod_AM1808/d_uart.ko
-/home/alejandro/projects/lms2012/d_uart/Linuxmod_AM1808/d_uart_mod.o /home/alejandro/projects/lms2012/d_uart/Linuxmod_AM1808/lego_ti_omapl_pru_suart.o /home/alejandro/projects/lms2012/d_uart/Linuxmod_AM1808/pru-firmware-05-31-2011-1423-v3.0/pru/hal/uart/src/suart_api.o /home/alejandro/projects/lms2012/d_uart/Linuxmod_AM1808/pru-firmware-05-31-2011-1423-v3.0/pru/hal/uart/src/suart_utils.o /home/alejandro/projects/lms2012/d_uart/Linuxmod_AM1808/pru-firmware-05-31-2011-1423-v3.0/pru/hal/common/src/pru.o
