@@ -1,1 +1,0 @@
-cmd_/home/alejandro/projects/lms2012/d_ui/Linuxmod_AM1808/d_ui.ko := arm-none-linux-gnueabi-ld -EL -r  -T /home/alejandro/projects/extra/linux-03.20.00.13/scripts/module-common.lds --build-id -o /home/alejandro/projects/lms2012/d_ui/Linuxmod_AM1808/d_ui.ko /home/alejandro/projects/lms2012/d_ui/Linuxmod_AM1808/d_ui.o /home/alejandro/projects/lms2012/d_ui/Linuxmod_AM1808/d_ui.mod.o

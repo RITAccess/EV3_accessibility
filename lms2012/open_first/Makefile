@@ -127,13 +127,9 @@ help:
 	@echo ' lms2012: to build the lms2012 program and its libraries'
 	@echo ' modules: to build lms2012 kernel modules'
 	@echo ' programs: to build bytecode programs and their data files'
-	@echo ' kernel: to build Linux kernel (uImage)'
-	@echo ' u-boot: to build u-Boot (uBoot)'
+	@echo ' kernel: to build Linux kernel'
+	@echo ' u-boot: to build u-Boot'
 	@echo ' doc: to build documentation'
-	@echo
-	@echo -e '\e[31mImportant Step!\e[39m'
-	@echo 'Execute u-boot and kernel during each new modification to kernel or modules'
-	@echo	'This ensures uBoot and uImage binaries are up-to-date.'
 	@echo
 	@echo 'Execute "make doc.view" to view the documentation in a web'
 	@echo 'browser'

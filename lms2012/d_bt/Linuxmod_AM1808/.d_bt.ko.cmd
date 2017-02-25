@@ -1,1 +1,0 @@
-cmd_/home/alejandro/projects/lms2012/d_bt/Linuxmod_AM1808/d_bt.ko := arm-none-linux-gnueabi-ld -EL -r  -T /home/alejandro/projects/extra/linux-03.20.00.13/scripts/module-common.lds --build-id -o /home/alejandro/projects/lms2012/d_bt/Linuxmod_AM1808/d_bt.ko /home/alejandro/projects/lms2012/d_bt/Linuxmod_AM1808/d_bt.o /home/alejandro/projects/lms2012/d_bt/Linuxmod_AM1808/d_bt.mod.o
