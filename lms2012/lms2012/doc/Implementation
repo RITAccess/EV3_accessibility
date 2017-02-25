@@ -6,19 +6,143 @@
  *  This section describes the relative changes from previous version
  *
  *
- *  \version lms2012_v104H_130531
+ *\version lms2012_v109D
+ *
+ *-# As v109H but telnet enabled with password "Just a bit off the block!"                    \n
+ *
+ *
+ *\version lms2012_v109
+ *
+ *-# As v1081 but version changed to 1.09                                                     \n
+ *
+ *
+ *\version lms2012_v1081
+ *
+ *-# Telnet disabled                                                                          \n
+ *
+ *
+ *\version lms2012_v108
+ *
+ *-# Support for edimax added                                                                 \n
+ *
+ *
+ *\version lms2012_v107
+ *
+ *-# As v1066 but version changed to 1.07                                                     \n
+ *
+ *
+ *\version lms2012_v1066
+ *
+ *-# ISSUE 4330 - sub call aliases block local issue UN-fixed                                 \n
+ *
+ *
+ *\version lms2012_v1065
+ *
+ *-# Bluetooth bundle changed to "BA9Q76VTQG" "com.lego.education.ev3"                        \n
+ *
+ *
+ *\version lms2012_v1064
+ *
+ *-# Bluetooth bundle changed to "BA9Q76VTQG" "com.lego.edu.ev3"                              \n
+ *
+ *
+ *\version lms2012_v1063
+ *
+ *-# Bluetooth bundle changed                                                                 \n
+ *
+ *
+ *\version lms2012_v1062
+ *
+ *-# Bluetooth bundle changed for test                                                        \n
+ *
+ *
+ *\version lms2012_v1061
+ *
+ *-# "Brick Name" app implemented                                                             \n
+ *
+ *
+ *\version lms2012_v106_140502
+ *
+ *-# As v105a but version changed to 1.06                                                     \n
+ *
+ *
+ *
+ *\version lms2012_v105a_140327
+ *
+ *-# IIC issue with automatic update blocking access fixed in "d_iic.c"                       \n
+ *-# UART protocol escape future issue fixed in "d_uart.c"                                    \n
+ *
+ *
+ *
+ *\version lms2012_v105H_140211
+ *
+ *-# As v104x but version changed to 1.05                                                     \n
+ *
+ *
+ *
+ *\version lms2012_v104x_140206
+ *
+ *-# ISSUE 4330 - sub call aliases block local issue fixed                                    \n
+ *-# Number of memory handles rised from 250 to 500 (MAX_HANDLES = 500)                       \n
+ *-# Color sensor mode 4 data checksum issue fixed                                            \n
+ *
+ *
+ *\version lms2012_v104w_140110
+ *
+ *-# Test app "Sensors" changed to use "Modes" instead of "Views" in mode change limit        \n
+ *-# opINPUT SETUP - IIC third party sensor read/write issue fixed                            \n
+ *-# opINPUT READY_IIC implemented                                                            \n
+ *-# More documentation about sensor reading (see \ref thirdpartydevicedesign "Third Party Device Design Guidelines ") \n
+ *
+ *
+ *\version lms2012_v104v_131205
+ *
+ *-# Release of version 104u for testing                                                      \n
+ *
+ *
+ *\version lms2012_v104u_131205
+ *
+ *-# Corrected issue when connecting to several devices using bluetooth (c_bt.c)              \n
+ *-# opUI_DRAW VALUE bug fixed (negative figures)                                             \n
+ *-# opUI_DRAW VIEW_UBIT bug fixed (negative figures)                                         \n
+ *-# opINPUT_DEVICE INSERT_TYPE implemented                                                   \n
+ *-# opINPUT_DEVICE SET_TYPEMODE implemented                                                  \n
+ *-# Corrected issue if trying to search for BT devices and allready connected to 7 devices   \n
+ *-# Corrected issue if get remote bluetooth name fails in a bluetooth search                 \n
+ *-# Bluetooth connect is not called if create paired device fails                            \n
+ *-# Bluetooth connection attempt actively rejected if user presses X on the UI               \n
+ *
+ *
+ *\version lms2012_v104t_131108
+ *
+ *-# Corrected remote bluetooth name issue                                                    \n
+ *-# Corrected brick crashing if number of motors diff from 2 in sync'ed motor cmds           \n
+ *-# Corrected filetransfer between SD cards in bricks - Folder type issue                    \n
+ *-# Corrected filetransfer between SD cards in bricks - Filehandle issue                     \n
+ *-# opFILE CLOSE_LOG changed to free up handle when logging in memory                        \n
+ *-# SD card back key bug fixed                                                               \n
+ *-# ISSUE 2636 - "Brick Program" app - test for attached sensor                              \n
+ *-# ISSUE 3226 - opMATH MOD8, MOD16, MOD32 zero bug fixed                                    \n
+ *-# ISSUE 3492 - opUI_DRAW LINE and RECT hang bug fixed                                      \n
+ *-# ISSUE 3565 - Brick Hang with 3rd party sensor bug fixed                                  \n
+ *-# Added TIInit_6.6.15.bts to the filesystem to support 1325A version bluetooth             \n
+ *-# Special exception text added to headers: "lmstypes.h", "lms2012.h" and "bytecodes.h"     \n
+ *-# opINPUT_DEVICE INSERT_TYPE implemented for test									                        \n
+ *-# IIC 3rd party hang and data instability issue fixed									                    \n
+ *
+ *\version lms2012_v104H_130531
  *
  *-# Bluetooth transfer folder error fixed in cComCreateBeginDL                               \n
  *-# First release for AFOL                                                                   \n
  *
  *
- *  \version lms2012_v103H_130528
+ *\version lms2012_v103H_130528
  *
  *-# Reduced tone levels                                                                      \n
  *-# Corrected kernel source error introduced in v102                                         \n
  *
  *
- *  \version lms2012_v102H_130524
+ *\version lms2012_v102H_130524
  *
  *-# Check on characters in filenames                                                         \n
  *-# opARRAY WRITE_CONTENT bug with DATA16, DATA32 and DATAF arrays fixed                     \n
@@ -42,7 +166,7 @@
  *-# Sound tone level adjusted                                                                \n
  *
  *
- *  \version lms2012_v101H_130204
+ *\version lms2012_v101H_130204
  *
  *-# Live update on datalog is possible on PC when running up to 100 samples per second       \n
  *-# opINPUT_DEVICE CAL_MIN and CAL_MAX changes to accept SI units (in DATA32 format)         \n
@@ -54,12 +178,12 @@
  *-# Enabling bluetooth pscan after pairing only process                                      \n
  *
  *
- *  \version lms2012_v100H_121220
+ *\version lms2012_v100H_121220
  *
  *-# WIFI reconnect with TCP is now possible                                                  \n
  *
  *
- *  \version lms2012_v069_121219
+ *\version lms2012_v069_121219
  *
  *-# Warnings in display after boot now looks fine                                            \n
  *-# READ_SIZE related to arrays have added NOBREAK                                           \n
@@ -68,14 +192,14 @@
  *-# Corrected make_ev3_os.sh to add CVS folder in all apps directories                       \n
  *
  *          
- *  \version lms2012_v068_121214
+ *\version lms2012_v068_121214
  *
  *-# Shut down while user program running issue fixed                                         \n
  *-# Printouts on debug port when connecting/disconnecting USB removed in kernel              \n
  *-# SSID Name truncation issue fixed                                                         \n
  *-# Valid IP in WIFI changed                                                                 \n  
  *          
- *  \version lms2012_v067_121207
+ *\version lms2012_v067_121207
  *
  *-# opARRAY READ_SIZE implemented                                                            \n
  *-# Daisy-chain, the motors on the lower layers are not stopped when the program ends - fixed\n
@@ -102,7 +226,7 @@
  *-# opFILE SET_LOG_SYNC_TIME and GET_LOG_SYNC_TIME implemented                               \n
  *-# On brick copy limited to folder with maximum 125 files                                   \n
  *          
- *  \version lms2012_v066_121130
+ *\version lms2012_v066_121130
  *
  *-# Underscore enabled in paskeys and network names                                          \n
  *-# "Brick Program" app - 50mS delay after gyro reset to ensure correct zeroed data          \n
@@ -118,7 +242,7 @@
  *-# Bluetooth name can be changed when connected                                             \n
  *
  *          
- *  \version lms2012_v0657_121123
+ *\version lms2012_v0657_121123
  *
  *-# "Brick Datalog" and "Brick Program" app updated (keyboard layout aligned)                \n
  *-# "IR Control" app updated (graphics)                                                      \n
@@ -130,7 +254,7 @@
  *-# "printf" bug in VM - fixed                                                               \n
  *
  *          
- *  \version lms2012_v065_121116
+ *\version lms2012_v065_121116
  *
  *-# Kernel modules updated with zeroed shared memory                                         \n
  *-# Light around buttons numbering changed (back to V0.62)                                   \n
@@ -142,7 +266,7 @@
  *-# SD card recognised also at boot time                                                     \n                                
  *
  *          
- *  \version lms2012_v064_121106
+ *\version lms2012_v064_121106
  *
  *-# EnergyMeter mode change stabilized and change time lowered to 100mS                      \n
  *-# Datalogging, Same value is being saved for each logging - bug fixed                      \n
@@ -157,7 +281,7 @@
  *-# opUI_WRITE DOWNLOAD_END implemented (send from PC when download is completed)            \n
  *
  *          
- *  \version lms2012_v063_121030
+ *\version lms2012_v063_121030
  *
  *-# Missing app icon bug fixed                                                               \n
  *-# Orange and red LED light swapped bug fixed                                               \n
@@ -175,7 +299,7 @@
  *-# Program validate accept nan/inf as floating point constants                              \n  
  *
  *          
- *  \version lms2012_v062_121012
+ *\version lms2012_v062_121012
  *
  *-# Graphics updated                                                                         \n
  *-# opFILE OPEN_APPEND bug fixed                                                             \n
@@ -191,7 +315,7 @@
  *-# Sound level 0 = silence                                                                  \n  
  *
  *          
- *  \version lms2012_v061_120928
+ *\version lms2012_v061_120928
  *
  *-# UART sensor error reset implemented (sensors before EP2 may not function propperly)      \n
  *-# MAX_HANDLES to arrays in one program increased to 250                                    \n
@@ -212,7 +336,7 @@
  *-# Sound noise removed                                                                      \n
  *
  *          
- *  \version lms2012_v060_120917
+ *\version lms2012_v060_120917
  *
  *-# Linux prompt bug fixed (no prompt when exitting debugger)                                \n
  *-# Display update limitted to 10 frames per second                                          \n
@@ -232,7 +356,7 @@
  *-# Boot time reduced to 30 seconds                                                          \n
  *
  *          
- *  \version lms2012_v059_120830
+ *\version lms2012_v059_120830
  *
  *-# SD card   folder copy implemented (popup for overwrite and media full)                   \n
  *-# USB stick folder copy implemented (popup for overwrite and media full)                   \n
@@ -251,7 +375,7 @@
  *-# "Brick Program" updated (IR remote bug fixed)                                            \n
  *
  *          
- *  \version lms2012_v0581_120822
+ *\version lms2012_v0581_120822
  *
  *-# Daisy chain mode change bug fixed                                                        \n
  *-# NXT ultrasonic missing 9V fixed                                                          \n
@@ -266,7 +390,7 @@
  *-# opPORT_CNV_INPUT implemented                                                             \n
  *
  *          
- *  \version lms2012_v057_120816
+ *\version lms2012_v057_120816
  *
  *-# "Black layer buffering" bug fixed and enabled again                                      \n
  *-# opINPUT_DEVICE CLR_ALL implemented                                                       \n
@@ -283,7 +407,7 @@
  *-# Daisy chain supports one slave (motor ready/test is not supported yet)                   \n
  *
  *          
- *  \version lms2012_v056_120807
+ *\version lms2012_v056_120807
  *
  *-# "Black layer buffering" disabled                                                         \n
  *-# Internal use only: simple "C-call way" of executing byte code streams - implemented      \n
@@ -293,13 +417,13 @@
  *-# 3th party IIC sensors are named "IIC-SENSOR"                                             \n
  *
  *          
- *  \version lms2012_v055_120718
+ *\version lms2012_v055_120718
  *
  *-# Fixed bug in CONTINUE_GETFILE                                                            \n
  *-# Implementation of iDevice interface started (Added c_i2c.c and c_i2c.h)                  \n
  *
  *
- *  \version lms2012_v054_120712
+ *\version lms2012_v054_120712
  *
  *-# Fast datalog (black layer buffering and optimization) on IIC implemented                 \n
  *-# Third party device support implemented (HW buffer on IIC clock)                          \n
@@ -314,7 +438,7 @@
  *-# MD5 SUM and filesize added to LIST_FILES and CONTINUE_LIST_FILES system commands         \n
  *
  *          
- *  \version lms2012_v053_120628 (EP2)
+ *\version lms2012_v053_120628 (EP2)
  *
  *-# Dynamic hardware adaptation implemented (from FINALB V0.30 hardware)                     \n
  *-# opINPUT_SAMPLE changed to support dynamic output array                                   \n
@@ -325,7 +449,7 @@
  *-# Fast datalog (black layer buffering and optimization) on UART and analog implemented     \n
  *
  *          
- *  \version lms2012_v052_120620
+ *\version lms2012_v052_120620
  *
  *-# Fast datalog (black layer buffering and optimization) implementation started             \n
  *-# opSTRINGS VALUE_TO_STRING bug fixed                                                      \n
@@ -337,7 +461,7 @@
  *-# opFILE WRITE_LOG writes scrambled values (4 bytes floatingpoint) NOT ASCII characters in the file\n 
  *
  *          
- *  \version lms2012_v051_120604
+ *\version lms2012_v051_120604
  *
  *-# "Brick Program" app graphics updated                                                     \n
  *-# Daisy chain support implementation started                                               \n
@@ -348,7 +472,7 @@
  *-# WiFi TKIP/AES implemented                                                                \n
  *
  *          
- *  \version lms2012_v050_120511
+ *\version lms2012_v050_120511
  *
  *-# NEW KERNEL AND FILESYSTEM REQUERED                                                       \n
  *-# UART sensor module updated                                                               \n
@@ -364,7 +488,7 @@
  *-# WiFi enabled                                                                             \n
  *
  *          
- *  \version lms2012_v049_120413
+ *\version lms2012_v049_120413
  *
  *-# opUI_DRAW ERASE_WINDOW removed                                                           \n
  *-# opUI_DRAW FILLWINDOW implemented (can replace ERASE_WINDOW with the right parameters)    \n
@@ -375,7 +499,7 @@
  *-# opFILE GET_HANDLE  implemented (get filehandle from open file by filename)               \n
  *
  *          
- *  \version lms2012_v048_120330
+ *\version lms2012_v048_120330
  *
  *-# ISSUE 15  - Download and run can't stop program - bug fixed                              \n
  *-# ISSUE 56  - UI buttons are active while program is running - bug fixed                   \n
@@ -388,7 +512,7 @@
  *-# Bluetooth hinted pairing implemented                                                     \n
  *
  *          
- *  \version lms2012_v047_120323
+ *\version lms2012_v047_120323
  *
  *-# ISSUE 6   - "Motor Control" app react on wrong channel - bug fixed                       \n
  *-# ISSUE 17  - Motor run unlimitted preformance - bug fixed                                 \n
@@ -399,7 +523,7 @@
  *-# Old NXT color sensor implementation started                                              \n
  *
  *          
- *  \version lms2012_v046_120316
+ *\version lms2012_v046_120316
  *
  *-# "Brick Program" app : exit canvas when program saved bug fixed                           \n
  *-# Wrong bytecode version resets sensor in port 1       bug fixed                           \n
@@ -407,7 +531,7 @@
  *-# opSTRING_TO_VALUE accept commas                                                          \n
  *
  *          
- *  \version lms2012_v045_120312
+ *\version lms2012_v045_120312
  *
  *-# UART sensor port 3 and 4 bug fixed                                                       \n
  *-# Graphics minor issues fixed                                                              \n
@@ -418,7 +542,7 @@
  *-# "General navigation" file transfer to bluetooth implemented                              \n
  *
  *          
- *  \version lms2012_v044_120302
+ *\version lms2012_v044_120302
  *
  *-# General navigation - WiFi - implementation started                                       \n
  *-# UI changed to also stop user programs started from direct commands                       \n
@@ -439,7 +563,7 @@
  *-# Messaging implemented                                                                    \n 
  *
  *          
- *  \version lms2012_v043_120210 (EP1)
+ *\version lms2012_v043_120210 (EP1)
  *
  *-# opUI_STORE and opUI_RESTORE had one parameter added (to expand the window levels)        \n
  *-# opUI_DRAW BMPFILE and PICTURE graphic bug (when drawing aligned bitmaps) fixed           \n 
@@ -462,7 +586,7 @@
  *-# "View"    app changed name to "Port View"                                                \n
  *
  *          
- *  \version lms2012_v042_120120
+ *\version lms2012_v042_120120
  *
  *-# opINPUT_DEVICE GET_MINMAX implemented                                                    \n
  *-# opINPUT_DEVICE CMD parameter moved to start (first parameter)                            \n
@@ -510,7 +634,7 @@
  *-  opUI_DRAW      KEYBOARD, BROWSE                                                          \n
  *
  *          
- *  \version lms2012_v041_111209
+ *\version lms2012_v041_111209
  *
  *-# opSINF, opCOSF, opTANF, opASINF, opACOSF, opATANF removed (see below)                    \n
  *-# opMATH SIN, COS, TAN, ASIN, ACOS, ATAN implemented                                       \n
@@ -522,7 +646,7 @@
  *-# UI readout with kernel version and build implemented                                     \n
  *
  *          
- *  \version lms2012_v040_111201
+ *\version lms2012_v040_111201
  *
  *-# OPB support for file load and save implemented                                           \n
  *-# Overall run screen implemented                                                           \n
@@ -534,7 +658,7 @@
  *-# opMOVE32_16 writes to 4 bytes bug - fixed                                                \n
  *
  *          
- *  \version lms2012_v039_111121
+ *\version lms2012_v039_111121
  *
  *-# Delete project (folder) from the UI implemented                                          \n
  *-# opINPUT_WRITE make device not ready until new data arrive                                \n
@@ -552,14 +676,14 @@
  *-# Motors must come to complete stop when brake parameter is set fixed                      \n
  *
  *          
- *  \version lms2012_v038_111104
+ *\version lms2012_v038_111104
  *
  *-# opPROGRAM_INFO OBJ_START bug fixed (delayed program start)                               \n  
  *-# opOutput_RESET should be used to clear tacho and timer upon program start                \n  
  *-# opOUTPUT_CLR_COUNT 10mS tacho clear bug fixed                                            \n  
  *-# IR Seeker (doc error around DATA_SI)                                                     \n 
  *          
- *  \version lms2012_v037_111027
+ *\version lms2012_v037_111027
  *
  *-# opINPUT_DEVICE SET_RAW     implemented                                                   \n  
  *-# opUI_DRAW VIEW_UNIT        implemented                                                   \n  
@@ -596,7 +720,7 @@
  *-# USB IDs changed                                                                          \n
  *-# BEGIN_UPLOAD, CONTINUE_UPLOAD, BEGIN_GETFILE, CONTINUE_GETFILE, LIST_FILES added to communication (see \ref systemcommands "Example")\n
  *          
- *  \version lms2012_v036_110928
+ *\version lms2012_v036_110928
  *
  *-# File browser changed opUI_DRAW CACHESELECT, APPSELECT, PRJSELECT changed                 \n  
  *-# opFILE has changed numeric value from 0xB0 to 0xC0 (to make room for more motor commands)\n
@@ -612,7 +736,7 @@
  *-# opOUTPUT_STEP_SYNC and opOUTPUT_TIME_SYNC implementation started                         \n
  *
  *          
- *  \version lms2012_v035_110909
+ *\version lms2012_v035_110909
  *
  *-# PrimParPointer changed so array handles can be converted to pointers (for array refference)\n  
  *-# Only first VMTHREAD is started when program is loaded                                    \n    
@@ -644,7 +768,7 @@
  *-# opUI_READ BUTTON0, BUTTON1, BUTTON2, BUTTON3, BUTTON4, BUTTON5 will be removed in V0.36  \n
  *
  *  
- *  \version lms2012_v034_110822
+ *\version lms2012_v034_110822
  *
  *-# End of direct commands does not float motors                                             \n
  *-# Validation of byte code programs has changed to be more restricteded                     \n
@@ -675,7 +799,7 @@
  *-# opSTRING   changed to opSTRINGS                                                          \n
  *
  *          
- *  \version lms2012_v033_110728
+ *\version lms2012_v033_110728
  *
  *-#  opMEMORY_WRITE implemented to write to different memory types in VM space (see \ref opMEMORY_WRITE1 "Example")\n
  *-#  opSTRING ADD, COMPARE and DUPLICATE is implemented (see \ref stringexample1 "Example")  \n
@@ -683,7 +807,7 @@
  *-#  opOUTPUT_TEST number of parameters changes (see \ref opOUTPUT_TEST)                     \n
  *
  *          
- *  \version lms2012_v032_110623
+ *\version lms2012_v032_110623
  *
  *-#  opUI_WRITE SET_TESTPIN implemented                                                      \n
  *-#  opINPUT_TEST implemented                                                                \n
@@ -695,7 +819,7 @@
  *-#  opSOUND_READY implemented                                                               \n
  *
  *          
- *  \version lms2012_v031_110616
+ *\version lms2012_v031_110616
  *
  *-#  Hardware platform "FINAL" implementation started                                        \n
  *-#  Sound implementation started                                                            \n
@@ -703,7 +827,7 @@
  *-#  Read UART sensor returns "nan" if sensor not ready                                      \n
  *
  *          
- *  \version lms2012_v030_110609
+ *\version lms2012_v030_110609
  *
  *-#  opUI_READ GET_IMAGE removed                                                             \n
  *-#  opFILE GET_PRJS, GET_APPS and GET_TOOLS removed                                         \n
@@ -733,7 +857,7 @@
  *-#  GUI addition: Debug app activates terminal output                                       \n
  *
  *          
- *  \version lms2012_v029_110513
+ *\version lms2012_v029_110513
  *
  *-#  opUI_READ BUTTON_READY implemented                                                      \n
  *-#  opUI_WRITE BUTTON_FLUSH implemented                                                     \n
@@ -741,7 +865,7 @@
  *-#  Reply/no reply implemented on USB                                                       \n
  *
  *          
- *  \version lms2012_v028_110509
+ *\version lms2012_v028_110509
  *
  *-#  Application folder structure changed (see \ref UIdesign)                                \n
  *-#  Bytecode file extension must be ".rbf"                                                  \n
@@ -750,7 +874,7 @@
  *-#  System command "Begin Download" creates folders acording to file path relative to "~/lms2012/"\n
  *
  *          
- *  \version lms2012_v027_110428
+ *\version lms2012_v027_110428
  *
  *-#  Device type alignmet started                                                            \n
  *-#  UART device communition change started                                                  \n
@@ -770,7 +894,7 @@
  *-#  opTIMER_READ implemented                                                                \n
  *
  *          
- *  \version lms2012_v026_110405
+ *\version lms2012_v026_110405
  *
  *-#  Input port 1 and 2 works now with Uart sensors (see \ref debug)                         \n
  *-#  opARRAY CREATE8, CREATE16, CREATE32, CREATEF implemented                                \n
@@ -778,7 +902,7 @@
  *-#  opARRAY_WRITE and opARRAY_WRITE implemented                                             \n
  *
  *          
- *  \version lms2012_v025_110330
+ *\version lms2012_v025_110330
  *
  *-#  USB communication support protocol from "Communication spec.docx"                       \n
  *-#  Userspace memory allocation centralized in "c_memory" (kernelspace is local)            \n
@@ -786,7 +910,7 @@
  *-#  BLOCKS local variable bug fixed                                                         \n
  *
  *          
- *  \version lms2012_v024_110325
+ *\version lms2012_v024_110325
  *
  *-#  procedure for formatting and copying SC cards added in documentation                    \n
  *-#  SUBCALL mutex bug fixed ("motorsCrash" program runs)                                    \n
@@ -795,7 +919,7 @@
  *-#  device type tabel content has changed                                                   \n
  *
  *          
- *  \version lms2012_v023_110307
+ *\version lms2012_v023_110307
  *
  *-#  linux prompt controlled by firmware started                                             \n
  *-#  opMEMORY_READ implemented to read different memory types from VM space (see \ref opMEMORY_READ1 "Example")\n
@@ -809,7 +933,7 @@
  *-#  SUBCALLs protected by mutex                                                             \n
  *
  *          
- *  \version lms2012_v022_110218
+ *\version lms2012_v022_110218
  *
  *-#  lms2012 project prepared for simulation                                                 \n
  *-#  Usb device module template added                                                        \n
@@ -817,7 +941,7 @@
  *-#  opINPUT_DEVICE_LIST have an extra parameter containing changed status                   \n
  *
  *          
- *  \version lms2012_v021_110201
+ *\version lms2012_v021_110201
  *
  *-#  scratches bug fixed on display                                                          \n
  *-#  power off bug fixed on display                                                          \n
@@ -826,7 +950,7 @@
  *-#  support for Color sensor                                                                \n
  *
  *          
- *  \version lms2012_v020_110126
+ *\version lms2012_v020_110126
  *
  *-#  Graphical interface implementation started                                              \n
  *-#  Simple graphical terminal implemented (in shared libary not in kernel module)           \n
@@ -844,20 +968,20 @@
  *-#  ONE2ONE power on and off implemented                                                    \n
  *
  *          
- *  \version lms2012_v019_101231
+ *\version lms2012_v019_101231
  *
  *-#  Performance algorithm changed                                                           \n
  *-#  Uart statemachine implementation started                                                \n
  *
  *          
- *  \version lms2012_v018_101209
+ *\version lms2012_v018_101209
  *
  *-#  prepared for cvs                                                                        \n
  *-#  module d_tacho removed                                                                  \n
  *-#  module d_display added                                                                  \n
  *
  *          
- *  \version lms2012_v017_101203
+ *\version lms2012_v017_101203
  *
  *-#  Output ID detection implementation started                                              \n
  *-#  Shared memory for analog module changed to use ANALOG struct and no SIGNAL              \n
@@ -865,7 +989,7 @@
  *-#  d_uart module implementation started                                                    \n
  *
  *          
- *  \version lms2012_v016_101129
+ *\version lms2012_v016_101129
  *
  *-#  PWM module changed to support all 4 output ports on LEGO A4 board                       \n
  *-#  opOUTPUT_TIME_POWER, opOUTPUT_POLARITY, opOUTPUT_READY and OUTPUT_TEST implemented      \n
@@ -877,13 +1001,13 @@
  *-#  Byte code for LED control implemented (opUI_WRITE,LED,....)                             \n
  *
  *          
- *  \version lms2012_v015_101114
+ *\version lms2012_v015_101114
  *
  *-#  Analog ID system implemented for input ports                                            \n
  *-#  Validation output changed to use "op" prefix on byte codes (output can be reassembled)  \n
  *
  *          
- *  \version lms2012_v014_101110
+ *\version lms2012_v014_101110
  *
  *-#  Adapted to the new distribution (DaVinci-PSP-SDK-03.20.00.1313)                         \n
  *-#  Subcall return parameter bug fixed                                                      \n
@@ -891,12 +1015,12 @@
  *-#  Port sequence remapped (physical 1 = logical 4, 2 = 1, 3 = 2, 4 = 3)                    \n
  *
  *          
- *  \version lms2012_v013_101011
+ *\version lms2012_v013_101011
  *
  *-#  Internal transition to new platform support package                                     \n
  *
  *          
- *  \version lms2012_v012_101011
+ *\version lms2012_v012_101011
  *
  *-#  Signal used to speed up awareness of device changes on input ports                      \n
  *-#  Kernel shared memory used to speed up reading of analog values from user land           \n
@@ -905,7 +1029,7 @@
  *-#  opFILE ISAVE implemented                                                                \n
  *
  *          
- *  \version lms2012_v011_100930
+ *\version lms2012_v011_100930
  *
  *-#  opCALL      - one more parameter = number of parameters added (needed for validation)   \n
  *-#  Simple UI changed to use subcalls                                                       \n
@@ -919,7 +1043,7 @@
  *-#  opOUTPUT_STEP_POWER implemented                                                         \n
  *
  *          
- *  \version lms2012_v010_100923
+ *\version lms2012_v010_100923
  *
  *-#  typedata    - 1st implementation for type data file read                                \n
  *-#  d_ui        - 1st implementation for read BUT0                                          \n
@@ -932,13 +1056,13 @@
  * 
  *
  *          
- *  \version lms2012_v009_100903
+ *\version lms2012_v009_100903
  *
  *-#  More support for eval-add-on-board input port (type, Pct, Si)                           \n
  *-#  Support for eval-add-on-board output port (start, stop, power)                          \n
  *
  *          
- *  \version lms2012_v008_100826
+ *\version lms2012_v008_100826
  *
  *-#  Place holder for d_pwm, d_tacho, d_analog, d_dcm added                                  \n
  *-#  d_analog - bitbang SPI for A/D converter implemented                                    \n
@@ -947,7 +1071,7 @@
  *-#  Support for eval-add-on-board input port started                                        \n
  *          
  *          
- *  \version lms2012_v007_100809
+ *\version lms2012_v007_100809
  *
  *-#  opINPUT takes "TYPE" as 3th parameter                                                   \n
  *-#  opOUTPUT_WRITE, opOUTPUT_STEP removed                                                   \n
@@ -955,7 +1079,7 @@
  *-#  opOUTPUT_STOP changed                                                                   \n
  *          
  *          
- *  \version lms2012_v006_100806
+ *\version lms2012_v006_100806
  *
  *-#  AM1808 eclipse debug enabled (debug setup is username dependend)                        \n
  *-#  VM optimization started                                                                 \n
@@ -963,18 +1087,18 @@
  *-#  opOUTPUT takes "LAYER" as 1st parameter                                                 \n
  *
  *          
- *  \version lms2012_v005_100708
+ *\version lms2012_v005_100708
  *
  *-#  AM1808 platform added                                                                   \n
  *-#  d_ppboard module uses "UDEV" way to deal with driver "files"                            \n
  *
  *          
- *  \version lms2012_v004_100614
+ *\version lms2012_v004_100614
  *
  *-#  Parallel port board driver added                                                        \n
  *
  *          
- *  \version lms2012_v003_100613
+ *\version lms2012_v003_100613
  *
  *-#  opUI,READ_CODE can read a ascii string and convert to a bytecode string                 \n
  *-#  opDO can execute a bytecode string as "Direct Command"                                  \n
@@ -984,7 +1108,7 @@
  *-#  More documentation added                                                                \n
  *-#  opSWITCH8 makes a simple selection on a DATA8 value                                     \n
  *
- *  \version lms2012_v002_100603
+ *\version lms2012_v002_100603
  *
  *-#  opTIMER_WAIT, opTIMER_READY - 1mS resolution - cTimer changed to use "clock_gettime"    \n
  *-#  opJR_xx - cBranch optimized if no jump                                                  \n
@@ -994,7 +1118,7 @@
  *-#  Some documentation started                                                              \n
  *-#  opOBJECT_TRIG, opOBJECT_WAIT implemented                                                \n
  *
- *  \version lms2012_v001_100520
+ *\version lms2012_v001_100520
  *
  *-#  UiImage contains info string and commands 'q','r' and 'b'                               \n
  *-#  'r' runs programs as rFILENAME                                                          \n
@@ -1011,7 +1135,9 @@
  *****************************************************************************/
 /*! \mainpage Firmware Documentation
  *
- * \image html Lms2012.jpg
+    \htmlonly
+    <IMG src="Lms2012.jpg">
+    \endhtmlonly
  *
  *- \subpage intro
  *  -  \subpage hardware
@@ -1292,30 +1418,12 @@
  *\n
  *
  *- Device Design Guidelines (sensors and motors)
- *  - \subpage DeviceDesign \n
+ *  - \subpage legodevicedesign \n
+ *  - \subpage thirdpartydevicedesign \n
  *\n
  *
  *
  *
- *
- */
- 
-/******************************************************************************
- * DEVICE DESIGN GUIDELINES
- *****************************************************************************/
-/*! \page DeviceDesign Device Design Guidelines
- *
- *- Non Intelligent Input Devices (sensors) 
- *  - \subpage DcmDriver \n
- *
- *- Intelligent Input Devices (sensors) 
- *  - \subpage DcmDriver \n
- *
- *- Non Intelligent Output devices (motors) 
- *  - \subpage DcmDriver \n
- *
- *- Intelligent Output devices (motors) 
- *  - \subpage DcmDriver \n
  *
  */
  
@@ -1342,12 +1450,18 @@
  *  - \subpage  pccompileapps
  *  - \subpage  pcimage
  * 
- *- U-boot
+ *- U-Boot (need "USB to EV3 Port1" adapter)
  *  - \subpage configuboot
  *  - \subpage updateuboot
  *
- *- LINUX
+ *- LINUX (need WiFi Dongle or "USB to Ethernet" adapter)
  *  - \subpage linuxprompt
+ *  - \subpage linuxstartssh
+ *
+ *- LINUX NFS (need "USB to EV3 Port1" and "USB to Ethernet" adapters)
+ *  - \subpage linuxnfsinstall
+ *  - \subpage linuxnfs
+ *  - \subpage linuxnfsdebug
  *
  */
 
@@ -1771,11 +1885,17 @@
  *
  *  <hr size="1"/>
  *
- *  \image html generalnavigation.png
- *  \image html filenavigation.png
- *  \image html buttonlight.png
- *  \n
- *  \subpage uiappcode
+    \htmlonly
+    <IMG src="generalnavigation.png">
+    \endhtmlonly
+    \htmlonly
+    <IMG src="filenavigation.png">
+    \endhtmlonly
+    \htmlonly
+    <IMG src="buttonlight.png">
+    \endhtmlonly
+    \n
+    \subpage uiappcode
  */
 
  
@@ -1786,9 +1906,11 @@
  *
  *  <hr size="1"/>
  *
- *  \image html view.png
- *  \n
- *  \subpage portviewappcode
+    \htmlonly
+    <IMG src="view.png">
+    \endhtmlonly
+    \n
+    \subpage portviewappcode
  */
 
  
@@ -1799,9 +1921,11 @@
  *
  *  <hr size="1"/>
  *
- *  \image html motorcontrol.png
- *  \n
- *  \subpage motorcontrolappcode
+    \htmlonly
+    <IMG src="motorcontrol.png">
+    \endhtmlonly
+    \n
+    \subpage motorcontrolappcode
  */
  
  
@@ -1812,9 +1936,11 @@
  *
  *  <hr size="1"/>
  *
- *  \image html ircontrol.png
- *  \n
- *  \subpage ircontrolappcode
+    \htmlonly
+    <IMG src="ircontrol.png">
+    \endhtmlonly
+    \n
+    \subpage ircontrolappcode
  */
  
  
@@ -1825,11 +1951,13 @@
  *
  *  <hr size="1"/>
  *
- *  \image html program.png
- *  \n
- *  \subpage brickprogramapp
- *  \n
- *  \subpage brickprogramtemplateapp
+    \htmlonly
+    <IMG src="program.png">
+    \endhtmlonly
+    \n
+    \subpage brickprogramapp 
+    \n
+    \subpage brickprogramtemplateapp
  */
  
  
@@ -1840,9 +1968,11 @@
  *
  *  <hr size="1"/>
  *
- *  \image html datalog.png
- *  \n
- *  \subpage brickdatalogapp
+    \htmlonly
+    <IMG src="datalog.png">
+    \endhtmlonly
+    \n
+    \subpage brickdatalogapp
  */
 
  
@@ -1862,12 +1992,14 @@
  *\n
  *  <hr size="1"/>
  *\n
+ *
  *  
- *  \version V0.54
+ *\version V0.54
  *
  *-# Sensor IIC driver updated                                                                \n
+ *
  *  
- *  \version V0.53
+ *\version V0.53
  *
  *-# Display spi driver changed (dma)                                                         \n
  *-# SD card driver changed (turn off clock when not used)                                    \n
@@ -1883,11 +2015,23 @@
  *  <hr size="1"/>
  *\n
  *  
- *  \version V0.54
+ *
+ *\version V1.09D (lmsfs_telnet_password.tar.bz2)
+ *
+ *-# Telnet enabled with password "Just a bit off the block!"                                 \n
+ *  
+ *
+ *\version V1.09H, V1.09E (lmsfs_without_telnet.tar.bz2)
+ *
+ *-# Telnet disabled in run level 5                                                           \n
+ *  
+ *
+ *\version V0.54
  *
  *-# PRU uarts updated (bitrate center moved 5% up)                                           \n
  *  
- *  \version V0.53
+ *
+ *\version V0.53
  *
  *-# BT_Init.sh updated                                                                       \n
  *
@@ -1895,3 +2039,9 @@
  */
 
 
+ *\version lms2012_v109D
+ *
+ *-# As v109H but telnet enabled with password "Just a bit off the block!"                    \n
+ *
+ *
+ *\version lms2012_v109

@@ -13,4 +13,3 @@
 #rmmod d_ppboard
 #rmmod d_power
 
-#poweroff -f
