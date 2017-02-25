@@ -1,12 +1,12 @@
 EVA - EV3 Accessiblity 
 -----------------------------------
+This project is intended provide additional functionality to the existing lego firmware. 
 
-
-## LEGO MINDSTORMS EV3 source code
+#### LEGO MINDSTORMS EV3 source code
 
 See [the release announcement on BotBench][1] for more information.
 
-## Things you will need
+#### Things you will need
 
 * A Linux (virtual) installation.  I used Ubuntu 13.04 on VMware Workstation, but I am sure other combinations also work.   
 The reason for the Linux installation requirement is due to the case-sensitive filenames used by the Linux kernel source repository. Attempting to clone the source repository to a non-case sensitive file system such as Mac OSX HFS+ or Windows FAT would result in a corrupted repository.
@@ -20,7 +20,8 @@ The reason for the Linux installation requirement is due to the case-sensitive f
 * A pair of flat-nosed pliers, for removing the SD card
 * A Netgear WNA1100 WiFi dongle.  It is currently the only WiFi dongle that is supported by the EV3’s firmware.
 
-## Getting Started
+
+#### Initial Getting Started
 
 Use Git to clone this repo:
 
@@ -29,6 +30,8 @@ Use Git to clone this repo:
 The scripts in the EV3 sources expect the source code to live in a projects folder in your home directory. You will need to create a  projects symlink to the ev3sources folder that was created when you cloned the Git repo.
 
 To import this project in Eclipse, check out the [Wiki article][6]
+
+For a more in depth look at getting started see [here][7].
 
 ## Contributing
 
@@ -42,3 +45,4 @@ If you want to make a change to this shared repo, submit a **Pull Request**, whi
   [4]: http://go.mentor.com/2ig4q
   [5]: http://botbench.com/blog/2013/08/15/ev3-creating-console-cable/
   [6]: https://github.com/mindboards/ev3sources/wiki/Eclipse-import
+  [7]: https://wiki.qut.edu.au/display/cyphy/EV3+Build+Environment+and+Compilation
