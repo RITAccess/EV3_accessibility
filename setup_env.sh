@@ -12,6 +12,7 @@ sudo apt-get install doxygen
 
 echo "Installing ImageMagick"
 sudo apt-get install imagemagick libmagickcore-dev
+echo
 
 echo "Pushing CodeSourcery to home"
 if [ -d $HOME/CodeSourcery ]; then
