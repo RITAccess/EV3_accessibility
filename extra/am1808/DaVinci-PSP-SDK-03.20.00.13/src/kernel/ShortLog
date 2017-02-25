@@ -1,0 +1,260 @@
+Ajay Kumar Gupta (50):
+      USB: musb: Add new fifo table for a OMAP3 errata
+      usb: musb: save dynfifo in musb struct
+      usb: musb: Add 'extvbus' in musb_hdrc_platform_data
+      usb: host: ehci: fix missing kfree in remove path also
+      usb: host: ehci: adding regulator framework in ehci-omap.cdriver
+      Revert: "musb: support disconnect after HNP roleswitch"
+      Revert "musb: make initial HNP roleswitch work (v2)"
+      Revert: "musb: otg timer cleanup"
+      musb: pm: soft disonnect if gadget is active
+      musb: Inform user when gadget cable is disconnected
+      musb: Add back old musb procfs file
+      musb: Remove USB_SUSPEND auto select with OTG
+      musb: disable PING on status phase of control transfer
+      musb: fix Inventra DMA lockup issue
+      musb: Remove PM dependency for OTG option
+      usb: ehci: fix companion port ownership issue
+      ehci: fix compiler warnings
+      ehci: Adding electrical test support
+      ehci: pm: Add power management support
+      omap3evm: Enable GPIO latch chip using T2_GPIO6
+      OMAP35x: musb: set 'extvbus' flag for OMAP3EVM >=E
+      ehci: Add auxiliarly regulators
+      usb: musb: Add context save and restore support
+      musb: pm: idle off mode support
+      omap35x: defconfig: enable usb support
+      cppi41: adding CPPI4.1 DMA support
+      musb: cppi41: adding musb CPPI41 DMA support (Sergei's take3)
+      cppi41: Move CPPI41 core to musb temporarily
+      cppi41: fix moduler build for musb driver
+      cppi41: add cppi41_exit() to free up the memories
+      cppi41: fix RGN0 memory alloc in queue_mgr_init()
+      cppi41: fix scheduler table init in dma_block_init()
+      cppi41: fix macro definition in cppi41.h
+      cppi41: fix channel program for actual len
+      musb: cppi41: Remove platform definitions from cppi41_dma.h
+      musb: procfs: add cppi41 related checks
+      cppi41: fix MODE_REG compatibility among platforms
+      musb: Adding AM3517 glue layer
+      cppi41: change number of DMA BLOCK from 4 to 1
+      cppi41: fix IO_ADDRESS related issue on AM3517
+      musb: Fix AM3517 FIFO read issue affecting USB Gadget
+      musb: cppi: ISO IN fixes for CPPI DMA
+      cppi41: device fix from Ravi
+      cppi41: teardown fix from Ravi
+      musb: kill unwanted messages
+      AM3517: musb: fix iperf failure issue
+      AM3517: ehci: update ES related programming
+      3517: musb: workaround for bytewise read issue
+      musb: start session only if A-device
+      am35x: defconfig: enable usb
+
+Anand Gadiyar (2):
+      usb: musb: hsdma: add wrapper for reading DMA count
+      PATCH/USB,
+
+Anton Vorontsov (1):
+      phylib: kernel oops on resume with 2.6.33-rc4
+
+Anuj Aggarwal (1):
+      Regulator: Check which register needs to be read for DCDC2/3
+
+Arnaud Mandy (1):
+      usb: musb: handle irqs in the order dictated by programmingguide
+
+Brijesh Jadav (3):
+      v4l: davinci: VPIF display: Buffer management updates
+      v4l: davinci: VPIF Display: Change Pixel format from 422P to NV16
+      v4l-subdev: TVP514x: Updates to detect the mode correclty
+
+Bryan Wu (2):
+      usb: musb: clean up commit 'workaround Blackfin FIFO anomalies'
+      USB: gadget: use ep5 for bulk-in and ep6 for bulk-out for Blackfin MUSB
+
+Chaithrika U S (25):
+      da8xx/omap-l1: Add default configuration for DA850 and DA830
+      DA850/OMAP-L138: Add McBSP driver
+      DA850/OMAP-L138: Platform support for McBSP
+      DA850/OMAP-L138: Fix for audio module to work
+      DA850/OMAP-L138: McBSP: Move the pinmux setup to board file
+      ASoC: DaVinci: Update suspend/resume support for McASP driver
+      ASoC: DaVinci: Fix stream restart error
+      davinci: spi: suspend/resume callback implementation
+      serial: 8250: Add cpufreq support
+      update arch serial driver to get clk info
+      CLCD: DA80/OMAP-L138: Add power management ops
+      davinci: Move VPIF related definitions from DM646x SoC header file to a new VPIF header file
+      v4l: davinci: VPIF: Generic changes to re-use the VPIF drivers on DA850/OMAP-L138 SoC
+      v4l: davinci: VPIF: Add arch specific interrupt status callback fucntion
+      v4l: davinci: VPIF : Update config file to support DA850/OMAP-L138 SoC
+      v4l-subdev: adv7343: fixes to mask video work on DA850/OMAP-L138 EVM
+      da850/omap-l138: Add SoC related definitions for VPIF
+      da850/omap-l138: Add EVM specific code for VPIF to work
+      v4l: davinci: VPIF capture: Add suspend/resume support
+      v4l: davinci: VPIF display: Add suspend/resume support
+      v4l: DaVinci: VPIF Display: Get image size from format irrespective of buf type
+      v4l: DaVinci: VPIF Capture: Get image size from format irrespective of buf type
+      da850/omap-l138: Do not set 'ALWAYS_ENABLED' flag for VPIF clock
+      v4l: DaVinci: VPIF: Device clock handling
+      v4l: DaVinci: VPIF: Add suspend/resume callbacks to VPIF driver
+
+Cliff Cai (1):
+      USB: gadget: add INT support for Blackfin musb
+
+Felipe Balbi (4):
+      USB: musb: use resource_size()
+      USB: musb: move two printk to dev_err
+      USB: musb: move to sysfs_groups
+      USB: musb: remove some of the never defined defines
+
+Madhvapathi Sriram (2):
+      da850/omapl138: cpufreq: New platform data for PLL async rate
+      da8xxfb.c: Corrected the da8xx FB parameters for da850/omap-l138
+
+Matthieu CASTET (1):
+      MUSB: Workaround for Ethernet data alignment issue
+
+Nori, Sekhar (1):
+      davinci: DA850/OMAP-L138: rearrange include file order in da850.c
+
+Rajashekhara, Sudhakar (3):
+      davinci: da830/omapl137: Specify reserved channels/slots
+      davinci: da850/omapl138: Specify reserved channels/slots
+      davinci: dm646x: Specify reserved EDMA channel/slots for DM646x
+
+Ravi B (19):
+      delete cppi41.h file
+      usb: musb-dma port and moved cppi41 modification to musb directory
+      da830: musb: enable usb in defconfig
+      usb: host ohci DA8XX_SYSCFG0_VIRT is not defined
+      By default enable usb selective suspsend for PM
+      usb: musb fix for musb PM and enable MUSB_SUSEND irq handling
+      disable default USB_SUSPEND for OMAPL137 platform
+      usb: musb re-organization of usb generic da8xx platform files
+      usb: musb: removed gadget usb mode compilation warning
+      usb: modified da850_omapl138_defconfig to include OHCI by default Signed-off-by: Ravi B <ravibabu@ti.com>
+      usb:  set usb default configuration for da830/omapl137
+      SATA: enabled SATA in default defconfig for da850/omapl138
+      SATA: removed compilartion warning of Serial ATA driver
+      fix for compilation failure when PM not selected
+      usb:musb reverting patch :Workaround for Ethernet data alignment issue
+      [DM64xx] Add support for NEUROS evm to new usb infrastructure and correct the  removal of DAVINCI_USB_OTG_BASE definition from the common file.
+      [MUSB] Fix redifinition of macros if DAVINCI ARCH is definied.
+      usb: fix for cppi41 dma, delay after tx completion interrupt removed
+      usb: gadget rndis OID crash fix
+
+Roger Monk (3):
+      Increase NAND kernel partition to 4M
+      Initialise card_name in VPIF Capture Driver setup
+      da850 regulator: Protect function prototypes with CONFIG
+
+Sandeep Paulraj (1):
+      SPI DaVinci: SPI master driver for DaVinci/DA8xx
+
+Sekhar Nori (35):
+      davinci: da850/omap-l138 evm: account for defdcdc{2,3} being tied high
+      davinci: clock: add support for setting sysclk rate
+      davinci: cpufreq: add support for changing async clk
+      davinci: da850/omap-l138: keep async clock constant with cpufreq
+      davinci: add support for aemif timing configuration
+      nand: davinci: add support for aemif timing configuration
+      davinci: da850/omap-l138 EVM: add NAND timing values configuration
+      nand: davinci: add suspend/resume support
+      mtd: davinci: add mapping driver for NOR flash
+      davinci: da850/omap-l138 evm: use new NOR mapping driver
+      davinci: da830/omap-l137: don't 'always enable' AEMIF clock
+      davinci: da850/omap-l138: add support for 456mhz and other OPPs
+      davinci: introduce arm-only variants of da8xx/omap-l1 parts
+      fb: da8xx: update Kconfig text to refer to AM1xxx
+      spi: davinci: update Kconfig text to refer to OMAP-L1/AM1xxx
+      rtc: omap1: update Kconfig text to refer to AM1xxx
+      ASoC: davinci: update Kconfig text to refer to AM1xxx parts
+      davinci: da830/omap-l137: do not force write through cache mode
+      davinci: i2c: reset i2c controller during cpufreq post change notification
+      davinci: da850/omap-l138: add spi0 to clock list
+      davinci: cpufreq: bailout correctly on regulator errors
+      davinci: da850/omap-l138: use 'normal' voltage defined in TRM as min voltage
+      davinci: da850/omap-l138 evm: use gpio based bit-banging i2c driver
+      fb: da8xx: fix LCD becoming non-responsive after multiple suspends
+      davinci: da830/omap-l137 evm: add support for new lcd panel
+      davinci: da830/omap-l137 evm: add support for tsc2004 controller
+      davinci: da8xx/omap-l1: fix compilation warning in include/mach/da8xx.h
+      davinci: da850/omap-l138: update defconfig for TPS65070 MFD driver
+      davinci: da8xx/omap-l1: add support to detect ARM only devices
+      davinci: da8xx/omap-l1: reserve channels/slots only when DSP is present
+      davinci: da8xx/omap-l1: make CPU speed selection depend only on DA850
+      davinci: da850/omap-l138: change default governer to userspace
+      Revert "[AM18xx] Adding platform support for SATA and USB"
+      davinci: da830/omap-l137: Configure LCD_AC_ENB_CS pin as GPIO
+      davinci: da8xx/omap-l1: fix build error when CONFIG_DAVINCI_MUX is undefined
+
+Sergei Shtylyov (2):
+      OHCI: DA8xx/OMAP-L1x glue layer (take 3)
+      MUSB: DA830/OMAP-L137 glue layer
+
+Sneha Narnakaje (3):
+      v4l: davinci: VPIF capture: updates to buffer management
+      v4l: davinci: VPIF capture: changes to buffer allocation
+      v4l: davinci: VPIF capture: Change the pixelformat to NV16
+
+Sudhakar Rajashekhara (24):
+      lcd: Add character LCD driver for da850/omap-l138
+      davinci: Add platform data for da850/omap-l138 char lcd
+      davinci: Add platform data for da830/omap-l137 char lcd
+      davinci: Add gpio7[4] pin to mux table
+      da8xx: Make TI Character LCD mode as default in panel.c
+      Current EDMA driver is not taking care of EDMA channels/slots which are allocated from other processor, say DSP. If a channel/slot is allocated from DSP, the existing EDMA driver can still allocate the same resource on ARM.
+      davinci: SPI: add SPI flash support for da850/omap-l138
+      davinci: SPI: add SPI flash support for da830/omap-l137
+      davinci: spi: cpufreq support
+      da8xx: Fix GLCD initialization sequence
+      i2c: davinci: Correct I2C initialization sequence during xfer
+      da830/omap-l137: Reconfigure MSTPRI2 register to increase LCDC priority
+      da850/omap-l138: Reconfigure MSTPRI2 register to increase LCDC priority
+      da850: GLCD: Workaround for LCDC Underflow During Initialization
+      davinci: da830/omap-l137 EVM: add NAND timing values configuration
+      da830: Modify NAND parition information
+      da850: Enable I2C bit bang driver in defconfig
+      da8xx: Modify the init sequence of GPIO I2C driver
+      tvp514x: Fix S_INPUT behavior
+      da830: Adding the support of GPIO based card detection
+      da850/omapl138: Do not enable McBSP in defconfig
+      da850/omap-l138: Correct the information returned by fbset
+      da830/omap-l137: Configure LCD_AC_ENB_CS pin as LCD for Char LCD
+      da8xx/omap-l1x: Fix build warning
+
+Swaminathan S (18):
+      Update the transceiver structure access to be in line with OTG changes.
+      Fix USB0 phy configuration to reflect the compiled in mode of operation. Minor fix for try_idle inclusion for DA850.
+      Fix for DA8xx OHCI module w.r.t returning the correct probe status.
+      Fix for checking USB0 PHY for USB1 enabled/disabled state. If the USB0 PHY is not enabled enable the same and then program USB1 PHY to be enabled. Refer to CFGCHIP2 register for further details.
+      Adding platform support for SATA and USB
+      Adding platform CPPI Suport for USB
+      [AHCI] Add DA850 platform support to AHCI module.
+      [AM18xx] Adding platform support for SATA and USB
+      [AM17xx] Fix compile error for AM17xx usb in platform directory.
+      usb: musb: workaround toggle bug when doing bulk transferafter isoc
+      usb: musb: Fix cppi_channel_abort() function to handle Txabort correctly
+      [AM18xx] Fix for SATA driver to support Hard disk's that are connected either directly or through PM when PM is enabled.
+      [AM18xx] SATA: Fix DVD/CD drive support in PM enabled configuration.
+      [AM18xx] SATA : Add support for Power Management in SATA
+      [AM18xx] SATA: populate the correct board number
+      [MUSB] Support for MUSB_DUAL_MODE board configuration.
+      [MUSB] Add DUAL_MODE support for DA8xx MUSB platform.
+      [MUSB] Move PHY control to platform/board phy controls.
+
+Todd Fischer (8):
+      1/8 tps6507x regulator refactor
+      2/8 Added structure to make a holder for the initialization data for all tps6507x sub-devices.
+      3/8 Add tps6507x multi-function device driver.
+      4/8 Improve regulator driver naming
+      5/8 Make the read modify write register change obvious.
+      tps6507x regulator driver moved to mfd sub-driver
+      7/8 Add tps6507x touch screen driver.
+      8/8 Improved I2C chip initialization consistency.
+
+Vaibhav Hiremath (2):
+      Videobuf-dma-contig: Set PAGE_READONLY flag for capture mmap
+      Input:TouchScreen: Introduce TSC2004 driver support
+
