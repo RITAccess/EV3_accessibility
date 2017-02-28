@@ -18,14 +18,15 @@ echo "Pushing CodeSourcery to home"
 if [ -d $HOME/CodeSourcery ]; then
 	echo "CodeSourcery already already exists in your home directory."
 else
-	ln -s ~/projects/extra/CodeSourcery/ ~/CodeSourcery
+	mkdir ~/CodeSourcery
+	ln -s ~/projects/utilities/linuxdevkit/sg++_lite  ~/CodeSourcery/Sourcery_G++_Lite
 fi
 
 echo "Pushing am1808 to home"
 if [ -d $HOME/am1808 ]; then
 	echo "am1808 already already exists in your home directory."
 else
-	ln -s ~/projects/extra/am1808/ ~/am1808
+	ln -s ~/projects/utilities/am1808/ ~/am1808
 fi
 
 echo -e "\nFinished pre-req setup\n"
