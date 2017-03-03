@@ -9,6 +9,9 @@ sleep 1
 
 echo -e "Setting up pre-reqs\n"
 
+echo -e "Increasing post buffer size"
+git config http.postBuffer 52428800
+
 echo -e "Linking bash to /bin/sh"
 sudo rm /bin/sh
 sudo ln -s /bin/bash /bin/sh
