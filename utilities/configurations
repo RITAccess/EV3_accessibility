@@ -1,0 +1,8 @@
+AM1808:
+	After failing to run build_kernel, I finally figured out some issues.
+	PRU binaries can be found in d_uart/pru...
+	Necessary to compile ( provides lex scanners I think )
+
+	Also found necessary libraries to compile with the package:  gcc-arm-linux-gnueabi
+	Had to modify the build_kernel script to use the compiler, but it is the same compiler
+	jst labeled differently. 

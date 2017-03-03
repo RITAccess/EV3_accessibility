@@ -1,4 +1,4 @@
-#!/bin/bash
+#/bin/sh
 
 #if [ ! -f /usr/bin/mksquashfs ]; 
 #then     
@@ -82,18 +82,18 @@ chmod 644 /mnt/tmpdrv_ud/settings/BrickName
 if [ -f $PATH5/def_sett.tgz ];
 then
    rm $PATH5/def_sett.tgz
-   echo -e "Remove Old Files\t: [ DONE ]"
+   echo "Remove Old Files\t: [ DONE ]"
 fi
 cd /mnt/tmpdrv_ud/
 tar zcf $PATH5/def_sett.tgz ./
-echo -e "New DefSettFile Created\t: [ DONE ]"
+echo "New DefSettFile Created\t: [ DONE ]"
 
 mkfs.cramfs /mnt/tmpdrv_fs/ $PATH1/$PATH2/EV3.cramfs.bin
-echo -e "CRAMFS File Created\t: [ DONE ]"
+echo "CRAMFS File Created\t: [ DONE ]"
 
 #rm $PATH1/$PATH2/EV3.squashfs.bin
 #mksquashfs /mnt/tmpdrv_fs/ $PATH1/$PATH2/EV3.squashfs.bin
-#echo "-e SQUASHFS File Created\t: [ DONE ]"
+#echo "SQUASHFS File Created\t: [ DONE ]"
 
 cd $CURRENTPATH
 rm -R /mnt/tmpdrv_fs/

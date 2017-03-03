@@ -1,0 +1,44 @@
+Ajay Kumar Gupta (5):
+      DA830: Add pinmux for USB0_DRVVBUS
+      DA8xx: Add GPIO register definitions
+      DA8xx: Add MUSB host support
+      DA830: Add usb config
+      Enable USB in DA850 defconfig.
+
+Alagu Sankar (3):
+      Davinci MMCSD Support
+      Multiblock Support for MMC
+      Environment in MMC
+
+Nick Thompson (5):
+      Davinci: Table driven pinmux configuration
+      Davinci: Configurable NAND chip selects
+      Davinci: NAND enable ECC even when not in NAND boot mode
+      Davinci: davinci_nand.c performance enhancments
+      The EMAC IP on DM365, DM646x and DA830 is slightly different from that on DM644x. This change updates the DaVinci EMAC driver so that EMAC becomes operational on SOCs with EMAC v2.
+
+Sekhar Nori (1):
+      TI DaVinci: Driver for the davinci SPI controller
+
+Sudhakar Rajashekhara (20):
+      da830: Enable SPI in configuration file
+      da830: Make i2c and emac work
+      da830: Add support for NAND boot mode
+      da830: Print ARM frequency information
+      da8xx: Prepare for da850
+      da8xx: Add cpu_is_da8xx macros
+      da8xx: Add support for multiple PLL controllers
+      da850: Add support for da850
+      da850: Add support for NAND boot mode
+      da850: Add support for NOR boot mode
+      da850: Add RMII support for EMAC
+      From: Sekhar Nori <nsekhar@ti.com>
+      da830: Modify bootargs and bootcmd for da830/omap-l137.
+      da8xx: Decrease CONFIG_SF_DEFAULT_SPEED to 30MHz
+      da8xx: Modify the U-Boot prompt string
+      da8xx: Add aliases for compiling da850 and da830
+      da8xx/omap-l1xx: Modify default bootargs and bootcmd
+      da8xx: Modify the MEMTEST start and end address
+      da850/omap-l138: Modify the bootargs and bootcmd to boot from MMC/SPI.
+      da850/omapl138: Correct "mmc rescan" implementation
+

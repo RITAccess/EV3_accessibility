@@ -1,0 +1,2730 @@
+commit 2acf935c01b9adb50164d421c40cdc5862b9e143
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Fri Apr 30 13:22:25 2010 +0530
+
+    da8xx/omap-l1x: Fix build warning
+    
+    This patch fixes the following warning seen during building:
+    
+    drivers/usb/musb/Kconfig:147:warning: defaults for choice values not supported
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit 5a0316a565d55d0f04cbe447ac4f25d151587c0d
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Mon Apr 19 16:16:39 2010 +0530
+
+    da830/omap-l137: Configure LCD_AC_ENB_CS pin as LCD for Char LCD
+    
+    Commit ID f0e2b46daa879978c01868d38989bac96b9ece45 had
+    configured the LCD_AC_ENB_CS pin as GPIO for Graphical
+    LCD to work on AM1707 parts. But this had caused Character
+    LCD not to work which requires the LCD_AC_ENB_CS pin to be
+    functioning as LCD. This patch configures the LCD_AC_ENB_CS
+    pin as LCD incase Character LCD is enabled.
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit cf553adec38dccc5775c2c99db7d85362038ee87
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Wed Mar 10 14:19:38 2010 +0530
+
+    davinci: da8xx/omap-l1: fix build error when CONFIG_DAVINCI_MUX is undefined
+    
+    The da8xx/omap-l1 boards refuse to build when CONFIG_DAVINCI_MUX is undefined
+    because arch/arm/mach-davinci/mux.c:da8xx_pinmux_setup() is not defined.
+    
+    This patch fixes this issue. This is build tested with davinci_all_defconfig
+    and da8xx_omapl_defconfig and boot tested on DA830 EVM.
+    
+    Reported-by: Shanmuga Sundaram Mahendran <shanmuga@ti.com>
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+
+commit 76fcecb83d562608bcebba44774f92b6c62d3593
+Author: Swaminathan S <swami.iyer@ti.com>
+Date:   Tue Mar 9 19:37:37 2010 +0530
+
+    [MUSB] Move PHY control to platform/board phy controls.
+    
+    Signed-off-by: Swaminathan S <swami.iyer@ti.com>
+
+commit b01954204594924a69b32b7606d06f0245dd0dc6
+Author: Ravi B <ravibabu@ti.com>
+Date:   Tue Mar 9 18:20:55 2010 +0530
+
+    usb: gadget rndis OID crash fix
+    
+    Signed-off-by: Ravi B <ravibabu@ti.com>
+
+commit 5427491f385113e7f5fccb433078e067bcac5504
+Author: Swaminathan S <swami.iyer@ti.com>
+Date:   Tue Mar 9 17:32:48 2010 +0530
+
+    [MUSB] Add DUAL_MODE support for DA8xx MUSB platform.
+    
+    	This patch adds support for DUAL_MODE support for DA8xx MUSB(USB0)
+    	module.
+    
+    	Signed-off-by: Swaminathan S <swami.iyer@ti.com>
+
+commit 571e176155ee76298ee604db8b703e949a2b07c1
+Author: Swaminathan S <swami.iyer@ti.com>
+Date:   Tue Mar 9 17:25:31 2010 +0530
+
+    [MUSB] Support for MUSB_DUAL_MODE board configuration.
+    
+    	This patch adds support for DUAL_MODE configuration to MUSB module.
+    	This enables products that need to support host and Device functionality
+    	without the need for OTG feature.
+    
+    	Signed-off-by: Swaminathan S <swami.iyer@ti.com>
+    ---
+
+commit 9fd86e93c8d247c0218d7cbdd57eaa976a26c261
+Author: Swaminathan S <swami.iyer@ti.com>
+Date:   Mon Mar 8 18:44:26 2010 +0530
+
+    [AM18xx] SATA: populate the correct board number
+    
+    Signed-off-by: Swaminathan S <swami.iyer@ti.com>
+    ---
+
+commit 5d9f7d6ce46149b01f25ee593421819b660b6937
+Author: Swaminathan S <swami.iyer@ti.com>
+Date:   Mon Mar 8 18:42:36 2010 +0530
+
+    [AM18xx] SATA : Add support for Power Management in SATA
+    
+    Signed-off-by: Swaminathan S <swami.iyer@ti.com>
+    ---
+
+commit 1d44a46c9ca17b6782d479e9fc92292667d16957
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Fri Mar 5 10:15:46 2010 +0530
+
+    da850/omap-l138: Correct the information returned by fbset
+    
+    This patch corrects the wrong information reported by fbset
+    command. This was reported by Martin Ambrose.
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit 844e04e5ae3103c88826f74f5ee7ce2dce5a3168
+Author: Roger Monk <r-monk@ti.com>
+Date:   Tue Mar 2 14:00:25 2010 +0000
+
+    da850 regulator: Protect function prototypes with CONFIG
+    
+       * Regulator usage functions are encapsulated in CONFIG_REGULATOR
+       * Function prototypes need the same protection
+    
+    Signed-off-by: Roger Monk <r-monk@ti.com>
+
+commit f0e2b46daa879978c01868d38989bac96b9ece45
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Mon Feb 22 22:19:21 2010 +0530
+
+    davinci: da830/omap-l137: Configure LCD_AC_ENB_CS pin as GPIO
+    
+    On AM17xx EVMs, GLCD will not work unless the GPIO1[11]
+    pin is driven high. This pin was configured to be a LCD
+    functional pin earlier. Configuring this pin as GPIO will
+    not have any effect on the older DA830/OMP-L137 EVMs.
+    
+    Also, LCD backlight pin needs to be driven high on AM17xx
+    EVMs.
+    
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit 2a996a225af969f377eecf6b0ff2261ad666d9b8
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Wed Mar 3 16:54:30 2010 +0530
+
+    da850/omapl138: Do not enable McBSP in defconfig
+    
+    If both McASP and McBSP are enabled in kernel, a warning
+    is printed out. In this case though McASP takes precedence
+    over McBSP, it may confuse the user. Hence disable McBSP
+    in defconfig.
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit 466d3fe2700279cb9393730cf24cc285b8ae41cf
+Author: Roger Monk <r-monk@ti.com>
+Date:   Wed Feb 24 11:22:44 2010 +0000
+
+    Initialise card_name in VPIF Capture Driver setup
+    
+    * .card_name needs to be configured for capture driver in board file
+    
+    Signed-off-by: Roger Monk <r-monk@ti.com>
+
+commit 822c2aff4e3e507d0627a7db8778604e30904db2
+Author: Roger Monk <r-monk@ti.com>
+Date:   Wed Feb 24 11:27:20 2010 +0000
+
+    Increase NAND kernel partition to 4M
+    
+    Signed-off-by: Roger Monk <r-monk@ti.com>
+
+commit 149c8730f1cb71c1f83267313b1eaa03c4c50b32
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Mon Feb 22 15:09:03 2010 +0530
+
+    Revert "[AM18xx] Adding platform support for SATA and USB"
+    
+    This reverts commit c3a42237426aeb814a76d95560eb6c0d5f131cce.
+    
+    The commit had nothing to do with either SATA or USB and was
+    reverting some fixes done to set LCD master priorirty correctly.
+
+commit 7e3a7a58061021aaeaace58bb4edbc140078e99d
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Thu Feb 18 17:56:36 2010 +0530
+
+    da830: Adding the support of GPIO based card detection
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit c5392b41fe00eb67e0673c58add8ac538fb099d6
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Thu Feb 18 17:59:03 2010 +0530
+
+    davinci: da850/omap-l138: change default governer to userspace
+    
+    This patch changes the default governer to userspace. The
+    governer can be changed at runtime using sysfs entries.
+    
+    Also, the maximum speed the device can run at is set to
+    456MHz. Since the governer is set to usespace, the device
+    will come-up at the speed set by UBL.
+
+commit 9bf3007c2a0b502aad5c82a836748be1c15cbae8
+Author: Ravi B <ravibabu@ti.com>
+Date:   Wed Feb 17 20:13:50 2010 +0530
+
+    usb: fix for cppi41 dma, delay after tx completion interrupt removed
+    
+        This fixes the cdc low performance issue.
+    
+    Signed-off-by: Ravi B <ravibabu@ti.com>
+
+commit 56003dc321aabd0b7ad8ca95042940ad8e836898
+Author: Ravi B <ravibabu@ti.com>
+Date:   Wed Feb 17 19:44:58 2010 +0530
+
+    [MUSB] Fix redifinition of macros if DAVINCI ARCH is definied.
+    
+     Signed-off-by: Swaminathan S <swami.iyer@ti.com>
+
+commit dccc92c1d575c9e89f1081a3807fd162191a952b
+Author: Ravi B <ravibabu@ti.com>
+Date:   Wed Feb 17 19:44:10 2010 +0530
+
+    [DM64xx] Add support for NEUROS evm to new usb infrastructure and correct the
+     removal of DAVINCI_USB_OTG_BASE definition from the common file.
+    
+        Signed-off-by: Swaminathan S <swami.iyer@ti.com>
+
+commit dade9cd4a037a5df97a1378bc60e9294c4af8d2d
+Author: Ravi B <ravibabu@ti.com>
+Date:   Wed Feb 17 19:34:23 2010 +0530
+
+    usb:musb reverting patch :Workaround for Ethernet data alignment issue
+    
+        reverting patch, cdc perfermance was slow.
+    
+    Signed-off-by: Ravi B <ravibabu@ti.com>
+    	       Gupta Ajay Kumar <ajay.gupta@ti.com>
+
+commit 05cffbbae76ddca1c827b0497739365d060f16bd
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Wed Feb 17 12:39:23 2010 +0530
+
+    davinci: da8xx/omap-l1: make CPU speed selection depend only on DA850
+    
+    DA830 does not support speed selection in Linux, so the menu
+    for selecting the speed should not appear for DA830 users.
+
+commit 447f27402b44af7c70aeb5b62170602885ef4f07
+Author: Ravi B <ravibabu@ti.com>
+Date:   Wed Feb 17 11:29:39 2010 +0530
+
+    fix for compilation failure when PM not selected
+    
+    Signed-off-by: Ravi B <ravibabu@ti.com>
+
+commit eba2d7ed89680d01f8604ef8e0e8b46b556974ca
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Wed Feb 17 00:02:33 2010 +0530
+
+    davinci: da8xx/omap-l1: reserve channels/slots only when DSP is present
+    
+    This patch reserves EDMA channels and slots only when DSP is present
+    on the SoC. If DSP is not present, all the channels are available
+    for allocation from ARM.
+
+commit a00629a54265757b325b3c47996496cab008edca
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Tue Feb 16 23:57:39 2010 +0530
+
+    davinci: da8xx/omap-l1: add support to detect ARM only devices
+    
+    Add a function to read hardware register to determine if a
+    device is ARM only or ARM + DSP variant. This is used later
+    to check if EDMA channels/slots neeed to be reserved for DSP
+    or not.
+
+commit 08eefe77f1edca24ad2635590a993fc44dfac57b
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Tue Feb 16 19:43:16 2010 +0530
+
+    tvp514x: Fix S_INPUT behavior
+    
+    Currently, TVP514x goes to Power-Save mode when STREAMOFF
+    ioctl is called from application and it comes out of
+    Power-Save mode when STREAMON ioctl is called. But with
+    this S_INPUT ioctl fails because this ioctl is dependant
+    on some TVP514x status registers which reflect correct
+    status only when TVP514x is not in Power-Save mode.
+    
+    This patch brings TVP514x out of Power-Save mode when
+    application calls S_INPUT ioctl.
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit 1f617e47233f27b084e2ebfe50d0898ebe6dded6
+Author: Madhvapathi Sriram <sriram.m@ti.com>
+Date:   Tue Feb 16 11:24:14 2010 +0530
+
+    da8xxfb.c: Corrected the da8xx FB parameters for da850/omap-l138
+    
+    The vfp and the vbp parameters were needed to be modified for
+    LK043T1DG01 display panel. Without this modification, the first
+    line would be cropped and not be visible on the display.
+    
+    Signed-off-by: Madhvapathi Sriram <sriram.m@ti.com>
+
+commit 5a810e5abab24c26583d58d8fcea1f9a258c0cfa
+Author: Ravi B <ravibabu@ti.com>
+Date:   Tue Feb 16 10:53:59 2010 +0530
+
+    SATA: removed compilartion warning of Serial ATA driver
+    
+    Signed-off-by: Ravi B <ravibabu@ti.com>
+
+commit 2994ab36c4f9376a2c537c8ed057c7ae26d3755c
+Author: Ravi B <ravibabu@ti.com>
+Date:   Tue Feb 16 00:22:33 2010 +0530
+
+    SATA: enabled SATA in default defconfig for da850/omapl138
+    
+    Signed-off-by: Subbrathnam, Swaminathan <swami.iyer@ti.com>
+
+commit 6b364cb56b9601ce9bb45199873c8c6ba830d96f
+Author: Ravi B <ravibabu@ti.com>
+Date:   Mon Feb 15 18:03:02 2010 +0530
+
+    usb:  set usb default configuration for da830/omapl137
+    
+    Signed-off-by: Ravi B <ravibabu@ti.com>
+
+commit 05b13b74f24ee6d6e2d5294ba5e97ac975be90a6
+Author: Madhvapathi Sriram <sriram.m@ti.com>
+Date:   Mon Feb 15 16:23:13 2010 +0530
+
+    da850/omapl138: cpufreq: New platform data for PLL async rate
+    
+    Added a new member, asyncrate, to struct davinci_cpufreq_config,
+    to facilitate the specification for maximum async frequency to be
+    used for the platform. This would be used, to (re-)configure the async
+    related PLL dividers, when frequency change occurs as a result of
+    DVFS.
+    
+    Without this change, the async freq would be configured based on
+    the "previous" divider settings, which may not actually be the
+    maximum frequency that could be set for async.
+    
+    Signed-off-by: Madhvapathi Sriram <sriram.m@ti.com>
+
+commit f58426fd5d0ee9232e533a8eff20ae011a6cabf4
+Author: Ravi B <ravibabu@ti.com>
+Date:   Mon Feb 15 16:10:24 2010 +0530
+
+    usb: modified da850_omapl138_defconfig to include OHCI by default
+    Signed-off-by: Ravi B <ravibabu@ti.com>
+
+commit 341e5a7edf0ac61385a9531f46b5e5ac887ce760
+Author: Ravi B <ravibabu@ti.com>
+Date:   Mon Feb 15 15:14:28 2010 +0530
+
+    usb: musb: removed gadget usb mode compilation warning
+    
+    Signed-off-by: Ravi B <ravibabu@ti.com>
+
+commit 71261aed4f4b6e93b6fc2b26de903bf504a1d78f
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Sun Feb 14 21:45:21 2010 +0530
+
+    davinci: da850/omap-l138: update defconfig for TPS65070 MFD driver
+
+commit 3f5476ead2856a863391b69df279d8fea287dc68
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Sun Feb 14 21:41:06 2010 +0530
+
+    davinci: da8xx/omap-l1: fix compilation warning in include/mach/da8xx.h
+    
+    In file included from drivers/usb/musb/da8xx.c:35:
+    arch/arm/mach-davinci/include/mach/da8xx.h:135: warning: 'struct platform_device' declared inside parameter list
+    arch/arm/mach-davinci/include/mach/da8xx.h:135: warning: its scope is only this definition or declaration, which is probably not what you want
+
+commit 82b39547729886076de23ad6fbfeddee6f167ff8
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Sun Feb 14 17:10:06 2010 +0530
+
+    davinci: da830/omap-l137 evm: add support for tsc2004 controller
+    
+    A new version of DA830 UI board is now available which adds
+    support for TSC2004 touchscreen controller.
+    
+    This patch adds board specific hooks required to support the
+    touchscreen controller.
+
+commit a0f78fc63f67684740a2bea17cf65b14bb78fb03
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Sun Feb 14 12:53:40 2010 +0530
+
+    davinci: da830/omap-l137 evm: add support for new lcd panel
+    
+    There is a new revision DA830 EVM UI card with a touchscreen
+    controller (TSC2004) and newer Sharp LCD panel (same as that
+    present on DA850 EVM).
+    
+    This patch adds support for the LCD panel on the new UI card.
+
+commit 5c7b3637d84f04e4bfade2cd13dcd640f7552cd1
+Author: Vaibhav Hiremath <hvaibhav@ti.com>
+Date:   Thu Nov 19 08:50:10 2009 +0530
+
+    Input:TouchScreen: Introduce TSC2004 driver support
+    
+    Input:TouchScreen: Introduce TSC2004 driver support
+
+commit 29be34b9c3550909950c29e9ff7c4e949547b1c3
+Author: Todd Fischer <todd.fischer@ridgerun.com>
+Date:   Thu Feb 11 17:41:33 2010 -0700
+
+    8/8 Improved I2C chip initialization consistency.
+    
+    Wait until I2C pins are initialized before initializing tsp6507x chip.
+    Initialize tsp6507x chip the same way other I2C chips are initalized.
+    
+    Signed-off-by: Todd Fischer <todd.fischer@ridgerun.com>
+
+commit df0c48014140d7f95b1c575d70830db38fbe8c6d
+Author: Todd Fischer <todd.fischer@ridgerun.com>
+Date:   Thu Feb 11 17:33:57 2010 -0700
+
+    7/8 Add tps6507x touch screen driver.
+    
+    Signed-off-by: Todd Fischer <todd.fischer@ridgerun.com>
+
+commit a1df597436c51034bb65065ca36b97525a3239ba
+Author: Todd Fischer <todd.fischer@ridgerun.com>
+Date:   Thu Feb 11 17:23:27 2010 -0700
+
+    tps6507x regulator driver moved to mfd sub-driver
+    
+    Change tps6507x regulator driver to not use I2C bus access directly
+    and instead use API provided by the tps6507x mfd driver.
+    
+    Signed-off-by: Todd Fischer <todd.fischer@ridgerun.com>
+
+commit f617d523ce5898af7663a28f4f334a8adaaa9d50
+Author: Todd Fischer <todd.fischer@ridgerun.com>
+Date:   Thu Feb 11 16:44:14 2010 -0700
+
+    5/8 Make the read modify write register change obvious.
+    
+    Make the read/modify/write register change obvious.  Properly
+    protect for the case of two processes trying to change the
+    regulator setting.
+    
+    Signed-off-by: Todd Fischer <todd.fischer@ridgerun.com>
+
+commit 1db42f1a2703e0ccddcb930e66af9f68baea7c70
+Author: Todd Fischer <todd.fischer@ridgerun.com>
+Date:   Thu Feb 11 16:36:39 2010 -0700
+
+    4/8 Improve regulator driver naming
+    
+    Rename regulator driver variables and functions to make them unique
+    as additional mfd sub-drivers are added.
+    
+    Signed-off-by: Todd Fischer <todd.fischer@ridgerun.com>
+
+commit 1279746feb17f04759d4a1bfcacc6d58bfd34441
+Author: Todd Fischer <todd.fischer@ridgerun.com>
+Date:   Thu Feb 11 16:30:07 2010 -0700
+
+    3/8 Add tps6507x multi-function device driver.
+    
+    The tps6507x is a family of multi-function power managment ICs.
+    A multi-function device driver is needed to allow the various
+    chip capabilities, like regulator, touch screen and LED, to
+    have function specific sub-drivers.
+    
+    Signed-off-by: Todd Fischer <todd.fischer@ridgerun.com>
+
+commit 25c841428d7357baf8bc2b2382053094afb4d254
+Author: Todd Fischer <todd.fischer@ridgerun.com>
+Date:   Thu Feb 11 16:23:30 2010 -0700
+
+    2/8 Added structure to make a holder for the initialization data for all tps6507x sub-devices.
+    
+    The board specific tps6507x initialization data changed
+    to a structure of structures so as sub-drivers are added
+    sub-driver specific initialization data can be added.
+    
+    Signed-off-by: Todd Fischer <todd.fischer@ridgerun.com>
+
+commit 89e5d36b486690f173be3cf4f50bcb8b5214be4f
+Author: Todd Fischer <todd.fischer@ridgerun.com>
+Date:   Thu Feb 11 16:02:15 2010 -0700
+
+    1/8 tps6507x regulator refactor
+    
+    A tps6507x multi-function device driver is being added.  Move
+    tps6507x register definition to a header file shared by all
+    the tps6507x sub-drivers.
+    
+    Signed-off-by: Todd Fischer <todd.fischer@ridgerun.com>
+
+commit deafe68f259a8973111cc93321e316610029790f
+Author: Swaminathan S <swami.iyer@ti.com>
+Date:   Thu Feb 11 22:12:02 2010 +0530
+
+    [AM18xx] SATA: Fix DVD/CD drive support in PM enabled configuration.
+    
+    Signed-off-by: Swaminathan S <swami.iyer@ti.com>
+    ---
+
+commit 4abb5dfb0227b1173ab454f59385b98bee5d88e1
+Author: Ravi B <ravibabu@ti.com>
+Date:   Thu Feb 11 17:10:16 2010 +0530
+
+    usb: musb re-organization of usb generic da8xx platform files
+    
+    This patch includes fix for compiler error for pio and
+    moved the da830.c to generic platform specific file da8xx.c
+    for omapl137/omapl138, created da8xx.h file.
+    
+    Signed-off-by: Ravi B <ravibabu@ti.com>
+
+commit 6b4ac5774d53a1991319dc81395be6c29453fd57
+Author: Ravi B <ravibabu@ti.com>
+Date:   Thu Feb 11 14:19:33 2010 +0530
+
+    disable default USB_SUSPEND for OMAPL137 platform
+    
+    Signed-off-by: Ravi B <ravibabu@ti.com>
+
+commit 4658b77a16ee965e00d75b7a8ecf2772813c9bc8
+Author: Ravi B <ravibabu@ti.com>
+Date:   Wed Feb 10 21:15:20 2010 +0530
+
+    usb: musb fix for musb PM and enable MUSB_SUSEND irq handling
+    
+    Signed-off-by: Ravi B <ravibabu@ti.com>
+
+commit bbfc170877d85e0eb019f9eb258a285687cdee8e
+Author: Ravi B <ravibabu@ti.com>
+Date:   Wed Feb 10 20:43:27 2010 +0530
+
+    By default enable usb selective suspsend for PM
+    
+    Signed-off-by: Ravi B <ravibabu@ti.com>
+
+commit 76832461bedbc049f40b02e7adb7ac19c3c96411
+Author: Vaibhav Hiremath <hvaibhav@ti.com>
+Date:   Fri Jan 8 15:04:11 2010 +0530
+
+    Videobuf-dma-contig: Set PAGE_READONLY flag for capture mmap
+    
+    Videobuf-dma-contig: Set PAGE_READONLY flag for capture mmap
+    
+    This patch fixes the issue of high CPU usage when copying data
+    using 'memory mapped buffers' mechanish of V4L2.
+    
+    The implementation is under discussion with community. Details here:
+    
+    http://www.mail-archive.com/linux-omap@vger.kernel.org/msg21106.html
+    
+    This will be maintained out of the mainlinbe till  we get right
+    resolution on the mailing list.
+
+commit 2ab5d6f8ec595cb9602ac1c666a1bf1c5662a523
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Wed Feb 10 18:02:44 2010 +0530
+
+    fb: da8xx: fix LCD becoming non-responsive after multiple suspends
+    
+    It is observed that LCD becomes non-responsive (does not
+    take new data) after multiple suspend resume operations.
+    This patch fixes that issue.
+    
+    In suspend:
+    1) After disabling raster, wait for current frame to finish
+       before disabling LCD module clock.
+    2) Power down the panel after raster is disabled.
+    
+    On resume, enable the LCD module before panel is powered up.
+
+commit a04a24aed0709f76b6d96ee7692b46b5497f2111
+Author: Ravi B <ravibabu@ti.com>
+Date:   Wed Feb 10 12:52:42 2010 +0530
+
+    usb: host ohci DA8XX_SYSCFG0_VIRT is not defined
+
+commit 5d9c8c7473ceb3279e02c5a5b4560d5210f0cfe0
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Tue Feb 9 09:31:23 2010 +0530
+
+    da8xx: Modify the init sequence of GPIO I2C driver
+    
+    Currently GPIO based bit-banging I2C driver is initialized much
+    later during initialization. Due to this, the NAND sub-system
+    is failing to identify the NAND chip on the EVM. Hence make the
+    init call of GPIO based I2C driver as subsys_initcall() instead
+    of module_init().
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit a7840a41727dcfd7d73c69e0c2d95b48eaf33d4c
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Mon Feb 8 18:14:30 2010 +0530
+
+    da850: Enable I2C bit bang driver in defconfig
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit 7d8accda275fdbe6e727e7ac02ae5a92f5695326
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Sun Jan 31 17:09:56 2010 +0530
+
+    davinci: da850/omap-l138 evm: use gpio based bit-banging i2c driver
+    
+    It has been observed that the PMIC on some OMAP-L138 SOM boards
+    is not accessed correctly by using the OMAP-L138 I2C peripheral.
+    Repeated NACKs and controller time-outs are being observed.
+    While that is being debugged, the GPIO bit-banging driver is being
+    used for the time being.
+    
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+
+commit 77e6bad73304cc1738d105dd32181a71e92e8e08
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Sun Jan 31 17:15:46 2010 +0530
+
+    davinci: da850/omap-l138: use 'normal' voltage defined in TRM as min voltage
+    
+    The min voltage defined in TRM is more from the perspective
+    of taking care of voltage fluctuations. In general, the CVDD
+    should be set to the 'normal' or 'nominal' value as defined
+    by the TRM
+    
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+
+commit a09de10c7d533b7931c622bae18aebd748412a2f
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Mon Feb 8 15:28:35 2010 +0530
+
+    da830: Modify NAND parition information
+    
+    Modify NAND partition information to be in-line with latest
+    U-Boot.
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit f052bc61966d381be246f657ee7a7d94d307998c
+Author: Swaminathan S <swami.iyer@ti.com>
+Date:   Sat Feb 6 20:53:39 2010 +0530
+
+    [AM18xx] Fix for SATA driver to support Hard disk's that are connected either
+    directly or through PM when PM is enabled.
+    
+    Signed-off-by: Swaminathan S <swami.iyer@ti.com>
+    ---
+
+commit 7a64de50ae5bf3fd35a957b263931911d7a36a43
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Fri Feb 5 11:34:00 2010 +0530
+
+    davinci: da830/omap-l137 EVM: add NAND timing values configuration
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit 38b2055a4c20989128eb45ceab93b8209d7eca8e
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Thu Feb 4 10:22:19 2010 +0530
+
+    da850: GLCD: Workaround for LCDC Underflow During Initialization
+    
+    During LCDC initialization, there is the potential for a FIFO
+    underflow condition to occur. A FIFO underflow condition
+    occurs when the input FIFO is completely empty and the LCDC
+    raster controller logic that drives data to the output pins
+    attempts to fetch data from the FIFO. When a FIFO underflow
+    condition occurs, incorrect data will be driven out on the
+    LCDC data pins.
+    
+    Software should poll the FUF bit field in the LCD_STAT register
+    to check if an error condition has occurred or service the
+    interrupt if FUF_EN is enabled when FUF occurs. If the FUF bit
+    field has been set to 1, this will indicate an underflow
+    condition has occurred and then the software should execute a
+    reset of the LCDC via the LPSC.
+    
+    This problem may occur if the LCDC FIFO threshold size
+    (LCDDMA_CTRL[TH_FIFO_READY]) is left at its default value after
+    reset. Increasing the FIFO threshold size will reduce or
+    eliminate underflows. Setting the threshold size to 256 double
+    words or larger is recommended.
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit 8eb1bd05bba0c19a9a99f2b8fba61e9ac356b97b
+Author: Ravi B <a0393587@psplinux051.india.ti.com>
+Date:   Tue Feb 2 16:32:44 2010 +0530
+
+    da830: musb: enable usb in defconfig
+
+commit 3375ec131d7f8ebec06a3fa8b002fc635318d3da
+Author: Ravi B <a0393587@psplinux051.india.ti.com>
+Date:   Mon Feb 1 12:12:12 2010 +0530
+
+    usb: musb-dma port and moved cppi41 modification to musb directory
+    
+    Signed-off-by: Babu Ravi <ravibabu@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit d6d663cad4118293e525b086d74f80b90ba591bb
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jan 19 18:26:30 2010 +0530
+
+    am35x: defconfig: enable usb
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 3fc0ffdb0dd2a9ae9b766cda732726c39d51fa19
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Sat Nov 21 17:20:39 2009 +0530
+
+    musb: start session only if A-device
+    
+    Currently session is always started when image is OTG build.This
+    way Vbus is enabled always and gets switched off only when a device
+    is connected and then disconnected.
+    
+    Added a A-device check from DEVCTL register to start session.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 0709fbb7fe41346b2a7151c4d8a2b6dafc426b18
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Thu Nov 19 12:40:07 2009 +0530
+
+    3517: musb: workaround for bytewise read issue
+    
+    AM3517 has a limitation on read operation. Only 32 bit read is
+    allowed and thus 8bit and 16bit read has to be handled differently
+    using 32bit read only.
+    We also need to workaround of scenario where reading an 8bit
+    register would accidently clear the interrupt register causing
+    an interrupt event miss. This patch takes care of this scenario.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit b60a6939df25af1ef871dc1b06daeff60a494ebe
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Mon Nov 9 18:11:22 2009 +0530
+
+    AM3517: ehci: update ES related programming
+    
+    AM3517 is based on ES3.1 and so ES2.x related programming is invalid
+    for AM3517.
+    
+    Updating ES2.x programming so that it is done only for OMAP35x.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit cb90cf3af93c6c972681b41e59521b1bbb553691
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jan 19 18:16:47 2010 +0530
+
+    AM3517: musb: fix iperf failure issue
+    
+    As we get DMA completion interrupt even when data is in FIFO.
+    Fixing the issue by adding delay before calling dma completion.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 6036e59eefbdb2523ad49749d6eb06701ede9069
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Sep 29 16:46:52 2009 +0530
+
+    musb: kill unwanted messages
+    
+    Remives below messages:
+    musb_bus_suspend 2285: trying to suspend as a_wait_bcon while active
+    ....
+    ....
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 1c3d14afec59f6a5ea806f5ed2d459115a6acb68
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Mon Nov 9 18:02:32 2009 +0530
+
+    cppi41: teardown fix from Ravi
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit b282b204bcb2baab4ebd365c643f7f5ec0aafb2a
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Mon Nov 9 18:01:57 2009 +0530
+
+    cppi41: device fix from Ravi
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 9792649c85f951d7e5eff01fab350562c7706d6a
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jul 21 17:43:19 2009 +0530
+
+    musb: cppi: ISO IN fixes for CPPI DMA
+    
+    ISO doesn't work without this patch as CPPI DMA is not even
+    programmed for ISO IN transfer.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 9cdc02ab5812e1f9a3c8e4cc81a9b275a3296812
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Wed Jul 15 16:25:39 2009 +0530
+
+    musb: Fix AM3517 FIFO read issue affecting USB Gadget
+    
+    Byte wise FIFO read in AM3517 MUSB corrupts the read data so
+    use read double word data from FIFO and mask unwanted data at
+    end of read cycle.
+    	- Use double word FIFO read in Gadget mode
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 58b719de6d51c6867b38daf7abbced46b0a1fe25
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Nov 10 10:02:35 2009 +0530
+
+    cppi41: fix IO_ADDRESS related issue on AM3517
+    
+    IO_ADDRESS for AM3517 MUSB doesn't work and thus CPPI41 programming
+    also fails.
+    
+    Fixing this by ioremapping MUSB complete address space (~32K) and
+    updating CPPI41 related memory base with this mappings.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 16da7a0832b548cecb5e6584bed5f406c45a8978
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jul 28 18:42:50 2009 +0530
+
+    cppi41: change number of DMA BLOCK from 4 to 1
+    
+    Number of DMA block is different for different platforms.
+    
+    Changing this to '1' for AM3517 platform.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 08348ea8b3921f3303bb9dfdf22212763fa35fce
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jan 19 18:07:38 2010 +0530
+
+    musb: Adding AM3517 glue layer
+    
+    Changes:
+    	- glue file am3517.c
+    	- musb_init() in board-am3517evm.c
+    	- am3517 specific changes in usb-musb.c
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit cbf25b7e28856fed0e011320efa9b114715dc252
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Fri Jul 24 18:02:08 2009 +0530
+
+    cppi41: fix MODE_REG compatibility among platforms
+    
+    AM3517 has seperate Tx and Rx MODE registers whereas OMAPL137/DA8x
+    has only one registers for both Rx and Tx modes.
+    
+    Solving this difference by adding TX_MODE and RX_MODE registers
+    seperately which are actually same in case of OMAPL137/DA8x but
+    different for AM3517.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit de4e5404364e2ea497559e7943db431f90681f5a
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Thu Jul 23 12:02:09 2009 +0530
+
+    musb: procfs: add cppi41 related checks
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit b16d66fed8877c7e8fc560b7078e27757b45dd0a
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Thu Aug 13 11:11:35 2009 +0530
+
+    musb: cppi41: Remove platform definitions from cppi41_dma.h
+    
+    cppi41_dma.h should have common definitions as it would be used
+    by multiple platforms. As different platform can have different
+    register layouts so it's better to remove these definitions and
+    let them come from platform file at plat/usb.h
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit d10e021a2176bd46fc9f49b3565241a40add7660
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jul 28 19:33:06 2009 +0530
+
+    cppi41: fix channel program for actual len
+    
+    actual length has to be zero at the start of new dma programming.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 3e174a3563aee621a15f4c39c05a592e0e8299d8
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Mon Jul 27 11:32:19 2009 +0530
+
+    cppi41: fix macro definition in cppi41.h
+    
+    Macros definitions for number of queue managers and DMA blocks are
+    defined in cppi41.h only so use them instead of defining in other
+    files and using unnecessary extern.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 7dfcb5693cf969b0c7ae26c2af7228c2d251e6cd
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Mon Nov 9 17:05:47 2009 +0530
+
+    cppi41: fix scheduler table init in dma_block_init()
+    
+    scheduler table init programming is unreliable using for loops so
+    fixing this by using scheduler table entries.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 616f227a7d93e84e51106d3f758ef144a21d53f1
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jul 28 17:35:59 2009 +0530
+
+    cppi41: fix RGN0 memory alloc in queue_mgr_init()
+    
+    queue_mgr_init() is currently allocating memory only for RGN1 and
+    expecting RGN0 memory to be allocated in platform files.
+    
+    Normally RGN0 is only used so updating queue_mgr_init() to allocate
+    RGN0 memory.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit c9118d66b785fb7ac0e0af8faaf6a378ba2bc101
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jul 28 18:50:27 2009 +0530
+
+    cppi41: add cppi41_exit() to free up the memories
+    
+    Adding cppi41_exit() to free up the allocated memories.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 454ac1a63a31a8925cf350b3b9bd7fa1735e5830
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jul 28 19:54:15 2009 +0530
+
+    cppi41: fix moduler build for musb driver
+    
+    musb driver calls queue manager init and dma block init functions
+    and so these functions has to be exported for moduler build of
+    musb controller driver.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit aa3ebae0058b3d2cb4c40fbc07a5ed244c8926cf
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Thu Aug 13 17:11:13 2009 +0530
+
+    cppi41: Move CPPI41 core to musb temporarily
+    
+    This is to ease our development effort and collaboration on Davinci
+    and OMAP35x family musb drivers.
+    
+    This would be reverted back once the cppi41 drivers are accepted in
+    mainline and all confusion are cleared out.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 5514d5bdb26fa02778ce26406e36f3fa9aa971df
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Thu Aug 13 17:10:27 2009 +0530
+
+    musb: cppi41: adding musb CPPI41 DMA support (Sergei's take3)
+    
+    Texas Instruments CPPI 4.1 DMA support for the MUSBMHRDC driver.
+    
+    The code makes use of the accelerated "generic RNDIS" DMA mode, falling back to
+    the transparent (packet per transfer) mode if the hardware restrictions prevent
+    it from using the accelerated mode.
+    
+    Update:
+            - has update for is_cppi41_enabled() due to musb changes
+    
+    Signed-off-by: Sergei Shtylyov <sshtylyov@ru.mvista.com>
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 271fbfb1afe2a73a7ad36730eca8e168e3f77024
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Thu Aug 13 17:09:33 2009 +0530
+
+    cppi41: adding CPPI4.1 DMA support
+    
+    Add support for Texas Instuments Communication Port Programming Interface 4.1
+    (CPPI 4.1) used on OMAP-L137/DA830.
+    
+    At this moment, only the DMA controller and queue manager are supported.
+    Support for the buffer manager is lacking but this chip doesn't have it anyway.
+    
+    Signed-off-by: Sergei Shtylyov <sshtylyov@ru.mvista.com>
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 74d35f98bd31c5a0aa45cac5c9efea12c4fc2008
+Author: Ravi B <a0393587@psplinux051.india.ti.com>
+Date:   Fri Jan 29 12:13:14 2010 +0530
+
+    delete cppi41.h file
+    
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit b6486c106788d715b4c8f0385b6057c8680b0822
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jan 19 17:46:33 2010 +0530
+
+    omap35x: defconfig: enable usb support
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 5ee024ef99d1b97111ae5db5c31ca8303d0cad12
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jan 19 17:43:37 2010 +0530
+
+    musb: pm: idle off mode support
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 3ab7c77b51f131ed0941ff8ba6aadef8081cbe12
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jan 5 14:38:40 2010 +0530
+
+    usb: musb: Add context save and restore support
+    
+    Adding support for MUSB register save and restore during system
+    suspend and resume.
+    
+    Changes:
+            - Added musb_save/restore_context() functions
+            - Added platform specific musb_platform_save/restore_context()
+              to handle platform specific jobs.
+            - Maintaining BlackFin compatibility by adding read/write
+              functions for registers which are not available in BlackFin
+    
+    Tested system suspend and resume on OMAP3EVM board.
+    
+    Signed-off-by: Anand Gadiyar <gadiyar@ti.com>
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Felipe Balbi <felipe.balbi@nokia.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 06a2238f5eed204519583102681a3c406d555141
+Author: Matthieu Castet <castet.matthieu@free.fr>
+Date:   Fri Dec 4 16:13:06 2009 +0530
+
+    MUSB: Workaround for Ethernet data alignment issue
+    
+    This issue only applies to OMAP3730 so updated the same.
+    
+    Signed-off-by: Matthieu Castet <castet.matthieu@free.fr>
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 82000873cef690fe5f1c919645f7af214afe76ca
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Thu Nov 12 16:53:25 2009 +0530
+
+    ehci: Add auxiliarly regulators
+    
+    OMAP3EVM Rev < E has EHCI port on MDC which requires both VUSB1V8
+    and VUSB1V5 regulators to be enabled.
+    
+    VUSB1V8 will get enabled as main ehci regulator and VUSB1V5 as
+    a auxiliarly.
+    
+    Auxiliary regulators will be enabled only when 'aux[N]' flag
+    is set from board data.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit b9db2652cf86d77aff044e168845a246b07e3144
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jan 19 17:29:31 2010 +0530
+
+    OMAP35x: musb: set 'extvbus' flag for OMAP3EVM >=E
+    
+    OMAP3EVM >=E uses external Vbus supply to support 500mA.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 9450ae5046eb026136fa964be3e7056b7c6f0be0
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Mon Jan 4 13:24:31 2010 +0530
+
+    omap3evm: Enable GPIO latch chip using T2_GPIO6
+    
+    This has to be done to enable U131 chip used to latch USB, Camera and
+    Audio lines.
+    
+    Should be done in generic way at board files.
+    
+    Revert once generic implementation completed.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 9ddd9dd16f9d842de882a74373a8c514ada21ab3
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Nov 3 17:38:33 2009 +0530
+
+    ehci: pm: Add power management support
+    
+    Tested on OMAP3EVM (with SMSC3320 PHY) and observations are,
+    	- system suspend and resume works fine using
+    		$ echo mem > /sys/power/state
+    	- EHCI works fine after resume even when the USB devices
+    	  were connected before suspend.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 23bf29d535b7bf58663a49c328773a3a0a4efb81
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Sep 15 13:28:34 2009 +0530
+
+    ehci: Adding electrical test support
+    
+    Electrical test can be done port wise as per details below.
+    
+    $ cat sys/devices/platform/ehci-omap.0/portn
+    
+    [Options -->Description]
+    reset   -->Reset Device
+    t-j     -->Send TEST_J on suspended port
+    t-k     -->Send TEST_K on suspended port
+    t-pkt   -->Send TEST_PACKET[53] on suspended port
+    t-force -->Send TEST_FORCE_ENABLE on suspended port
+    t-se0   -->Send TEST_SE0_NAK on suspended port
+    
+    Use $ echo 'Options' > sys/devices/platform/ehci-omap.0/portn
+    to perform electrical tests.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 8b5b69a9a36b6204805410c423fa74eb6fc6db82
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Fri Oct 16 15:07:40 2009 +0530
+
+    ehci: fix compiler warnings
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 8b829de4792aa9bda04aa1be57d7414cfd0c8362
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Aug 18 17:33:01 2009 +0530
+
+    usb: ehci: fix companion port ownership issue
+    
+    We face below issue without this fix:
+    	- EHCI unusable (dead) when a FS device is connected
+    	  directly to EHCI port.
+    	- EHCI unusable (dead) when a USB pendrive is removed
+    	  while data is being written onto it.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit a9803074844f0d832d558ad91c981f8be0634c6a
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Thu Aug 13 18:11:26 2009 +0530
+
+    musb: Remove PM dependency for OTG option
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 219246f7de336c17b61574ec364cd092550719f4
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Mon Aug 10 13:21:48 2009 +0530
+
+    musb: fix Inventra DMA lockup issue
+    
+    MUSB RTL version 1.4 has a hardware issue when TX and RX DMA
+    channels are simultaneously enabled. To work around this issue,
+    use System DMA for all RX channels.
+    
+    System DMA performance is lower than Inventra DMA and thus Rx
+    throughput would be lower.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 827ad0bbb1954cfb5ab9375531c151a86c34691f
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Fri Jun 12 19:07:13 2009 +0530
+
+    musb: disable PING on status phase of control transfer
+    
+    PING token is not mandatory in status phase of control transfer
+    so some high speed USB sticks doesn't support this.If such devices
+    are connected to MUSB then they would not respond to PING token
+    causing delayed or failed enumeration.
+    
+    Fixing this issue by disabling PING token in status phase of control
+    transfers.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 214be07eba49490be556e2c9f39c01010f927f83
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Sat Jun 20 14:09:15 2009 +0530
+
+    musb: Remove USB_SUSPEND auto select with OTG
+    
+    As USB power management is not yet supported in MUSB but we want to
+    use OTG build image so disable auto selection of USB_SUSPEND with
+    OTG till power management is supported.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 22db880162d0bc34ad833dd6dfa01ffc9cd53b84
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Sat Jun 20 14:06:38 2009 +0530
+
+    musb: Add back old musb procfs file
+    
+    Procfs file is removed from musb and an equivalent debugfs is
+    expected to replace it.
+    
+    Adding the old file back to retain the debug functionalities untill
+    we get debugfs equivalent in mainline.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 876eb98b32a9097ad9dc552d2ab9e4407475d512
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jan 19 17:21:43 2010 +0530
+
+    musb: Inform user when gadget cable is disconnected
+    
+    Currently we don't see any message to inform user that gadget cable is
+    successfully disconnected leading to suspicion if everything is fine at
+    driver therefore adding an informative print message in gadget
+    disconnect path.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 340f89a694459edfccc9cd0bc7a290af48103bb6
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jan 5 14:44:03 2010 +0530
+
+    musb: pm: soft disonnect if gadget is active
+    
+    If musb is working as gadeget and cable is connected to host
+    and the same time if system suspend is enabled then we should
+    disconnect the gadget from host as after resume gadget state
+    will be undefined.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit bfffc11767a30962e2e41a746ce9a5ee0ebb8b3b
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jan 19 17:17:53 2010 +0530
+
+    Revert: "musb: otg timer cleanup"
+    
+    Reverts:
+    commit f7f9d63eac12b345d6243d1d608b7944a05be921
+    Author: David Brownell <dbrownell@users.sourceforge.net>
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 7b1642ef742ce13c7e493d6d201ff14f6fcc1467
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jan 19 17:13:55 2010 +0530
+
+    Revert "musb: make initial HNP roleswitch work (v2)"
+    
+    This reverts commit 1de00dae8036dfee44ebea2c38f942fb6072e0b7.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit a588af5882bd28ad3c1561b6408ceb0b809b73fa
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jan 19 17:10:39 2010 +0530
+
+    Revert: "musb: support disconnect after HNP roleswitch"
+    
+    Reverts:
+    ab983f2a1be582b00f706013f40f658769d0823a
+    Author: David Brownell <dbrownell@users.sourceforge.net>
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 398cfc2a4edada93df41ae908a3bb93d091b12f3
+Author: Cliff Cai <cliff.cai@analog.com>
+Date:   Mon Dec 21 10:42:39 2009 -0500
+
+    USB: gadget: add INT support for Blackfin musb
+    
+    Signed-off-by: Cliff Cai <cliff.cai@analog.com>
+    Signed-off-by: Mike Frysinger <vapier@gentoo.org>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit b2dc75781ac10b2d7452d3815ac60e1817df5ee0
+Author: Bryan Wu <cooloney@kernel.org>
+Date:   Mon Dec 21 10:43:06 2009 -0500
+
+    USB: gadget: use ep5 for bulk-in and ep6 for bulk-out for Blackfin MUSB
+    
+    Normally, the musb uses ep1 as the bidirectional bulk endpoint.  This won't
+    work on the Blackfin musb as all endpoints (except ep0) are unidirectional.
+    Further, ep1-ep4 have a small 128 byte FIFO which makes them undesirable
+    for bulk endpoints (which need more like a 512 byte FIFO).  This leaves us
+    with ep5-ep7 which have 1024 byte FIFOs and can be configured as either
+    in/out and bulk/interrupt/iso on the fly.
+    
+    Signed-off-by: Bryan Wu <cooloney@kernel.org>
+    Signed-off-by: Cliff Cai <cliff.cai@analog.com>
+    Signed-off-by: Mike Frysinger <vapier@gentoo.org>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 94c0b7757927ac380d517f7d40495e51b4c710e4
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jan 19 13:14:14 2010 +0000
+
+    usb: host: ehci: adding regulator framework in ehci-omap.cdriver
+    
+    OMAP3 has three HS USB ports so it can have three different regulator
+    for each PHY connected to each port.
+    
+    Currently these regulators are assumed to be optional and driver doesn't
+    fail but continue with the initialization if it doesn't get any regulators.
+    
+    Regulator supply names has to be mapped in board files as 'hsusbN' where
+    'N' is port number and can be {0, 1 ,2}.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Felipe Balbi <felipe.balbi@nokia.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+    Signed-off-by: Tony Lindgren <tony@atomide.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 36d41c6cbe2815f6dd15da08ea061b427be14bb3
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jan 19 13:14:13 2010 +0000
+
+    usb: host: ehci: fix missing kfree in remove path also
+    
+    Added missing kfree() in ehci_hcd_omap_remove().
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Felipe Balbi <felipe.balbi@nokia.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+    Signed-off-by: Tony Lindgren <tony@atomide.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 2795ecd2b93a147064c0d479860550903b582d59
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jan 19 13:14:12 2010 +0000
+
+    usb: musb: Add 'extvbus' in musb_hdrc_platform_data
+    
+    Some of the board might use external Vbus power supply on musb
+    interface which would require to program ULPI_BUSCONTROL register.
+    
+    Adding 'extvbus' flag which can be set from such boards which will
+    be checked at musb driver files before programming ULPI_BUSCONTROL.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Felipe Balbi <felipe.balbi@nokia.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+    Signed-off-by: Tony Lindgren <tony@atomide.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 1c9edc738c2c7ff4e5e6928f9e524452abde3d1c
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jan 19 13:14:11 2010 +0000
+
+    usb: musb: save dynfifo in musb struct
+    
+    Save dynamic FIFO read only information for later uses during
+    musb_save/restore_context functions.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Felipe Balbi <felipe.balbi@nokia.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+    Signed-off-by: Tony Lindgren <tony@atomide.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit ec4540952c4b105c3a95ebbd55eeb2c7030b98d0
+Author: Arnaud Mandy <ext-arnaud.2.mandy@nokia.com>
+Date:   Tue Jan 19 13:14:10 2010 +0000
+
+    usb: musb: handle irqs in the order dictated by programmingguide
+    
+    MUSB's programming guide dictates how we should handle its
+    irqs and in which order. Follow that.
+    
+    Signed-off-by: Arnaud Mandy <ext-arnaud.2.mandy@nokia.com>
+    Signed-off-by: Felipe Balbi <felipe.balbi@nokia.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+    Signed-off-by: Tony Lindgren <tony@atomide.com>
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 1c60c7a5fb041897332f977edc38187ae3ca5958
+Author: Bryan Wu <cooloney@kernel.org>
+Date:   Tue Jan 19 13:14:09 2010 +0000
+
+    usb: musb: clean up commit 'workaround Blackfin FIFO anomalies'
+    
+    The version applied had a few comments which are now
+    done.
+    
+    Thanks to Sergei for pointing out.
+    
+    Signed-off-by: Bryan Wu <cooloney@kernel.org>
+    Signed-off-by: Cliff Cai <cliff.cai@analog.com>
+    Signed-off-by: Mike Frysinger <vapier@gentoo.org>
+    Signed-off-by: Felipe Balbi <felipe.balbi@nokia.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+    Signed-off-by: Tony Lindgren <tony@atomide.com>
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit f8fefbf10c0ade19dc6803ef82ba80f9319c9ccb
+Author: Swaminathan S <swami.iyer@ti.com>
+Date:   Tue Jan 19 13:14:08 2010 +0000
+
+    usb: musb: Fix cppi_channel_abort() function to handle Txabort correctly
+    
+    This patch fixes the Tx abort/teardown logic. We now wait for the teardown
+    completion interrupt and acknowledge the same by setting the tx_complete
+    register to 0.
+    
+    This change is needed to ensure that abort processing works on DM365 platform.
+    Without this change after completion of abort processing the system is
+    overwhelmed with continuous stream of abort interrupts.
+    
+    This change has been tested on all CPPI3.x platforms (DM644x, DM646x, DM35x,
+    DM36x).
+    
+    Signed-off-by: Swaminathan S <swami.iyer@ti.com>
+    Signed-off-by: Felipe Balbi <felipe.balbi@nokia.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+    Signed-off-by: Tony Lindgren <tony@atomide.com>
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 50602604e3a9810c39b0bf11dacccf7275e37204
+Author: Swaminathan S <swami.iyer@ti.com>
+Date:   Tue Jan 19 13:14:07 2010 +0000
+
+    usb: musb: workaround toggle bug when doing bulk transferafter isoc
+    
+    This patch implements the work around for a Mentor controller related
+    bug where it's observed a BULK Tx toggle error on the bus when a
+    BULK IO gets scheduled on an endpoint that was earlier used for
+    handling ISOC transaction and needed to start on 1 toggle.  When such
+    a situation arises even if the TXCSR toggle bits are programmed
+    correctly by the musb driver the data gets transmitted with 0 toggle
+    which leads to toggle error on the bus and the BULK transaction fails.
+    In case of MSC write, the device gets reset by the Host.
+    
+    This Mentor bug is observed on almost all Mentor versions (1.3, 1.5,
+    1.8).  Confirmed on DM644x, DM355, DM365, OMAPL13x platforms.
+    
+    Signed-off-by: Swaminathan S <swami.iyer@ti.com>
+    Signed-off-by: Felipe Balbi <felipe.balbi@nokia.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+    Signed-off-by: Tony Lindgren <tony@atomide.com>
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit e49cbb544c8404d963789343c531bff8e9f7af64
+Author: Anand Gadiyar <gadiyar@ti.com>
+Date:   Tue Jan 19 13:14:06 2010 +0000
+
+    PATCH/USB,
+    
+    MUSB DMA_INTR register may sometimes read zero when infact there
+    was a pending interrupt. Workaround this by reading the DMA_COUNT
+    values for all enabled channels when this condition occurs.
+    Flag these channels as the ones needing to be serviced.
+    
+    Additionally, the absence of a debug print meant we would never
+    catch a spurious DMA interrupt in MUSB. So this patch adds a
+    debug print in the IRQ handler.
+    
+    Signed-off-by: Anand Gadiyar <gadiyar@ti.com>
+    Cc: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Cc: David Brownell <dbrownell@users.sourceforge.net>
+    Cc: Sergei Shtylyov <sshtylyov@ru.mvista.com>
+    Cc: Vikram Pandita <vikram.pandita@ti.com>
+    Signed-off-by: Felipe Balbi <felipe.balbi@nokia.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+    Signed-off-by: Tony Lindgren <tony@atomide.com>
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 0bafbff2a506058e1e5edd0521c159100afb85e2
+Author: Anand Gadiyar <gadiyar@ti.com>
+Date:   Tue Jan 19 13:14:05 2010 +0000
+
+    usb: musb: hsdma: add wrapper for reading DMA count
+    
+    Add a wrapper for reading the DMA count register, analogous
+    to the one for writing to this register.
+    
+    Signed-off-by: Anand Gadiyar <gadiyar@ti.com>
+    Cc: Vikram Pandita <vikram.pandita@ti.com>
+    Signed-off-by: Felipe Balbi <felipe.balbi@nokia.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+    Signed-off-by: Tony Lindgren <tony@atomide.com>
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 9d8365519b70b3d8c4f7a8592ee0d3c51c448323
+Author: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Date:   Tue Jan 19 13:14:04 2010 +0000
+
+    USB: musb: Add new fifo table for a OMAP3 errata
+    
+    We have observed MSC data read corruption when USB LAN device is
+    also connected and it's interface is up.
+    
+    Silicon team has confirmed an errata where in all the active
+    transfers should use FIFO space either in first 8K or next 8K.
+    So far we have observed the issue in above use case scenario.
+    
+    As a workaround to it, adding a new FIFO config (5) fitting well
+    within first 8K which can be used for such use cases.
+    
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Acked-by: Anand Gadiyar <gadiyar@ti.com>
+    Signed-off-by: Felipe Balbi <felipe.balbi@nokia.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+    Signed-off-by: Tony Lindgren <tony@atomide.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 8691a40fe610e4b437eb9762e6b2c85ff355b3d3
+Author: Felipe Balbi <felipe.balbi@nokia.com>
+Date:   Tue Jan 19 13:14:03 2010 +0000
+
+    USB: musb: remove some of the never defined defines
+    
+    just makes the musb init code a bit cleaner.
+    
+    Signed-off-by: Felipe Balbi <felipe.balbi@nokia.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+    Signed-off-by: Tony Lindgren <tony@atomide.com>
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 554101e6e4373b99e786b9b7c4ce85fbc16174a0
+Author: Felipe Balbi <felipe.balbi@nokia.com>
+Date:   Tue Jan 19 13:14:02 2010 +0000
+
+    USB: musb: move to sysfs_groups
+    
+    it's easier to keep up and add more sysfs entries
+    as necessary.
+    
+    Signed-off-by: Felipe Balbi <felipe.balbi@nokia.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+    Signed-off-by: Tony Lindgren <tony@atomide.com>
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit d7ffa1694da797dcb372bddc8068e616d9a3625b
+Author: Felipe Balbi <felipe.balbi@nokia.com>
+Date:   Tue Jan 19 13:14:01 2010 +0000
+
+    USB: musb: move two printk to dev_err
+    
+    trivial cleanup, no functional changes.
+    
+    Signed-off-by: Felipe Balbi <felipe.balbi@nokia.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+    Signed-off-by: Tony Lindgren <tony@atomide.com>
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 75ece92b2e4edcbd105a83235845ee3bcae149cf
+Author: Felipe Balbi <felipe.balbi@nokia.com>
+Date:   Tue Jan 19 13:14:00 2010 +0000
+
+    USB: musb: use resource_size()
+    
+    it makes ioremap() usage looks cleaner.
+    
+    Signed-off-by: Felipe Balbi <felipe.balbi@nokia.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+    Signed-off-by: Tony Lindgren <tony@atomide.com>
+    Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+    Signed-off-by: Ravi B <a0393587@psplinux051.india.ti.com>
+
+commit 6c07677942d2c3b07e4c90ad1f3842835a3acf75
+Author: Swaminathan S <swami.iyer@ti.com>
+Date:   Mon Feb 1 12:10:08 2010 +0530
+
+    [AM17xx] Fix compile error for AM17xx usb in platform directory.
+    
+    Signed-off-by: Swaminathan S <swami.iyer@ti.com>
+    ---
+
+commit c2324110b7d479420898348fb2f2a195fde1e364
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Sun Jan 31 16:56:57 2010 +0530
+
+    davinci: cpufreq: bailout correctly on regulator errors
+    
+    Currently, code to increase CPU  frequency goes ahead even in
+    case, the regulator failed to increase the voltage. This leads
+    to hard error since lower voltages cannot support increased
+    frequency.
+    
+    Prevent this by not increasing frequency in case increasing
+    voltage is not successful.
+
+commit c3a42237426aeb814a76d95560eb6c0d5f131cce
+Author: Swaminathan S <swami.iyer@ti.com>
+Date:   Thu Jan 28 23:41:41 2010 +0530
+
+    [AM18xx] Adding platform support for SATA and USB
+    
+    Signed-off-by: Swaminathan S <swami.iyer@ti.com>
+    ---
+
+commit 5492e587470d1b3254f7d1f07e0a4d0ba7e535db
+Author: Swaminathan S <swami.iyer@ti.com>
+Date:   Mon Nov 9 21:18:26 2009 +0530
+
+    [AHCI] Add DA850 platform support to AHCI module.
+    
+            Signed-off-by: Swaminathan S <swami.iyer@ti.com>
+
+commit 67e1927c970775450b540715c3a7febb1716d696
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Fri Jan 29 11:11:37 2010 +0530
+
+    v4l: DaVinci: VPIF: Add suspend/resume callbacks to VPIF driver
+    
+    VPIF clock has to be dealt with during suspend and resume.
+    Implement power management callbacks to VPIF driver to disable/
+    enable clock on suspend/resume respectively.
+    
+    Tested on DA850/OMAP-l138 EVM.
+    
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit 93b340be5c760c6b29db5e504c54c33e8059208a
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Fri Jan 29 08:38:59 2010 +0530
+
+    v4l: DaVinci: VPIF: Device clock handling
+    
+    Add clock enable and disable in probe and remove functions.
+    Probe will succeed only if the device clock is provided instead of
+    assuming that the clock is always enabled.
+    
+    NOTE: This has been testes only on TI DA850/OMAP-L138 EVM.
+    This change is NOT tested for TI DM6467 EVM.
+    
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit 7405a47983a85cb83e309332374f9262dfed5e1f
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Fri Jan 29 08:45:20 2010 +0530
+
+    da850/omap-l138: Do not set 'ALWAYS_ENABLED' flag for VPIF clock
+    
+    VPIF clock should be enabled in the driver. Do not enable it here.
+    
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit a3a722a14f469cce1e5c589e16472df6b2ea322a
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Fri Jan 29 04:22:52 2010 +0530
+
+    davinci: da850/omap-l138: add spi0 to clock list
+    
+    davinci: da850/omap-l138: add spi0 to clock list
+    
+    SPI0 is not used on the EVM, but registering its clock:
+    
+    1) Helps kernel disable it in case it remain left on by boot-software
+    2) Helps other boards using SPI0 peripheral.
+
+commit d5218566f808fed99be364c66a1fb2a628acd9cc
+Author: Swaminathan S <swami.iyer@ti.com>
+Date:   Thu Jan 28 23:43:52 2010 +0530
+
+    Adding platform CPPI Suport for USB
+    
+    Signed-off-by: Swaminathan S <swami.iyer@ti.com>
+
+commit 97c18bdf206e91a322c216b3b0613c3033f7eeb3
+Author: Swaminathan S <swami.iyer@ti.com>
+Date:   Thu Jan 28 23:41:41 2010 +0530
+
+    Adding platform support for SATA and USB
+    
+    Signed-off-by: Swaminathan S <swami.iyer@ti.com>
+
+commit 751a96609defdf4fc8ad90b2132e5fb57468ce74
+Author: Swaminathan S <swami.iyer@ti.com>
+Date:   Mon Nov 9 15:26:39 2009 +0530
+
+    Fix for checking USB0 PHY for USB1 enabled/disabled state. If the USB0 PHY is not enabled enable the same and then program USB1 PHY to be enabled. Refer to CFGCHIP2 register for further details.
+    
+        Signed-off-by: Swaminathan S <swami.iyer@ti.com>
+
+commit 0ffd39e3ee311b21e28253fd24030674d3ccf5fb
+Author: Swaminathan S <swami.iyer@ti.com>
+Date:   Mon Nov 9 15:10:12 2009 +0530
+
+    Fix for DA8xx OHCI module w.r.t returning the correct probe status.
+    
+        Signed-off-by: Swaminathan S <swami.iyer@ti.com>
+
+commit 86e082ecf1d42e3ffcef0e1944c71c414c9eca2d
+Author: Swaminathan S <swami.iyer@ti.com>
+Date:   Thu Aug 6 12:48:46 2009 +0530
+
+    Fix USB0 phy configuration to reflect the compiled in mode of operation. Minor fix for try_idle inclusion for DA850.
+    
+        Signed-off-by: Swaminathan S <swami.iyer@ti.com>
+
+commit 7826db30153c7ce9749daa027728d24a8a129b63
+Author: Swaminathan S <swami.iyer@ti.com>
+Date:   Wed Aug 5 20:45:59 2009 +0530
+
+    Update the transceiver structure access to be in line with OTG changes.
+    
+        Signed-off-by: Swaminathan S <swami.iyer@ti.com>
+
+commit f40b581ad4ecf601bdca6833907d4f43c0094e70
+Author: Sergei Shtylyov <sshtylyov () ru ! mvista ! com>
+Date:   Mon Apr 20 18:12:36 2009 +0530
+
+    MUSB: DA830/OMAP-L137 glue layer
+    
+        [Download message RAW]
+    
+        Texas Instruments DA830/OMAP-L137 glue layer for the MUSBMHRDC driver.
+    
+        Signed-off-by: Sergei Shtylyov <sshtylyov@ru.mvista.com>
+        Signed-off-by: Yadviga Grigorieva <yadviga@ru.mvista.com>
+
+commit bbb6916e7287f2c0ba03c0a6a3933cf45d0d07ff
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Thu Jan 28 18:30:58 2010 +0530
+
+    v4l: DaVinci: VPIF Capture: Get image size from format irrespective of buf type
+    
+    Whether the buffer is user pointer or mmap based, image size
+    should be based on the standard type and not the driver buffer size.
+    
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit 569bb7d9280a86bef5fa7f8766dca7c44c777710
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Thu Jan 28 18:28:53 2010 +0530
+
+    v4l: DaVinci: VPIF Display: Get image size from format irrespective of buf type
+    
+    Whether the buffer is user pointer or mmap based, image size
+    should be based on the standard type and not the driver buffer size.
+    
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit 4a28f396ee9dc5844b93577ba40da3808b2e3f30
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Thu Jan 28 17:46:56 2010 +0530
+
+    davinci: i2c: reset i2c controller during cpufreq post change notification
+    
+    The current clock divider update code on cpufreq trantition puts the
+    I2C in reset in pre-change notifier and changes the frequency in post-change
+    notifier.
+    
+    However, the regulator access that happens between these notifications
+    gets the I2C out of reset. Prevent this by doing the entire operation
+    during post change notification.
+    
+    Note that this problem will not be detected on DA850 EVM since the I2C0
+    used on the EVM derives its input from a fixed clock.
+
+commit 01a291c9b3132ba609b44deb2c9551021b7dd967
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Thu Jan 28 14:54:51 2010 +0530
+
+    davinci: da830/omap-l137: do not force write through cache mode
+    
+    Silicon revision 2.0 of DA850/OMAP-L137 fixes the advisory forcing
+    the use of ARM cache in write-through mode.
+    
+    To fully support the capabilities of the new silicon, stop enforcing
+    write-through cache mode whenever DA830 is selected. So, users of
+    new silicon can run it in cache write-back mode.
+    
+    However, keep cache-writethrough mode enabled in the defconfig so
+    users of old silicon dont get a nasty surprise when they try to boot.
+
+commit de1d325f93ccfd2bbd96197d86a11922a9405bfe
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Mon Jan 25 13:56:48 2010 +0530
+
+    da850/omap-l138: Reconfigure MSTPRI2 register to increase LCDC priority
+    
+    LCDC traffic is typically real-time sensitive, therefore, the
+    default priority of 5, which is lower as compared to the default
+    priority of several masters, is not recommended. You should
+    reconfigure the LCDC priority to the highest or equal to other
+    high-priority masters in an application to ensure that the
+    throughput/latency requirements for the LCDC are met.
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit 3bb006b34b6acb742de5546d2d7c15cf583d0fd9
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Mon Jan 25 15:06:38 2010 +0530
+
+    da830/omap-l137: Reconfigure MSTPRI2 register to increase LCDC priority
+    
+    LCDC traffic is typically real-time sensitive, therefore, the
+    default priority of 5, which is lower as compared to the default
+    priority of several masters, is not recommended. You should
+    reconfigure the LCDC priority to the highest or equal to other
+    high-priority masters in an application to ensure that the
+    throughput/latency requirements for the LCDC are met.
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit cba445603491061b8946e17064b36a45ea4019c6
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Thu Jan 28 09:30:05 2010 +0530
+
+    i2c: davinci: Correct I2C initialization sequence during xfer
+    
+    Commit e99f59bd6c3558803fc7f237743e9a4ae175994b introduces an
+    i2c write in i2c_davinci_xfer_msg() function before setting
+    the I2C mode register, which results in undefined behavior.
+    This patch corrects this sequence by setting the I2C mode
+    register before starting any I2C transaction.
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit 8e1510750d6fe18928b26ba3be47e44268be4355
+Author: Sergei Shtylyov <sshtylyov () ru ! mvista ! com>
+Date:   Fri Oct 2 18:35:57 2009 +0530
+
+    OHCI: DA8xx/OMAP-L1x glue layer (take 3)
+    
+        [Download message RAW]
+    
+        Texas Instruments DA8xx/OMAP-L1x OHCI glue layer.
+    
+        This OHCI implementation is not without quirks: there's only one physical port
+        despite the root hub reporting two; the port's power control and over-current
+        status bits are not connected to any pins, however, at least on the DA830 EVM
+        board, those signals are connected via GPIO, thus the provision was made for
+        overriding the OHCI port power and over-current bits at the board level...
+    
+        Signed-off-by: Mikhail Cherkashin <mcherkashin@ru.mvista.com>
+        Signed-off-by: Sergei Shtylyov <sshtylyov@ru.mvista.com>
+
+commit f0392c1b4fe436ab8d031944691e735658d841c3
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Tue Jan 19 14:15:04 2010 +0530
+
+    v4l: davinci: VPIF display: Add suspend/resume support
+    
+    Implement power management ops for VPIF display driver
+    
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit a31bbd2a1b5b834c3fd886975f92ac731515a395
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Tue Jan 19 14:14:00 2010 +0530
+
+    v4l: davinci: VPIF capture: Add suspend/resume support
+    
+    Implement power management ops for VPIF capture driver
+    
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit c070fabf046885a32b49ff5ceed145cd2b734420
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Fri Jan 15 13:21:26 2010 +0530
+
+    da850/omap-l138: Add EVM specific code for VPIF to work
+    
+    Include the expander settings to select VPIF peripheral on
+    UI card and add registration call in EVM init. Also add platform
+    data to configure display and capture devices.
+    
+    Signed-off-by: Sneha Narnakaje <nsnehaprabha@ti.com>
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit c512a9689f198209949f817b349a857acd50b18c
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Fri Jan 15 13:18:07 2010 +0530
+
+    da850/omap-l138: Add SoC related definitions for VPIF
+    
+    Add clock, pin mux definitions and registration function for
+    DA850/OMAP-L138 SoC.
+    
+    Signed-off-by: Sneha Narnakaje <nsnehaprabha@ti.com>
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit 49c84b96312eff6d1c483dcea72eb51d2e0ddf28
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Fri Jan 15 13:15:43 2010 +0530
+
+    v4l-subdev: adv7343: fixes to mask video work on DA850/OMAP-L138 EVM
+    
+    Signed-off-by: Sneha Narnakaje <nsnehaprabha@ti.com>
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit 6e5081b824de4c31d275ae0b1bdf2135d8d9f7c4
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Fri Jan 15 13:14:43 2010 +0530
+
+    v4l: davinci: VPIF : Update config file to support DA850/OMAP-L138 SoC
+    
+    Signed-off-by: Sneha Narnakaje <nsnehaprabha@ti.com>
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit 5c881afba93ba9742814696adfd1423fb5b5a166
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Fri Jan 15 12:16:28 2010 +0530
+
+    v4l: davinci: VPIF: Add arch specific interrupt status callback fucntion
+    
+    Signed-off-by: Sneha Narnakaje <nsnehaprabha@ti.com>
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit ea94406e43de5f24701e784e3e804e4b681c72ac
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Fri Jan 15 11:34:06 2010 +0530
+
+    v4l: davinci: VPIF: Generic changes to re-use the VPIF drivers on DA850/OMAP-L138 SoC
+    
+    This patch prepares VPIF drivers to be re-used on DA850/OMAP-L138
+    based platforms.
+    
+    Signed-off-by: Sneha Narnakaje <nsnehaprabha@ti.com>
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit 47f5de9e909c2c8a0a9d5e5e518afdc947ee439b
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Fri Jan 15 11:30:13 2010 +0530
+
+    davinci: Move VPIF related definitions from DM646x SoC header file to a new VPIF header file
+    
+    VPIF is present on DA850/OMAP-L138 SoC too. Move the VPIF related
+    definitions from DM646x header file to a separate header file so
+    that it can be re-used by multiple SoCs.
+    
+    Signed-off-by: Sneha Narnakaje <nsnehaprabha@ti.com>
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit 70a0b54401701ff737a8775358b937a3ed2ec2b3
+Author: Brijesh Jadav <brijesh.j@ti.com>
+Date:   Mon Sep 14 14:36:53 2009 +0530
+
+    v4l-subdev: TVP514x: Updates to detect the mode correclty
+    
+    With this patch, TVP5147 driver will always detect the input and mode
+    correctly, In earlier implemention, when application calls s_std api, driver
+    forces tvp5147 to work in that mode and changes autoswitch mode to that mode,
+    so after s_std api, if application calls querystd, tvp will not be able to
+    detect mode correctly. This patch puts tvp5147 in auto switch mode when
+    s_input or querystd api is called
+    
+    Signed-off-by: Brijesh Jadav <brijesh.j@ti.com>
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit c253396e8e7193f75158e87070bf2886da4fc75f
+Author: Brijesh Jadav <brijesh.j@ti.com>
+Date:   Tue Sep 22 15:31:24 2009 +0530
+
+    v4l: davinci: VPIF Display: Change Pixel format from 422P to NV16
+    
+    This patch changes pixel format from V4L2_FIELD_422P to
+    V4L2_FIELD_NV16 as DM6467 supports NV16 pixel format. In this
+    pixel format, Luma and Chroma (Cb and Cr interleaved) data is
+    stored in the separate buffers.
+    
+    Signed-off-by: Brijesh Jadav <brijesh.j@ti.com>
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit 1fb0e14c92be303e568083b6cee8e571de144571
+Author: Brijesh Jadav <brijesh.j@ti.com>
+Date:   Wed Sep 2 18:20:07 2009 +0530
+
+    v4l: davinci: VPIF display: Buffer management updates
+    
+    Buffer management updates to the VPIF display driver
+    
+    Signed-off-by: Brijesh Jadav <brijesh.j@ti.com>
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit 63c75a1ae8944fd56cddf8db5b1bd857decab601
+Author: Sneha Narnakaje <nsnehaprabha@ti.com>
+Date:   Tue Dec 8 15:15:15 2009 -0500
+
+    v4l: davinci: VPIF capture: Change the pixelformat to NV16
+    
+    This patch changes the pixelformat to NV16 from YUV422P.
+    
+    Signed-off-by: Sneha Narnakaje <nsnehaprabha@ti.com>
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+
+commit 7ee84b99afc2b39d039f983fd907b923b62b1364
+Author: Sneha Narnakaje <nsnehaprabha@ti.com>
+Date:   Tue Oct 13 16:41:03 2009 -0400
+
+    v4l: davinci: VPIF capture: changes to buffer allocation
+    
+    This patch fixes the issues with buffer allocation - to use
+    videobuf_iolock() instead of VPIF defined vpif_uservirt_to_phys API.
+    There are changes to in the vpif_buffer_prepare, vpif_streamon,
+    vpif_qbuf and vpif_schedule_next_buffer APIs to use videobuf_to_dma_contig
+    API for both memory-mapped and userptr buffer allocations.
+    
+    Signed-off-by: Sneha Narnakaje <nsnehaprabha@ti.com>
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit 202241445fc7f5cfd9b337f38a9836586422e2ee
+Author: Sneha Narnakaje <nsnehaprabha@ti.com>
+Date:   Thu Sep 17 17:45:33 2009 -0400
+
+    v4l: davinci: VPIF capture: updates to buffer management
+    
+    This patch fixes the issues with the way vpif_capture driver was calling
+    videobuf_queue_dma_contig_init and videobuf_dma_contig_free APIs. The
+    videobuf_queue_dma_contig_init API required vpif_dev to be passed and
+    videobuf_dma_contig_free had to be called only for the mmap based buffer
+    allocation.
+    
+    Signed-off-by: Sneha Narnakaje <nsnehaprabha@ti.com>
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+
+commit ae3509b0c5bd213ebc0d2dd6e1638f1229235155
+Author: Anton Vorontsov <[avorontsov@ru.mvista.com]>
+Date:   Sun Jan 17 11:44:58 2010 +0530
+
+    phylib: kernel oops on resume with 2.6.33-rc4
+    
+    Hello,
+    
+    On Sat, Jan 16, 2010 at 09:38:34PM +0530, Nori, Sekhar wrote:
+    > Hello all,
+    >
+    > I am hitting a kernel oops when resuming from suspend-to-RAM on 2.6.33-rc4
+    > kernel.
+    >
+    > The MAC is TI DaVinci EMAC and PHY is SMSC LAN8710. However, I also hit the
+    > issue even when using generic PHY driver (CONFIG_SMSC_PHY turned off).
+    >
+    > On reverting commit 541cd3e "phylib: Fix deadlock on resume" which was
+    > introduced in 2.6.33-rc4, the issue doesn't come about. So far, I haven't
+    > figured out how this particular commit is causing the oops. Full oops report
+    > is attached. Appreciate any help in debugging this.
+    
+    It seems phy_start_machine() needlessly reinitialized work
+    struct. This is OK for ucc_geth and gianfar driver because
+    these drivers do not detach PHYs on suspend, but TI davinci
+    does. :-/
+    
+    Can you try the patch down below?
+    
+    Thanks!
+
+commit e1818cffe7c826b59704812593790de0bd29afa8
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Fri Jan 15 16:09:58 2010 +0530
+
+    ASoC: davinci: update Kconfig text to refer to AM1xxx parts
+    
+    ARM only variants of TI's DA8xx/OMAP-L1xx series of SoCs
+    are being launched. Initial two parts are being called
+    AM1707 and AM1808. Update the Kconfig text to reflect
+    that the same da8xx/omap-l1 EVM configuration can be used
+    for these parts as well.
+
+commit a99d0fb2348d8c7cb29f4b7930e3bfe60aebdc52
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Fri Jan 15 16:06:19 2010 +0530
+
+    rtc: omap1: update Kconfig text to refer to AM1xxx
+    
+    ARM only variants of TI's DA8xx/OMAP-L1xx series of SoCs
+    are being launched. Initial two parts are being called
+    AM1707 and AM1808. Update the Kconfig text for OMAP1 RTC
+    driver to reflect the fact that the same OMAP1 driver can
+    be used for these parts as well.
+
+commit 5ce58b7c1e54843c7549bfc13ddea588227e22a9
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Fri Jan 15 15:56:53 2010 +0530
+
+    spi: davinci: update Kconfig text to refer to OMAP-L1/AM1xxx
+    
+    TI's OMAP-L1 devices are very similar to DA8xx devices and the
+    same driver which works on DA8xx can be used on OMAP-L1 devices
+    
+    Update the help text to help user's understand that the driver
+    applies to OMAP-L1
+    
+    Also, ARM only variants of TI's DA8xx/OMAP-L1xx series of SoCs
+    are being launched. Initial two parts are being called
+    AM1707 and AM1808. Update the Kconfig text to reflect
+    that the same da8xx driver can be used for these parts as well.
+    
+    Removed reference to DA8xx in config prompt to reduce part number
+    clutter.
+
+commit 9b0c49c4481f54edc00f3c40ae281a15d8a023ce
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Fri Jan 15 15:50:38 2010 +0530
+
+    fb: da8xx: update Kconfig text to refer to AM1xxx
+    
+    ARM only variants of TI's DA8xx/OMAP-L1xx series of SoCs
+    are being launched. Initial two parts are being called
+    AM1707 and AM1808. Update the Kconfig text to reflect
+    that the same da8xx driver can be used for these parts as well.
+
+commit ed35fea141b002e1373ae9bf7b52bdd8add5ff14
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Fri Jan 15 15:45:34 2010 +0530
+
+    davinci: introduce arm-only variants of da8xx/omap-l1 parts
+    
+    This patch updates the Kconfig help text to introduce ARM
+    only variants of DA830/OMAP-L137 and DA850/OMAP-L138 parts.
+    
+    AM17xx corresponds to DA830 and AM18xx corresponds to DA850.
+    
+    The initial two parts being released are called AM1707 and
+    AM1808.
+    
+    Updating the help/menuconfig text helps users select the
+    configurations required for these parts easily.
+    
+    Also, the hardware information that shows up in /proc/cpuinfo
+    is updated to show applicability of the EVM for AM1xxx parts.
+
+commit 16dbf61018e172718f8902cdd87a8c96cb51241b
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Fri Jan 15 13:22:06 2010 +0530
+
+    davinci: da850/omap-l138: add support for 456mhz and other OPPs
+    
+    New OPPs have been defined on the DA850/OMAP-L138
+    SoC which lets the maximum CPU speed to reach 456MHz.
+    
+    A kernel configuration option has been added to let
+    users choose if they want to remain at 300MHz or move to
+    other available higher OPPs.
+
+commit 61591ed9ec42cad58feab0523007a31dab71f736
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Wed Dec 23 16:12:59 2009 +0530
+
+    CLCD: DA80/OMAP-L138: Add power management ops
+    
+    Implement suspend and resume callbacks for Character LCD
+    driver on DA850/OMAP-l138.
+    
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit e40694a36ff698e46ba8f6b9baba4b45c4f121a5
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Fri Jan 8 14:40:53 2010 +0530
+
+    update arch serial driver to get clk info
+    
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit 31cf61590b4ded0ac3af08c52440b8e8acea00c7
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Wed Jan 6 11:16:43 2010 +0530
+
+    serial: 8250: Add cpufreq support
+    
+    On DA850/OMAP-L138 SoC, the PLL which supplies the clock to CPU also feeds the
+    UART and the UART input frequency can change when the CPU frequency is scaled.
+    
+    This patch adds cpufreq support for 8250 serial driver. A clk structure member
+    has been added to the platform and port data structures. This member is used by
+    the cpufreq notifier callback to get the updated clock rate. The implementation
+    is based on the cpufreq implementation for Samsung serial driver.
+    
+    Tested on TI DA850/OMAP-L138 EVM.
+    
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit ee8992e0263b5341ddb871b6de5fd1cf961075c5
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Wed Jan 13 16:56:26 2010 +0530
+
+    da8xx: Fix GLCD initialization sequence
+    
+    Sometimes system comes up with a 'white screen' on the LCD after
+    boot, and nothing is ever displayed. This was consistent with the
+    'reset' button (or linux reboot). This is fixed by switching off
+    and switching on the panel power and backlight after enabling
+    raster. Earlier this sequence was done before enabling the raster.
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit 5d53f8d2a15229f6200eaaa345944f0cb9bf1f69
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Wed Jan 13 16:11:41 2010 +0530
+
+    davinci: spi: suspend/resume callback implementation
+    
+    Add suspend and resume callbacks to DaVinci I2C driver.
+    This has been tested on DA850/OMAP-L138 EVM. The SoC
+    specific suspend-to-RAM support patch series [1] is
+    needed to test this feature.
+    
+    [1] http://linux.davincidsp.com/pipermail/davinci-linux-open-source/
+    2009-November/016958.html
+    
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit 290502e3319eab39d3ef2bfc458085e9427e0587
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Wed Jan 13 15:23:52 2010 +0530
+
+    davinci: spi: cpufreq support
+    
+    Add a function to calculate the clock divider and implement
+    cpufreq support. Added a member to the spi private data
+    structure to know if data transfer is in progress.
+    
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit 23ff1f4a37ea3152248708bfbc560d9dd004ffee
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Fri Jan 1 12:41:05 2010 +0530
+
+    davinci: da830/omap-l137: don't 'always enable' AEMIF clock
+    
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+
+commit da0a2db18f24c06c8ab9d9ca49b12ced7081f4ee
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Fri Jan 1 12:37:39 2010 +0530
+
+    davinci: da850/omap-l138 evm: use new NOR mapping driver
+    
+    This patch makes use of the new NOR flash mapping driver
+    introduced for DaVinci device.
+    
+    The patch also adds the EMIF timing values suitable for the
+    NOR flash available on the UI card.
+    
+    After configuring the timing values, the read performance
+    (on MTD chardev interface) increased from 960kbps to 2.8mbps
+    and the write performance increased from 460kbps to 550kbps.
+    
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+
+commit f779b3f421549162b000300d1a517de86264a961
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Fri Jan 1 12:31:21 2010 +0530
+
+    mtd: davinci: add mapping driver for NOR flash
+    
+    This patch adds a NOR flash mapping driver for DaVinci
+    platforms. Advantages of using it over the generic
+    PHYSMAP driver include:
+    
+    1) Enables aemif clock at probe. Eliminates the need to do a
+       clock enable in board code.
+    2) Support for timing value and other configurations in case
+       the bootloader did not set the AEMIF up.
+    3) Support for power management suspend/resume
+    4) Support for cpufreq transtition notifications
+    
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+
+commit 2f23fdf1b3d329e3a981d223e6cc5ebb0f346abd
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Tue Dec 15 14:14:27 2009 +0530
+
+    nand: davinci: add suspend/resume support
+    
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+
+commit c816f8f98573cfe7521a7b7c3c7d2de607ad9b76
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Sun Dec 13 17:33:33 2009 +0530
+
+    davinci: da850/omap-l138 EVM: add NAND timing values configuration
+    
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+
+commit 85d6dde145b2f31c2194b5e26adbc99d79bccffc
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Fri Jan 1 13:56:34 2010 +0530
+
+    nand: davinci: add support for aemif timing configuration
+    
+    This patch adds support for configuring AEMIF timing values
+    during NAND flash init.
+    
+    Earlier, AEMIF configuration was being done as a special case
+    for DM644x board, but now more boards emerge which have capability
+    to boot for other media (SPI flash, NOR flash) and have the kernel
+    access NAND flash. This means that kernel cannot always  depend on
+    the bootloader to setup the NAND.
+    
+    Also, on platforms such as da850/omap-l138, the aemif input
+    frequency changes as cpu frequency changes; necessiating
+    re-calculation of timimg values as part of cpufreq transtitions.
+    This patch forms the basis for adding that support.
+    
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+
+commit 75def8ab0db813d1182248c36df01a96920bc2ca
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Fri Jan 1 13:32:33 2010 +0530
+
+    davinci: add support for aemif timing configuration
+    
+    This patch adds support to configure the AEMIF interface
+    for user supplied timing values.
+    
+    Since this capability is useful both from NOR and NAND
+    flashes, it is provided as a new interface in a file of
+    its own.
+    
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+
+commit 268eaba0b9455c4d161624e7b23faaac28351a01
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Sun Jan 10 19:14:28 2010 +0530
+
+    davinci: da850/omap-l138: keep async clock constant with cpufreq
+    
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+
+commit b0c926ea67083e5f3f86fc1497caf9b920f7d66b
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Sun Jan 10 19:10:52 2010 +0530
+
+    davinci: cpufreq: add support for changing async clk
+    
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+
+commit e0168145428f2a5dff2f2ce4a0150f7f3a1e3c16
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Sun Jan 10 19:06:08 2010 +0530
+
+    davinci: clock: add support for setting sysclk rate
+    
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+
+commit d8396974e7db57d917f300bc2dd519c98e44f867
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Tue Jan 12 13:47:09 2010 +0530
+
+    davinci: SPI: add SPI flash support for da830/omap-l137
+    
+    This patch adds platform data for the 4MB SPI Flash
+    found on DA830/OMAP-L137 EVM. SPI flash has been
+    exposed as a MTD device.
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit fe129f9c6bc72c78a1b13174f6a1c8794418892a
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Tue Jan 12 11:53:19 2010 +0530
+
+    davinci: SPI: add SPI flash support for da850/omap-l138
+    
+    This patch adds platform data for the 8MB SPI Flash
+    found on DA850/OMAP-L138 EVM. SPI flash has been
+    exposed as a MTD device.
+    
+    [sekhar: marked spi1 clock as ASYNC3 clock]
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit a3bb1da1f2166cf769fd60944d9e566a747e5cd5
+Author: Sandeep Paulraj <s-paulraj@ti.com>
+Date:   Wed Dec 16 22:02:18 2009 +0000
+
+    SPI DaVinci: SPI master driver for DaVinci/DA8xx
+    
+    This patch adds support for a SPI master driver for the
+    DaVinci series of SOCs
+    
+    Signed-off-by: Sandeep Paulraj <s-paulraj@ti.com>
+    Signed-off-by: Mark A. Greer <mgreer@mvista.com>
+    Signed-off-by: Philby John <pjohn@in.mvista.com>
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit b11ca822f25da92f17524fbcb82ef7de498b3e81
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Mon Jan 11 13:59:33 2010 +0530
+
+    ASoC: DaVinci: Fix stream restart error
+    
+    Sometimes during a suspend resume cycle, the ALSA application
+    restarts the stream when resume fails and McASP fails to work
+    as the clock is not enabled. This patch corrects this bug.
+    
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit 1e6ee439aa3e34e1c6b0829442d5958c64a7dd75
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Thu Dec 3 18:56:56 2009 +0530
+
+    ASoC: DaVinci: Update suspend/resume support for McASP driver
+    
+    Add clock enable and disable calls to resume and suspend respectively.
+    Also add a member to the audio device data structure which tracks the clock
+    status.
+    
+    Tested on DA850/OMAP-L138 EVM. For the purpose of testing, the patches[1] which
+    add suspend-to-RAM support to DA850/OMAP-L138 SoC were applied.
+    
+    [1] http://linux.davincidsp.com/pipermail/davinci-linux-open-source/
+    2009-November/016958.html
+    
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+    Acked-by: Liam Girdwood <lrg@slimlogic.co.uk>
+    Signed-off-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+
+commit 6201df46580353efd978d91eaeb3ebbe9c5ad5e5
+Author: Sekhar Nori <nsekhar@ti.com>
+Date:   Mon Dec 21 14:43:49 2009 +0530
+
+    davinci: da850/omap-l138 evm: account for defdcdc{2,3} being tied high
+    
+    Per the da850/omap-l138 Beta EVM SOM schematic, the defdcdc2 and
+    defdcdc3 lines are tied high by default. This leads to a 3.3V IO
+    and 1.2V CVDD voltage.
+    
+    For the TPS6507x driver, it means that the DEFDCDC_HIGH registers
+    need to be read/written instead of DEFDCDC_LOW register. The tps6507x
+    driver added this functionality recently. This patch passes the right
+    platform data to the TPS6507x which tells it that the HIGH register
+    needs to be read instead of the LOW register.
+    
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+
+commit ec74f51ab087a8b75e58d1cab46d2470a3995066
+Author: Anuj Aggarwal <anuj.aggarwal@ti.com>
+Date:   Fri Dec 18 16:48:43 2009 +0530
+
+    Regulator: Check which register needs to be read for DCDC2/3
+    
+    In TPS6507x, for DCDC2/3, either DEFDCDC2_LOW or DEFDCDC2_HIGH
+    can be read depending on the status of DEFDCDC2 pin. Since this
+    pin cannot be read through register, this information is passed
+    through board-evm file and the driver appropriately checks it
+    before reading the LOW / HIGH register.
+    
+    Signed-off-by: Anuj Aggarwal <anuj.aggarwal@ti.com>
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+
+commit c7f4a57b7c3d6df57b9713638780006e8a82f9a7
+Author: Rajashekhara, Sudhakar <sudhakar.raj@ti.com>
+Date:   Wed Dec 2 05:34:44 2009 +0000
+
+    davinci: dm646x: Specify reserved EDMA channel/slots for DM646x
+    
+    Pass reserved EDMA channel/slots as platform data for dm646x.
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit 077301dd72713939b9c328a825ec1e5ac7475477
+Author: Rajashekhara, Sudhakar <sudhakar.raj@ti.com>
+Date:   Wed Dec 2 05:34:38 2009 +0000
+
+    davinci: da850/omapl138: Specify reserved channels/slots
+    
+    Pass reserved EDMA channel/slots as platform data for da850/omap-l138.
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit 6108f14c8a89a11816988d22ace3f3a4238eeabd
+Author: Rajashekhara, Sudhakar <sudhakar.raj@ti.com>
+Date:   Wed Dec 2 05:34:31 2009 +0000
+
+    davinci: da830/omapl137: Specify reserved channels/slots
+    
+    Pass reserved EDMA channel/slots as platform data for da830/omap-l137.
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit 82684a40f09165c00ca1a8e1a125ebd7885a9960
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Fri Jan 8 19:01:56 2010 +0530
+
+    Current EDMA driver is not taking care of EDMA channels/slots
+    which are allocated from other processor, say DSP. If a
+    channel/slot is allocated from DSP, the existing EDMA driver
+    can still allocate the same resource on ARM.
+    
+    This patch enables the user to pass the channel/slots reserved
+    for DSP as platform data. EDMA driver scans this list during
+    probe and prepares a bitmap of channel/slots which can be used
+    on ARM side.
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+    Cc: David Brownell <david-b@pacbell.net>
+
+commit a89e8410386d964c72839318c10491a09f037a86
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Wed Nov 4 16:06:29 2009 +0530
+
+    da8xx: Make TI Character LCD mode as default in panel.c
+    
+    Whenever HANTRONIX LCD panel is selected in menuconfig, the
+    driver was selecting LCD_PROTO_PARALLEL as the default
+    protocol. This patch modifies the driver to select
+    LCD_PROTO_TI_DA8XX_LCD protocol as default. In this way the
+    char LCD driver will work as statically linked module also.
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit 0a15905a327682f28eec7701f118e957e4135c19
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Mon Nov 2 13:56:23 2009 +0530
+
+    DA850/OMAP-L138: McBSP: Move the pinmux setup to board file
+    
+    Builds fails when DA830/OMAP-L137 only is configured as system type.
+    This is due to MCBSP pin mux setup which is present in devices-da8xx.c file.
+    Move this to board file for DA850/OMAP-L138 EVM.
+    
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit a816455575713e2b186db9de1f28e28ff2e6c969
+Author: Nori, Sekhar <nsekhar@ti.com>
+Date:   Thu Oct 22 09:42:18 2009 +0000
+
+    davinci: DA850/OMAP-L138: rearrange include file order in da850.c
+    
+    commit c735eeb86fedb0e81e6eb2cef75a6048b6263c58 changed the order
+    of platform_device.h inclusion in da850.c. Rearrange to keep all
+    includes from linux/ together
+    
+    Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+
+commit a414052e74307f5c78272618c1f3c751306bd184
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Mon Oct 26 17:06:23 2009 +0530
+
+    DA850/OMAP-L138: Fix for audio module to work
+    
+    This patch adds another check to register McASP device when
+    audio is built as a kernel module.
+    
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit f9e7e36ee40a265005f627f73e84124659aac160
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Thu Oct 22 18:33:13 2009 +0530
+
+    DA850/OMAP-L138: Platform support for McBSP
+    
+    This patch adds McBSP resources, pin mux, clock definitions. In addition
+    it defines McBSP platfrom device and platform data in the board file.
+    
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit 2f0005772d4c0102df14a4fe0913db82993fb239
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Thu Oct 22 17:04:49 2009 +0530
+
+    DA850/OMAP-L138: Add McBSP driver
+    
+    This patch adds McBSP driver for DA850/OMAP-L138.
+    This driver is used mainly for serial data transfer applications.
+    
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+
+commit c359be41e2ea85cda6c0e23a2d7a0bde663f80f4
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Thu Oct 22 16:01:59 2009 +0530
+
+    davinci: Add gpio7[4] pin to mux table
+    
+    This patch adds GPIO pin 116 to mux table enabling
+    the gpio test application to work. This GPIO pin
+    is connected to S7-8 pin on the DA850/OMAP-L138 EVM.
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit b015b37e7f205b7d76051486cb0e60607b79a200
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Thu Oct 22 15:50:59 2009 +0530
+
+    davinci: Add platform data for da830/omap-l137 char lcd
+    
+    This patch adds the platform data for the Hantronix
+    character LCD panel found on DA830/OMAP-L137 EVM.
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit 2b8df1c0844d0114a5025e98e415549e52d2dfbf
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Thu Oct 22 15:26:30 2009 +0530
+
+    davinci: Add platform data for da850/omap-l138 char lcd
+    
+    This patch adds the platform data for the Hantronix
+    character LCD panel found on DA850/OMAP-L138 EVM.
+    
+    To initialize the character LCD on da850/omap-l138,
+    some pins have to be configured using the I2C IO
+    expander (TCA6416). Code to configure this expander
+    is also part of this patch.
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit 6e08e29ac81dd085c14a831d63dbdd1e597c5696
+Author: Chaithrika U S <chaithrika@ti.com>
+Date:   Wed Oct 7 17:42:07 2009 +0530
+
+    da8xx/omap-l1: Add default configuration for DA850 and DA830
+    
+    Include al the drivers in the default configuration except
+    the ones which cause pinmux conflict.
+    
+    Also, disable CONFIG_LOCALVERSION_AUTO in defconfig
+    
+    Kernel build process was automatically appending version
+    information to the version string when built. Due to this
+    some kernel modules built with the SDK, were not getting
+    inserted on the EVM booted with default uImage due to
+    version mis-match. Disbaling the CONFIG_LOCALVERSION_AUTO
+    config option solves this issue.
+    
+    Signed-off-by: Chaithrika U S <chaithrika@ti.com>
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+
+commit 9a125bb1d1502857475d8432d1ddcbd0a1d5a64d
+Author: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+Date:   Fri Sep 4 17:36:05 2009 -0400
+
+    lcd: Add character LCD driver for da850/omap-l138
+    
+    On TI DA850/OMAP-L138 EVM, HD44780 (24x2) LCD panel is
+    being used, interfaced through the SoC specific LCD
+    interface[1].
+    
+    Driver from drivers/staging/panel/panel.c works for this
+    LCD panel but that driver expects the LCD panel to be
+    interfaced through a parallel port.
+    
+    This patch implements a dummy parallel port driver which
+    interfaces to the panel driver in staging area through the
+    LCD interface available on SoC.
+    
+    Signed-off-by: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
