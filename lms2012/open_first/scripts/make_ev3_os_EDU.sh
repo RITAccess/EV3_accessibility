@@ -13,6 +13,11 @@
 #   rm -R /mnt/tmpdrv_ud
 #fi
 
+if [[ $EUID != 0 ]]; then
+    echo "Please run script as root!"
+    exit 1;
+fi
+
 CURRENTPATH=${PWD}
 PATH1=~/projects/lms2012
 PATH2=open_first
@@ -82,18 +87,18 @@ chmod 644 /mnt/tmpdrv_ud/settings/BrickName
 if [ -f $PATH5/def_sett.tgz ];
 then
    rm $PATH5/def_sett.tgz
-   echo "Remove Old Files\t: [ DONE ]"
+   echo -e "Remove Old Files\t: [ DONE ]"
 fi
 cd /mnt/tmpdrv_ud/
 tar zcf $PATH5/def_sett.tgz ./
-echo "New DefSettFile Created\t: [ DONE ]"
+echo -e "New DefSettFile Created\t: [ DONE ]"
 
 mkfs.cramfs /mnt/tmpdrv_fs/ $PATH1/$PATH2/EV3.cramfs.bin
-echo "CRAMFS File Created\t: [ DONE ]"
+echo -e "CRAMFS File Created\t: [ DONE ]"
 
 #rm $PATH1/$PATH2/EV3.squashfs.bin
 #mksquashfs /mnt/tmpdrv_fs/ $PATH1/$PATH2/EV3.squashfs.bin
-#echo "SQUASHFS File Created\t: [ DONE ]"
+#echo -e "SQUASHFS File Created\t: [ DONE ]"
 
 cd $CURRENTPATH
 rm -R /mnt/tmpdrv_fs/
