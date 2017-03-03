@@ -11,6 +11,11 @@ echo ---------------------------------------------------------------------------
 echo
 sleep 1
 
+if [[ $EUID == 0 ]]; then
+	echo "Please run as normal user, running as root causes file permission issues."
+	exit 1;
+fi
+
 project=~/projects/lms2012/open_first
 
 source ${project}/env_setup
@@ -20,12 +25,12 @@ PATH=${AM1808_UBOOT_DIR}/tools:$PATH
 
 cd ${AM1808_KERNEL}
 
-make distclean ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabi-
+make distclean ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-
 
 cp ${AM1808_KERNEL}/pru-firmware-05-31-2011-1423-v3.0/PRU_SUART_Emulation.bin ${AM1808_KERNEL}/PRU/
 
 cp ${project}/LEGOBoard.config ${AM1808_KERNEL}/.config
-make ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabi-
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-
 
 make -j4 uImage ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabi-
 
