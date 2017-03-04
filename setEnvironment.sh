@@ -47,7 +47,10 @@ else
 	ln -s ~/projects/utilities/linuxdevkit/sg++_lite  ~/CodeSourcery/Sourcery_G++_Lite
 	echo "CodeSourcery linked to your home directory."
 fi
+echo "Linking ARM toolchain to CodeSourcey binary directory"
+ln -s /usr/bin/arm-linux-gnueabi-gcc ~/CodeSourcery/Sourcery_G++_Lite/bin/arm-none-linux-gnueabi-gcc
 echo
+
 sleep 1
 
 echo -e "Pushing am1808 to home"
