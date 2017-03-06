@@ -16,22 +16,24 @@ then
 
     if [ -d /media/LMS2012_EXT ]
     then
-
+		# Wipe old data
         echo "  ...."erasing.sdcard
         sudo rm -r /media/LMS2012/*
         sudo rm -r /media/LMS2012_EXT/*
         sync
 
+		# Copy new image over
         echo "  ...."copying.kernel.to.sdcard
         sudo cp uImage /media/LMS2012/uImage
         sync
 
+		# Copy filesystem over
         echo "  ...."copying.filesystem.to.sdcard
-	sudo cp lmsfs.tar.bz2 /media/LMS2012_EXT
-	cd /media/LMS2012_EXT
-	sudo tar -jxf lmsfs.tar.bz2 
-	sudo rm lmsfs.tar.bz2
-	cd ${current}
+		sudo cp lmsfs.tar.bz2 /media/LMS2012_EXT
+		cd /media/LMS2012_EXT
+		sudo tar -jxf lmsfs.tar.bz2 
+		sudo rm lmsfs.tar.bz2
+		cd ${current}
         sync
 
         echo "  ...."copying.application.to.sdcard
