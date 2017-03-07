@@ -1,11 +1,13 @@
 #!/bin/bash
+#echo "This script is being reviewed"
+#exit 1
 
 source ${PWD}/env_setup
 curdir=${PWD}
 sudo
 
 clear
-echo 
+echo
 echo "*** FORMAT SDCARD ********************************** TCP120706 ***"
 echo
 echo BE SURE SDCARD IS REMOVED
@@ -13,7 +15,7 @@ echo -n and press enter or Ctrl-C to skip" ? "
 read
 
 clear
-echo 
+echo
 echo "*** FORMAT SDCARD ********************************** TCP120706 ***"
 echo
 sleep 2
@@ -26,7 +28,7 @@ echo -n and press enter or Ctrl-C to skip" ? "
 read
 
 clear
-echo 
+echo
 echo "*** FORMAT SDCARD ********************************** TCP120706 ***"
 echo
 sleep 2
@@ -62,15 +64,18 @@ if [ -n "$drive" ]; then
 
 			sleep 5
 
+			# Unmount and surpress information to the null file
 			sudo umount /dev/${drive}p1 &> /dev/null
 			sudo umount /dev/${drive}p2 &> /dev/null
 
+			# modify drive, echo any errors to error file
 			sudo fdisk /dev/${drive} < fdisk.cmd &>> sdcard.err
 
 			sleep 2
 
 			echo
 			echo "  ...."making.kernel.partition
+			# Create MSDOS partition, any issues are redirected to stderror file.
 			sudo mkfs.msdos -n LMS2012 /dev/${drive}p1 &>> sdcard.err
 
 			sleep 2
@@ -85,6 +90,7 @@ if [ -n "$drive" ]; then
 
 			if [ -e /dev/${drive}p1 ]; then
 			    if [ -e /dev/${drive}p2 ]; then
+				    sudo partprobe /dev/${drive}*
 			        echo
 			        echo SUCCESS
     			else
