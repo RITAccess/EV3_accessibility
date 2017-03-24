@@ -3,7 +3,7 @@ EVA - EV3 Accessiblity
 
 ## Things you will need
 
-* A Linux (virtual) installation.  I used Ubuntu 13.04 on VMware Workstation, but I am sure other combinations also work.   
+* A Linux installation (Virtual or Native).  I used Linux Mint 18.1 running natively on a dual boot machine.    
 The reason for the Linux installation requirement is due to the case-sensitive filenames used by the Linux kernel source repository. Attempting to clone the source repository to a non-case sensitive file system such as Mac OSX HFS+ or Windows FAT would result in a corrupted repository.
 * Code Sourcery Lite for ARM version 2009q1-203.  You can [download here directly][3].
 * The mkimage program from u-boot-tools package to compile kernel.
