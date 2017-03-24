@@ -26,7 +26,7 @@ Byte codes:
 
 opOUTPUT_GET_TYPE     LAYER   NO       *TYPE                                   // Get output device type
 opOUTPUT_SET_TYPE     LAYER   NO       TYPE                                    // Set output device type
-opOUTPUT_RESET        LAYER   NOS                                              // Resets tacho count
+opOUTPUT_RESET        LAYER   NOS                                              // Reset position  (POS=0)
 opOUTPUT_STOP         LAYER   NOS      BRAKE                                   // Stop outputs    (brake or coast)
 opOUTPUT_POWER        LAYER   NOS      POWER                                   // Set power       (suspend regulation and positioning)
 opOUTPUT_SPEED        LAYER   NOS      SPEED                                   // Set speed (relative to polarity - enables regulation if tacho)
@@ -54,7 +54,7 @@ Parameters:
                       NOS     DATA8    [0x00..0x0F]        // Bit field representing output 1 to 4 (0x01, 0x02, 0x04, 0x08)
                       BRAKE   DATA8    [0..1]              // Output state after stop              (0=Coast,  1=Brake)
                       POWER   DATA8    [+-0..100%]         // Power relative to polarity
-                      SPEED   DATA8    [+-0..100%]         // Speed relative to polarity
+                      SPEED   DATA8    [+-0..100%]         // Speed relative to polarity           (0->BRAKE=1)
                       STEPS   DATA32   [+-0..MAX]          // Steps in degrees                     (0=infinite)
                       POL     DATA8    [+-0..1]            // Polarity +-1, 0=toggle               (multiplied to SPEED and POWER)
                       POS     DATA32   [+-0..MAX]          // Steps in degrees                     (0=infinite)
@@ -70,9 +70,8 @@ Parameters:
 /*
  * SYNCRONIZATION:
  *
- *  Speed [-100 .. +100] is move forward or move backwards
- *  Turn ratio [-200 .. +200] is how tight you turn and to
- *  what direction you turn
+ *  Speed -100 to +100 is move forward or move backwards
+ *  Turn ratio is how tight you turn and to what direction you turn
  *   - 0 value is moving straight forward
  *   - Negative values turns to the left
  *   - Positive values turns to the right
@@ -88,7 +87,7 @@ Parameters:
  *  0     = Layer
  *  10    = Motor bit field - Motor B and D
  *  100   = Motor speed     - Motor B will run at speed 100 (because ratio is positive)
- *  50    = Turn ratio      - Motor D will run at speed 50
+ *  10    = Turn ratio      - Motor D will run at speed 50
  *  10000 = time in mS      - Motors will run for 10 sec.
  *  1     = Brake bit       - When 10 sec. has elapsed then brake both motors
  *
@@ -98,7 +97,7 @@ Parameters:
  *  0     = Layer
  *  10    = Motor bit field - Motor B and D
  *  100   = Motor speed     - Motor B will run at speed 100 (because ratio is positive)
- *  150   = Turn ratio      - Motor D will run at speed -50
+ *  10    = Turn ratio      - Motor D will run at speed -50
  *  10000 = time in mS      - Motors will run for 10 sec.
  *  1     = Brake bit       - When 10 sec. has elapsed then brake both motors
  *
@@ -108,7 +107,7 @@ Parameters:
  *  0     = Layer
  *  10    = Motor bit field - Motor B and D
  *  100   = Motor speed     - Motor B will run at speed  50 (because ratio is positive)
- *  -50   = Turn ratio      - Motor D will run at speed 100
+ *  10    = Turn ratio      - Motor D will run at speed 100
  *  10000 = time in mS      - Motors will run for 10 sec.
  *  1     = Brake bit       - When 10 sec. has elapsed then brake both motors
  *
@@ -118,7 +117,7 @@ Parameters:
  *  0     = Layer
  *  10    = Motor bit field - Motor B and D
  *  100   = Motor speed     - Motor B will run at speed -50 (because ratio is positive)
- *  -150  = Turn ratio      - Motor D will run at speed 100
+ *  10    = Turn ratio      - Motor D will run at speed 100
  *  10000 = time in mS      - Motors will run for 10 sec.
  *  1     = Brake bit       - When 10 sec. has elapsed then brake both motors
  *
@@ -306,7 +305,6 @@ void    cOutputSetTypes(char *pTypes)
  *  \param  (DATA8)   Val     - 32 bit value you would like to pack
  *  \param  (DATA8*)  pStr    - String pointer where to pack the 32
  *                              bit Val
- *  \return (UBYTE)   Len     - Length of the packed data
  */
 UBYTE      cOutputPackParam(DATA32 Val, DATA8 *pStr)
 {
@@ -355,14 +353,31 @@ UBYTE      cOutputPackParam(DATA32 Val, DATA8 *pStr)
   }
   return(Len);
 }
+/*
 
+UBYTE     cMotorGetBusyFlags(void)
+{
+  int     test, test2;
+  char    BusyReturn[10]; // Busy mask
+
+  if (OutputInstance.PwmFile >= 0)
+  {
+    read(OutputInstance.PwmFile,BusyReturn,4);
+    sscanf(BusyReturn,"%u %u",&test,&test2);
+  }
+  else
+  {
+    test = 0;
+  }
+  printf("cMotorGetBusyFlags test = %d\n\r", test);
+  return(test);
+}*/
 
 void ResetDelayCounter(UBYTE Pattern)
 {
 	BusyOnes = Pattern;
 	DELAY_COUNTER = 0;
 }
-
 
 UBYTE     cMotorGetBusyFlags(void)
 {
@@ -397,12 +412,13 @@ void      cMotorSetBusyFlags(UBYTE Flags)
 }
 
 
+
 //******* BYTE CODE SNIPPETS **************************************************
 
 
 /*! \page cOutput Output
  *  <hr size="1"/>
- *  <b>     opOUTPUT_PRG_STOP ()  </b>
+ *  <b>     opOUTPUT_PRG_STOP (LAYER, NO, TYPE)  </b>
  *
  *- Program stop\n
  *- Dispatch status unchanged
@@ -464,15 +480,15 @@ void      cOutputSetType(void)
 
         if ((Type == TYPE_NONE) || (Type == TYPE_ERROR))
         {
-          #ifdef DEBUG
-            printf("                Output %c Disable\r\n",'A' + No);
-          #endif
+#ifdef DEBUG
+          printf("                Output %c Disable\r\n",'A' + No);
+#endif
         }
         else
         {
-          #ifdef DEBUG
-            printf("                Output %c Enable\r\n",'A' + No);
-          #endif
+#ifdef DEBUG
+          printf("                Output %c Enable\r\n",'A' + No);
+#endif
         }
       }
     }
@@ -493,6 +509,7 @@ void      cOutputSetType(void)
           SetObjectIp(TmpIp - 1);
           DspStat  =  BUSYBREAK;
         }
+        //cDaisyDownStreamCmd(DaisyBuf, Len, Layer);
       }
       else
       {
@@ -559,6 +576,7 @@ void      cOutputReset(void)
           SetObjectIp(TmpIp - 1);
           DspStat  =  BUSYBREAK;
         }
+        //cDaisyDownStreamCmd(DaisyBuf, Len, Layer);
       }
       else
       {
@@ -629,6 +647,7 @@ void      cOutputStop(void)
           SetObjectIp(TmpIp - 1);
           DspStat  =  BUSYBREAK;
         }
+        //cDaisyDownStreamCmd(DaisyBuf, Len, Layer);
       }
       else
       {
@@ -651,6 +670,8 @@ void      cOutputStop(void)
  *  \param  (DATA8)   LAYER   - Chain layer number [0..3]
  *  \param  (DATA8)   NOS     - Output bit field [0x00..0x0F]
  *  \param  (DATA8)   SPEED   - Speed [-100..100%]
+ *
+ *
  */
 /*! \brief  opOUTPUT_SPEED byte code
  *
@@ -674,6 +695,8 @@ void      cOutputSpeed(void)
 
   if (Layer == 0)
   {
+
+
     SetSpeed[0] = (DATA8)opOUTPUT_SPEED;
     SetSpeed[1] = Nos;
     SetSpeed[2] = Speed;
@@ -768,6 +791,11 @@ void      cOutputPower(void)
           SetObjectIp(TmpIp - 1);
           DspStat  =  BUSYBREAK;
         }
+        else
+        {
+          // printf("cOutPut @ opOUTPUT_POWER after cDaisyDownStreamCmd - OK and WriteState = %d\n\r", cDaisyGetLastWriteState());
+        }
+        //cDaisyDownStreamCmd(DaisyBuf, Len, Layer);
       }
       else
       {
@@ -841,6 +869,12 @@ void      cOutputStart(void)
           SetObjectIp(TmpIp - 1);
           DspStat  =  BUSYBREAK;
         }
+        else
+        {
+          //printf("cOutPut @ opOUTPUT_START after cDaisyDownStreamCmd - OK and WriteState = %d\n\r", cDaisyGetLastWriteState());
+        }
+        //cDaisyDownStreamCmd(DaisyBuf, Len, Layer);
+
       }
       else
       {
@@ -910,6 +944,7 @@ void      cOutputPolarity(void)
           SetObjectIp(TmpIp - 1);
           DspStat  =  BUSYBREAK;
         }
+        //cDaisyDownStreamCmd(DaisyBuf, Len, Layer);
       }
       else
       {
@@ -991,11 +1026,16 @@ void      cOutputStepPower(void)
         Len             +=  cOutputPackParam((DATA32)StepPower.Step2, &(DaisyBuf[Len]));
         Len             +=  cOutputPackParam((DATA32)StepPower.Step3, &(DaisyBuf[Len]));
         Len             +=  cOutputPackParam((DATA32)StepPower.Brake, &(DaisyBuf[Len]));
+
+        //if(OK != cDaisyDownStreamCmd(DaisyBuf, Len, Layer))
         if(OK != cDaisyMotorDownStream(DaisyBuf, Len, Layer, StepPower.Nos))
         {
           SetObjectIp(TmpIp - 1);
           DspStat  =  BUSYBREAK;
         }
+
+        //cDaisyMotorDownStream(DaisyBuf, Len, Layer, StepPower.Nos);
+
       }
       else
       {
@@ -1082,6 +1122,7 @@ void      cOutputTimePower(void)
           SetObjectIp(TmpIp - 1);
           DspStat  =  BUSYBREAK;
         }
+        //cDaisyMotorDownStream(DaisyBuf, Len, Layer, TimePower.Nos);
       }
       else
       {
@@ -1097,7 +1138,7 @@ void      cOutputTimePower(void)
  *  <hr size="1"/>
  *  <b>     opOUTPUT_STEP_SPEED (LAYER, NOS, SPEED, STEP1, STEP2, STEP3, BRAKE)  </b>
  *
- *- Set Ramp up, constant and rampdown steps and speed of the outputs\n
+ *- Set Ramp up, constant and rampdown steps and power of the outputs\n
  *- Dispatch status unchanged
  *
  *  \param  (DATA8)   LAYER   - Chain layer number [0..3]
@@ -1120,6 +1161,9 @@ void      cOutputStepSpeed(void)
   DSPSTAT     DspStat = NOBREAK;
   IP          TmpIp;
 
+  //DEBUG
+//  int i;
+
   TmpIp            =  GetObjectIp();
   Len              =  0;
   Layer            =  *(DATA8*)PrimParPointer();
@@ -1130,7 +1174,16 @@ void      cOutputStepSpeed(void)
   StepSpeed.Step2  =  *(DATA32*)PrimParPointer();
   StepSpeed.Step3  =  *(DATA32*)PrimParPointer();
   StepSpeed.Brake  =  *(DATA8*)PrimParPointer();
+/*
+  printf("StepSpeed.Cmd = %d\n\r", StepSpeed.Cmd);
+  printf("StepSpeed.Nos = %d\n\r", StepSpeed.Nos);
+  printf("StepSpeed.Speed = %d\n\r", StepSpeed.Speed);
+  printf("StepSpeed.Step1 = %d\n\r", StepSpeed.Step1);
+  printf("StepSpeed.Step2 = %d\n\r", StepSpeed.Step2);
+  printf("StepSpeed.Step3 = %d\n\r", StepSpeed.Step3);
+  printf("StepSpeed.Brake = %d\n\r", StepSpeed.Brake);
 
+*/
   if (0 == Layer)
   {
     if (OutputInstance.PwmFile >= 0)
@@ -1138,8 +1191,8 @@ void      cOutputStepSpeed(void)
       write(OutputInstance.PwmFile,(DATA8*)&(StepSpeed.Cmd),sizeof(StepSpeed));
 
       for (Tmp = 0; Tmp < OUTPUTS; Tmp++)
-      {
-        // Set calling id for all involved inputs
+      {// Set calling id for all involved inputs
+
         if (StepSpeed.Nos & (0x01 << Tmp))
         {
           OutputInstance.Owner[Tmp] = CallingObjectId();
@@ -1162,11 +1215,27 @@ void      cOutputStepSpeed(void)
         Len             +=  cOutputPackParam((DATA32)StepSpeed.Step2, &(DaisyBuf[Len]));
         Len             +=  cOutputPackParam((DATA32)StepSpeed.Step3, &(DaisyBuf[Len]));
         Len             +=  cOutputPackParam((DATA32)StepSpeed.Brake, &(DaisyBuf[Len]));
+
+       /* printf("Len = %d\n\r", Len);
+        for(i = 0; i < Len; i++)
+                            printf("DaisyBuf[%d]= %x\n\r", i, DaisyBuf[i]);
+                          printf("\n\r");
+*/
+
         if(OK != cDaisyMotorDownStream(DaisyBuf, Len, Layer, StepSpeed.Nos))
         {
+          printf("NOT ok txed cOutputStepSpeed\n\r");
           SetObjectIp(TmpIp - 1);
           DspStat  =  BUSYBREAK;
         }
+        else
+        {
+  /*        for(i = 0; i < Len; i++)
+                    printf("DaisyBuf[%d]= %d, ", i, DaisyBuf[i]);
+                  printf("\n\r");
+*/
+        }
+        //cDaisyMotorDownStream(DaisyBuf, Len, Layer, StepSpeed.Nos);
       }
       else
       {
@@ -1183,7 +1252,7 @@ void      cOutputStepSpeed(void)
  *  <hr size="1"/>
  *  <b>     opOUTPUT_TIME_SPEED (LAYER, NOS, SPEED, STEP1, STEP2, STEP3, BRAKE)  </b>
  *
- *- Set Ramp up, constant and rampdown steps and speed of the outputs\n
+ *- Set Ramp up, constant and rampdown steps and power of the outputs\n
  *- Dispatch status unchanged
  *
  *  \param  (DATA8)   LAYER   - Chain layer number [0..3]
@@ -1253,6 +1322,7 @@ void      cOutputTimeSpeed(void)
           SetObjectIp(TmpIp - 1);
           DspStat  =  BUSYBREAK;
         }
+        //cDaisyMotorDownStream(DaisyBuf, Len, Layer, TimeSpeed.Nos);
       }
       else
       {
@@ -1269,7 +1339,7 @@ void      cOutputTimeSpeed(void)
  *  <hr size="1"/>
  *  <b>     opOUTPUT_STEP_SYNC (LAYER, NOS, SPEED, TURN, STEP, BRAKE)  </b>
  *
- *- Syncronizes 2 motors (and 2 motors only) in steps \n
+ *- \n
  *- Dispatch status unchanged
  *
  *  \param  (DATA8)   LAYER   - Chain layer number [0..3]
@@ -1286,7 +1356,6 @@ void      cOutputStepSync(void)
 {
   DATA8       Layer;
   DATA8       Tmp;
-  DATA8       No;
   STEPSYNC    StepSync;
   UBYTE       Len;
   DSPSTAT     DspStat = NOBREAK;
@@ -1302,60 +1371,49 @@ void      cOutputStepSync(void)
   StepSync.Step  =  *(DATA32*)PrimParPointer();
   StepSync.Brake =  *(DATA8*)PrimParPointer();
 
-  // Sync motor cmd is illegal if no of motors are different from 2
-  for (Tmp = 0, No = 0; Tmp < OUTPUTS; Tmp++)
+  if (0 == Layer)
   {
-    if (StepSync.Nos & (0x01 << Tmp))
+    if (OutputInstance.PwmFile >= 0)
     {
-      No++;
-    }
-  }
+      write(OutputInstance.PwmFile,(DATA8*)&(StepSync.Cmd),sizeof(StepSync));
 
-  if (2 == No)
-  {
-    if (0 == Layer)
-    {
-      if (OutputInstance.PwmFile >= 0)
+      for (Tmp = 0; Tmp < OUTPUTS; Tmp++)
       {
-        write(OutputInstance.PwmFile,(DATA8*)&(StepSync.Cmd),sizeof(StepSync));
-
-        for (Tmp = 0; Tmp < OUTPUTS; Tmp++)
+        // Set calling id for all involved outputs
+        if (StepSync.Nos & (0x01 << Tmp))
         {
-          // Set calling id for all involved outputs
-          if (StepSync.Nos & (0x01 << Tmp))
-          {
-            OutputInstance.Owner[Tmp] = CallingObjectId();
-          }
+          OutputInstance.Owner[Tmp] = CallingObjectId();
         }
       }
     }
-    else
-    {
-      #ifndef    DISABLE_DAISYCHAIN_COM_CALL
-        if (cDaisyReady() != BUSY)
-        {
-          DaisyBuf[Len++]  =  0;
-          DaisyBuf[Len++]  =  0;
-          DaisyBuf[Len++]  =  opOUTPUT_STEP_SYNC;
-          Len             +=  cOutputPackParam((DATA32)0, &(DaisyBuf[Len]));
-          Len             +=  cOutputPackParam((DATA32)StepSync.Nos,   &(DaisyBuf[Len]));
-          Len             +=  cOutputPackParam((DATA32)StepSync.Speed, &(DaisyBuf[Len]));
-          Len             +=  cOutputPackParam((DATA32)StepSync.Turn,  &(DaisyBuf[Len]));
-          Len             +=  cOutputPackParam((DATA32)StepSync.Step,  &(DaisyBuf[Len]));
-          Len             +=  cOutputPackParam((DATA32)StepSync.Brake, &(DaisyBuf[Len]));
-          if(OK != cDaisyMotorDownStream(DaisyBuf, Len, Layer, StepSync.Nos))
-          {
-            SetObjectIp(TmpIp - 1);
-            DspStat  =  BUSYBREAK;
-          }
-        }
-        else
+  }
+  else
+  {
+    #ifndef    DISABLE_DAISYCHAIN_COM_CALL
+      if (cDaisyReady() != BUSY)
+      {
+        DaisyBuf[Len++]  =  0;
+        DaisyBuf[Len++]  =  0;
+        DaisyBuf[Len++]  =  opOUTPUT_STEP_SYNC;
+        Len             +=  cOutputPackParam((DATA32)0, &(DaisyBuf[Len]));
+        Len             +=  cOutputPackParam((DATA32)StepSync.Nos,   &(DaisyBuf[Len]));
+        Len             +=  cOutputPackParam((DATA32)StepSync.Speed, &(DaisyBuf[Len]));
+        Len             +=  cOutputPackParam((DATA32)StepSync.Turn,  &(DaisyBuf[Len]));
+        Len             +=  cOutputPackParam((DATA32)StepSync.Step,  &(DaisyBuf[Len]));
+        Len             +=  cOutputPackParam((DATA32)StepSync.Brake, &(DaisyBuf[Len]));
+        if(OK != cDaisyMotorDownStream(DaisyBuf, Len, Layer, StepSync.Nos))
         {
           SetObjectIp(TmpIp - 1);
           DspStat  =  BUSYBREAK;
         }
-      #endif
-    }
+        //cDaisyMotorDownStream(DaisyBuf, Len, Layer, StepSync.Nos);
+      }
+      else
+      {
+        SetObjectIp(TmpIp - 1);
+        DspStat  =  BUSYBREAK;
+      }
+    #endif
   }
   SetDispatchStatus(DspStat);
 }
@@ -1365,7 +1423,7 @@ void      cOutputStepSync(void)
  *  <hr size="1"/>
  *  <b>     opOUTPUT_TIME_SYNC (LAYER, NOS, SPEED, TURN, STEP, BRAKE)  </b>
  *
- *- Syncronizes 2 motors (and 2 motors only) for time\n
+ *- \n
  *- Dispatch status unchanged
  *
  *  \param  (DATA8)   LAYER   - Chain layer number [0..3]
@@ -1374,6 +1432,7 @@ void      cOutputStepSync(void)
  *  \param  (DATA16)  TURN    - Turn Ratio         [-200..200]
  *  \param  (DATA32)  TIME    - Time in ms         [0..MAX]
  *  \param  (DATA8)   BRAKE   - 0 = Coast, 1 = BRAKE
+ *
  */
 /*! \brief  opOUTPUT_STEP_SYNC byte code
  *
@@ -1382,7 +1441,6 @@ void      cOutputTimeSync(void)
 {
   DATA8     Layer;
   DATA8     Tmp;
-  DATA8     No;
   TIMESYNC  TimeSync;
   UBYTE     Len;
   DSPSTAT   DspStat = NOBREAK;
@@ -1398,60 +1456,49 @@ void      cOutputTimeSync(void)
   TimeSync.Time  =  *(DATA32*)PrimParPointer();
   TimeSync.Brake =  *(DATA8*)PrimParPointer();
 
-  // Sync motor cmd is illegal if no of motors are different from 2
-  for (Tmp = 0, No = 0; Tmp < OUTPUTS; Tmp++)
+  if (0 == Layer)
   {
-    if (TimeSync.Nos & (0x01 << Tmp))
+    if (OutputInstance.PwmFile >= 0)
     {
-      No++;
-    }
-  }
+      write(OutputInstance.PwmFile,(DATA8*)&(TimeSync.Cmd),sizeof(TimeSync));
 
-  if (2 == No)
-  {
-    if (0 == Layer)
-    {
-      if (OutputInstance.PwmFile >= 0)
+      for (Tmp = 0; Tmp < OUTPUTS; Tmp++)
       {
-        write(OutputInstance.PwmFile,(DATA8*)&(TimeSync.Cmd),sizeof(TimeSync));
-
-        for (Tmp = 0; Tmp < OUTPUTS; Tmp++)
+        // Set calling id for all involved outputs
+        if (TimeSync.Nos & (0x01 << Tmp))
         {
-          // Set calling id for all involved outputs
-          if (TimeSync.Nos & (0x01 << Tmp))
-          {
-            OutputInstance.Owner[Tmp] = CallingObjectId();
-          }
+          OutputInstance.Owner[Tmp] = CallingObjectId();
         }
       }
     }
-    else
-    {
-      #ifndef    DISABLE_DAISYCHAIN_COM_CALL
-        if (cDaisyReady() != BUSY)
-        {
-          DaisyBuf[Len++]  =  0;
-          DaisyBuf[Len++]  =  0;
-          DaisyBuf[Len++]  =  opOUTPUT_TIME_SYNC;
-          Len             +=  cOutputPackParam((DATA32)0, &(DaisyBuf[Len]));
-          Len             +=  cOutputPackParam((DATA32)TimeSync.Nos,   &(DaisyBuf[Len]));
-          Len             +=  cOutputPackParam((DATA32)TimeSync.Speed, &(DaisyBuf[Len]));
-          Len             +=  cOutputPackParam((DATA32)TimeSync.Turn,  &(DaisyBuf[Len]));
-          Len             +=  cOutputPackParam((DATA32)TimeSync.Time,  &(DaisyBuf[Len]));
-          Len             +=  cOutputPackParam((DATA32)TimeSync.Brake, &(DaisyBuf[Len]));
-          if(OK != cDaisyMotorDownStream(DaisyBuf, Len, Layer, TimeSync.Nos))
-          {
-            SetObjectIp(TmpIp - 1);
-            DspStat  =  BUSYBREAK;
-          }
-        }
-        else
+  }
+  else
+  {
+    #ifndef    DISABLE_DAISYCHAIN_COM_CALL
+      if (cDaisyReady() != BUSY)
+      {
+        DaisyBuf[Len++]  =  0;
+        DaisyBuf[Len++]  =  0;
+        DaisyBuf[Len++]  =  opOUTPUT_TIME_SYNC;
+        Len             +=  cOutputPackParam((DATA32)0, &(DaisyBuf[Len]));
+        Len             +=  cOutputPackParam((DATA32)TimeSync.Nos,   &(DaisyBuf[Len]));
+        Len             +=  cOutputPackParam((DATA32)TimeSync.Speed, &(DaisyBuf[Len]));
+        Len             +=  cOutputPackParam((DATA32)TimeSync.Turn,  &(DaisyBuf[Len]));
+        Len             +=  cOutputPackParam((DATA32)TimeSync.Time,  &(DaisyBuf[Len]));
+        Len             +=  cOutputPackParam((DATA32)TimeSync.Brake, &(DaisyBuf[Len]));
+        if(OK != cDaisyMotorDownStream(DaisyBuf, Len, Layer, TimeSync.Nos))
         {
           SetObjectIp(TmpIp - 1);
           DspStat  =  BUSYBREAK;
         }
-      #endif
-    }
+        //cDaisyMotorDownStream(DaisyBuf, Len, Layer, TimeSync.Nos);
+      }
+      else
+      {
+        SetObjectIp(TmpIp - 1);
+        DspStat  =  BUSYBREAK;
+      }
+    #endif
   }
   SetDispatchStatus(DspStat);
 }
@@ -1463,8 +1510,9 @@ void      cOutputTimeSync(void)
  *
  *  \param  (DATA8)   LAYER   - Chain layer number [0..3]
  *  \param  (DATA8)   NO      - Output no [0..3]
- *  \return (DATA8)   *SPEED  - Speed [-100..100]
- *  \return (DATA32)  *TACHO  - Tacho pulses [-MAX .. +MAX]
+ *  \param  (DATA8)   *SPEED  - Speed [-100..100]
+ *  \param  (DATA32)  *TACHO  - Tacho pulses [-MAX .. +MAX]
+ *
  */
 /*! \brief  opOUTPUT_READ byte code
  *
@@ -1493,6 +1541,7 @@ void      cOutputRead(void)
 }
 
 
+
 /*! \page   cOutput
  *  <hr size="1"/>
  *  <b>     opOUTPUT_READY (LAYER, NOS) </b>
@@ -1503,6 +1552,8 @@ void      cOutputRead(void)
  *
  *  \param  (DATA8)   LAYER   - Chain layer number [0..3]
  *  \param  (DATA8)   NOS     - Output bit field [0x00..0x0F]
+ *
+ *
  */
 /*! \brief  opOUTPUT_READY byte code
  *
@@ -1592,6 +1643,7 @@ void      cOutputReady(void)
  *
  *- Testing if output is not used \n
  *
+ *
  *  \param  (DATA8)   LAYER   - Chain layer number [0..3]
  *  \param  (DATA8)   NOS     - Output bit field [0x00..0x0F]
  *  \return (DATA8)   BUSY    - Output busy flag (0 = ready, 1 = Busy)
@@ -1642,6 +1694,7 @@ void      cOutputTest(void)
  *  <b>     opOUTPUT_CLR_COUNT (LAYER, NOS) </b>
  *
  *- Clearing tacho count when used as sensor \n
+ *
  *
  *  \param  (DATA8)   LAYER   - Chain layer number [0..3]
  *  \param  (DATA8)   NOS     - Output bit field [0x00..0x0F]
@@ -1695,6 +1748,7 @@ void      cOutputClrCount(void)
           SetObjectIp(TmpIp - 1);
           DspStat  =  BUSYBREAK;
         }
+        //cDaisyDownStreamCmd(DaisyBuf, Len, Layer);
       }
       else
       {
@@ -1717,7 +1771,7 @@ void      cOutputClrCount(void)
  *
  *  \param  (DATA8)   LAYER   - Chain layer number [0..3]
  *  \param  (DATA8)   NOS     - Output number [0x00..0x0F]
- *  \return (DATA32)  *TACHO  - Tacho pulses [-MAX .. +MAX]
+ *  \param  (DATA32)  *TACHO  - Tacho pulses [-MAX .. +MAX]
  */
 /*! \brief  opOUTPUT_GET_COUNT byte code
  *

@@ -19,134 +19,87 @@
  */
 
 
-/*! \page BluetoothPart Bluetooth
+/*! \page BluetoothPart Bluetooth Description
  *
+ *- \subpage  InterfacetoComm
  *- \subpage  InternalBtFunctionality
  *
  */
 
 
-/*! \page InternalBtFunctionality Bluetooth description
+/*! \page InterfacetoComm Comm Interface Description
  *
  *  <hr size="1"/>
  *
-  \verbatim
+ *  Interfaces to C_COM
+ *
+ *
+ */
 
-   Support of up to 7 connection - either 7 outgoing or 1 incoming connection.
-
-   Scatter-net is not supported. If connected from outside (by bluetooth) then
-   the  connection is closed if an outgoing connection is made from the brick.
-
-   Pin agent is used to handle pairing.
-
-   DBUS is used to handle connection creation.
-
-   Sockets are used to communicate with the remote devices.
-
-
-   Bluetooth buffer setup
-   ----------------------
-
-   RX side:
-
-   Bluetooth socket
-        |
-         --> c_bt RxBuf - Fragmented async. data bytes
-                 |
-                  --> c_bt Msg buffer  - Collected as complete LEGO protocol messages
-                             |
-                              --> c_com rx buffer - Transferred to c_com level for interpretation
-
-
-   Tx side:
-
-   c_com tx buffer
-         |
-          --> c_bt WriteBuf Buffer
-                      |
-                       -->  Bluetooth socket
-
-
-
-
-
-   In mode2:
-   ---------
-
-   RX:
-
-   Bluetooth socket
-         |
-          --> Mode2Buf - Fragmented data bytes (c_bt.c)
-                  |
-                   --> Mode2InBuf - Fragmented data bytes (c_i2c.c)
-                            |
-                             --> Transfer to Mode2 decoding
-                                    |
-                                     --> READBUF (return bytes from mode2 decoding) -> for mode1 decoding
-                                    |
-                                    |
-                                     --> WriteBuf (return bytes from mode2 decoding) -> for tx to remote mode2 device
-
-
-   TX:
-
-   Mode2WriteBuf   (c_bt.c)
-       |
-        --> Transfer to mode2 decoding  (data read in c_i2c.c)
-               |
-                --> WriteBuf (return bytes from mode2 decoding) -> for tx  (c_bt.c)
-                                            |
-                                             -->  Bluetooth socket
-
-
-
-   CONNECTION MANAGEMENT
-   ---------------------
-
-
-     CONNECTING:
-
-     Connecting brick:                                        Remote brick:
-
-     Connect to brick (Issued from byte codes)     |
-     - Set busy flag                               |
-     - Disable page inquiry                        |
-     - Open socket                           --->  |  --->    EVT_CONN_REQUEST
-                                                   |          - Issue remote name request
-                                                   |
-     Optional pin/passkey exchange (agent)   <-->  |  <-->    optional pin/passkey exchange (agent)
-                                                   |
-     EVT_CONN_COMPLETE                       <---  |  --->    EVT_CONN_COMPLETE
-     - Disable page inquiry                        |          - Disable page inquiry        (Cannot be connected to more than one, as a slave)
-     - Update Device list                          |          - Insert all info in dev list (Except connected)
-     - Update Search list                          |
-                                                   |
-     Socket write ready (Remote socket open) <---  |  --->    Success on accept listen socket (Socket gives remote address)
-     - NoOfConnDevices++                           |          - Set slave mode
-     - Update Search list to connected             |          - NoOfConnDevices++
-     - Update Device list to connected             |          - Update Device list to connected
-                                                   |          - Update Search list to connected
-                                                   |
-
-
-     DISCONNECTING:
-
-     Disconnecting brick:                          |          Remote brick:
-                                                   |
-     Disconnect  (Issued from byte codes)          |
-     - Close bluetooth socket                --->  |  --->    Socket indicates remote socket closed
-                                                   |          - Close socket
-                                                   |
-                                                   |
-     EVT_DISCONN_COMPLETE                    <---  |  --->    EVT_DISCONN_COMPLETE
-     - Update Search list to disconnected          |          - Update Search list to disconnected
-     - Update Device list to disconnected          |          - Update Device list to disconnected
-     - NoofConnDevices--                           |          - NoofConnDevices--
-     - If NoofConnDevices = 0 -> set idle mode     |          - If NoofConnDevices = 0 -> set idle mode
-
-  \endverbatim
-  */
+/*! \page InternalBtFunctionality Bluetooth functionality description
+ *
+ *  <hr size="1"/>
+ *
+ *
+ *  Support of up to 7 connection - either 7 outgoing connections or 1 incoming ->
+ *  scatter-net not supported
+ *
+ *
+ *  Bluetooth buffer setup
+ *  ----------------------
+ *
+ *  RX side:
+ *
+ *  Bluetooth socket
+ *       |
+ *        --> Bluetooth RxBuf - Fragmented async. data bytes
+ *                |
+ *                 --> Bluetooth Msg buffer  - Collected as complete LEGO protocol messages
+ *                            |
+ *                             --> Com msg buffer - Transferred to com level for interpretation
+ *
+ *
+ *  Tx side:
+ *
+ *  Com msg buffer
+ *        |
+ *         --> Bluetooth Tx Buffer
+ *                     |
+ *                      -->  Bluetooth socket
+ *
+ *
+ *
+ *
+ *
+ *  In mode2:
+ *  ---------
+ *
+ *  RX:
+ *
+ *  Bluetooth socket
+ *        |
+ *         --> Mode2Buf - Fragmented data bytes
+ *                 |
+ *                  --> Mode2InBuf - Fragmented data bytes (c_i2c.c)
+ *                           |
+ *                            --> Transfer to Mode2 decode device
+ *                                   |
+ *                                    --> READBUF (return bytes from mode 2 device) -> for mode1 decoding
+ *                                   |
+ *                                   |
+ *                                    --> WriteBuf (return bytes from mode 2 device) -> for tx to remote mode 2 device
+ *
+ *
+ *  TX:
+ *
+ *  Mode2WriteBuf
+ *      |
+ *       --> Transfer to mode2 decoding
+ *              |
+ *               --> WriteBuf (return bytes from mode2 decoding) -> for tx
+ *
+ *
+ */
 
 
 #include  "lms2012.h"
@@ -188,7 +141,6 @@
 
 
   static PAIREDDEVINFO PairedDevInfo;
-  static UBYTE         NameReqDueToPin = FALSE;
 
   BT_GLOBALS BtInstance;
   static  DBusConnection  *conn;
@@ -224,6 +176,8 @@
 #endif
 
 
+#define   LEGO_BUNDLE_SEED_ID                     "9RNK8ZF528"
+#define   LEGO_BUNDLE_ID                          "com.lego.lms"
 
 enum
 {
@@ -290,13 +244,6 @@ void                       BtClose(void);
 UBYTE                      BtIssueHciVisible(UBYTE Visible, UBYTE Page);
 
 
-#define   STOPScanning                  {\
-                                          BtSetup(BtInstance.OldState);\
-                                          BtInstance.ScanState        =   SCAN_OFF;\
-                                          BtInstance.HciSocket.Busy  &=  ~HCI_SCAN;\
-                                          BtIssueHciVisible(BtInstance.NonVol.Visible, BtInstance.PageState);\
-                                        }
-
 
 void    BtSetupHciSocket(void)
 {
@@ -322,7 +269,7 @@ void      BtSetupPinEvent(void)
   hci_filter_set_event(EVT_LINK_KEY_NOTIFY, &flt);
   hci_filter_set_event(EVT_ENCRYPT_CHANGE, &flt);
   hci_filter_set_event(EVT_CMD_COMPLETE, &flt);
-  hci_filter_set_event(EVT_CMD_STATUS, &flt);
+  hci_filter_set_event(EVT_CMD_STATUS, &flt);//
 
   hci_filter_set_event(EVT_INQUIRY_RESULT, &flt);
   hci_filter_set_event(EVT_INQUIRY_RESULT_WITH_RSSI, &flt);
@@ -340,6 +287,8 @@ void      BtSetupPinEvent(void)
   }
   BtInstance.HciSocket.p.fd      = BtInstance.HciSocket.Socket;
   BtInstance.HciSocket.p.events  = POLLIN | POLLERR | POLLHUP;
+
+
 }
 
 
@@ -503,38 +452,29 @@ void      BtCloseBtSocket(SLONG *pBtSocket)
 
 void      BtCloseCh(UBYTE ChIndex)
 {
-
-  if (CH_CONNECTING == BtInstance.BtCh[ChIndex].Status)
+  if (CH_FREE != BtInstance.BtCh[ChIndex].Status)
   {
-    if ((0 == BtInstance.NoOfConnDevs) && ((I_AM_MASTER == BtInstance.State) || (I_AM_SLAVE == BtInstance.State)))
-	  {
-	    BtSetup(I_AM_IN_IDLE);
-	  }
+    BtInstance.BtCh[ChIndex].Status = CH_FREE;
+  }
+
+  BtCloseBtSocket(&(BtInstance.BtCh[ChIndex].BtSocket.Socket));
+
+  if (0 < BtInstance.NoOfConnDevs)
+  {
+    BtInstance.NoOfConnDevs--;
+    if (0 == BtInstance.NoOfConnDevs)
+    {
+      BtSetup(I_AM_IN_IDLE);
+    }
   }
   else
   {
-    if (CH_CONNECTED == BtInstance.BtCh[ChIndex].Status)
+    if ((I_AM_MASTER == BtInstance.State) || (I_AM_SLAVE == BtInstance.State))
     {
-      if (0 < BtInstance.NoOfConnDevs)
-      {
-        BtInstance.NoOfConnDevs--;
-        if (0 == BtInstance.NoOfConnDevs)
-        {
-          BtSetup(I_AM_IN_IDLE);
-        }
-      }
-      else
-      {
-        if ((I_AM_MASTER == BtInstance.State) || (I_AM_SLAVE == BtInstance.State))
-        {
-          //Ensure going back to idle if only pairing (no application running on remote device)
-          BtSetup(I_AM_IN_IDLE);
-        }
-      }
+      //Ensure going back to idle if only pairing (no application running on remote device)
+      BtSetup(I_AM_IN_IDLE);
     }
   }
-  BtInstance.BtCh[ChIndex].Status = CH_FREE;
-  BtCloseBtSocket(&(BtInstance.BtCh[ChIndex].BtSocket.Socket));
 }
 
 
@@ -565,6 +505,7 @@ void      BtDisconnectAll(void)
 /*! \brief    cBtSetup
  *
  *  Function that handles all state switching
+ *
  *
  */
 void      BtSetup(UBYTE State)
@@ -646,7 +587,7 @@ void      BtSetup(UBYTE State)
       if (hci_send_cmd (BtInstance.HciSocket.Socket, OGF_LINK_CTL, OCF_INQUIRY, INQUIRY_CP_SIZE, &cp) < 0)
       {
         #ifdef DEBUG
-          printf("\r\n Can't start inquiry \r\n");
+          printf("Can't start inquiry");
         #endif
         return;
       }
@@ -696,10 +637,7 @@ UWORD     BtRequestName(void)
   bacpy(&cp.bdaddr, &BtInstance.SearchList[BtInstance.SearchIndex].Adr);
   cp.pscan_rep_mode = 0x02;
 
-  if(hci_send_cmd(BtInstance.HciSocket.Socket, OGF_LINK_CTL, OCF_REMOTE_NAME_REQ, REMOTE_NAME_REQ_CP_SIZE, &cp))
-  {
-    RtnVal = FALSE;
-  }
+  hci_send_cmd(BtInstance.HciSocket.Socket, OGF_LINK_CTL, OCF_REMOTE_NAME_REQ, REMOTE_NAME_REQ_CP_SIZE, &cp);
 
   return(RtnVal);
 }
@@ -709,8 +647,7 @@ UBYTE     BtStartScan(void)
 {
   UBYTE   RtnVal;
 
-  if(((HCI_IDLE == BtInstance.HciSocket.Busy) || (HCI_FAIL == BtInstance.HciSocket.Busy)) &&
-      (BLUETOOTH_OFF != BtInstance.State) && (NUMBER_OF_ATTACHED_SLAVES > BtInstance.NoOfConnDevs))
+  if(((HCI_IDLE == BtInstance.HciSocket.Busy) || (HCI_FAIL == BtInstance.HciSocket.Busy)) && (BLUETOOTH_OFF != BtInstance.State))
   {
     BtInstance.HciSocket.Busy = HCI_SCAN;
     BtSetup(I_AM_SCANNING);
@@ -960,6 +897,7 @@ void      DecodeMode2(void)
 
   // Buffer is dedicated to mode2 only
   // Only one bluetooth connection is valid at a time
+
   AvailBytes = (BtInstance.Mode2Buf.InPtr - BtInstance.Mode2Buf.OutPtr);             /* How many bytes is ready to be read */
   if (AvailBytes)
   {
@@ -1719,19 +1657,22 @@ void      BtUpdate(void)
             {
               if (0 < BytesRead)
               {
+
                 #ifdef DEBUG
-                  int Cnt;
                   printf("\r\nData received on BT in Slave mode");
+                #endif
+
+                pReadBuf->OutPtr = 0;
+                pReadBuf->InPtr  = BytesRead;
+                pReadBuf->Status = READ_BUF_FULL;
+
+                #ifdef DEBUG
                   for (Cnt = 0; Cnt < BytesRead; Cnt++)
                   {
                     printf("\r\n Rx byte nr %02d = %02X",Cnt,pReadBuf->Buf[Cnt]);
                   }
                   printf("\r\n");
                 #endif
-
-                pReadBuf->OutPtr = 0;
-                pReadBuf->InPtr  = BytesRead;
-                pReadBuf->Status = READ_BUF_FULL;
 
                 DecodeBtStream((UBYTE) 0);
               }
@@ -1754,7 +1695,7 @@ void      BtUpdate(void)
 
     case I_AM_MASTER:
     {
-      // Can have up till 7 slaves
+      // Can have up till 7 slaves - that is having up to 7 sockets to serve...
       // All packets go into the same buffer for the communication module and VM
       // and all packets needs to be wrapped with the channel number
       UBYTE     Cnt;
@@ -1770,6 +1711,7 @@ void      BtUpdate(void)
       // Check all 7 channels
       for(Cnt = 1; Cnt < NO_OF_BT_CHS; Cnt++)
       {
+
         pReadBuf  = &(BtInstance.BtCh[Cnt].ReadBuf);
         pBtSocket = &(BtInstance.BtCh[Cnt].BtSocket);
 
@@ -1898,47 +1840,25 @@ void    create_paired_device_reply(DBusPendingCall *pending, void *user_data)
   struct         sockaddr_rc  addr;
   int            sock_flags, status;
 
-  DBusMessage   *message;
-  DBusError     err;
-  UWORD         Status;
-
-  Status = TRUE;
 
   // Get the device info from the user data (device info is bluetooth addr and port number)
   pPairedDevInfo = (PAIREDDEVINFO*)user_data;
 
-  message = dbus_pending_call_steal_reply(pending);
-  dbus_error_init(&err);
+  BtInstance.BtCh[pPairedDevInfo->Port].BtSocket.Socket = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
 
-  if (dbus_set_error_from_message(&err, message))
-  {
+  addr.rc_family  = AF_BLUETOOTH;
+  addr.rc_channel = 1;
 
-//    printf("\r\nPending information: %s \r\n",err.name);
-    if (0 != strcmp("org.bluez.Error.AlreadyExists", err.name))
-    {
-      Status = FALSE;
-    }
-    dbus_error_free(&err);
-  }
+  bacpy(&(addr.rc_bdaddr), &(pPairedDevInfo->Addr));
 
-  if (TRUE == Status)
-  {
-    BtInstance.BtCh[pPairedDevInfo->Port].BtSocket.Socket = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
+  sock_flags = fcntl(BtInstance.BtCh[pPairedDevInfo->Port].BtSocket.Socket, F_GETFL, 0);
+  fcntl(BtInstance.BtCh[pPairedDevInfo->Port].BtSocket.Socket, F_SETFL, sock_flags | O_NONBLOCK);
 
-    addr.rc_family  = AF_BLUETOOTH;
-    addr.rc_channel = 1;
+  status = connect(BtInstance.BtCh[pPairedDevInfo->Port].BtSocket.Socket,(struct sockaddr *) &addr, sizeof(addr));
+  BtClearChBuf(pPairedDevInfo->Port);
+  BtInstance.BtCh[pPairedDevInfo->Port].Status = CH_CONNECTING;
 
-    bacpy(&(addr.rc_bdaddr), &(pPairedDevInfo->Addr));
-
-    sock_flags = fcntl(BtInstance.BtCh[pPairedDevInfo->Port].BtSocket.Socket, F_GETFL, 0);
-    fcntl(BtInstance.BtCh[pPairedDevInfo->Port].BtSocket.Socket, F_SETFL, sock_flags | O_NONBLOCK);
-
-    status = connect(BtInstance.BtCh[pPairedDevInfo->Port].BtSocket.Socket,(struct sockaddr *) &addr, sizeof(addr));
-    BtClearChBuf(pPairedDevInfo->Port);
-    BtInstance.BtCh[pPairedDevInfo->Port].Status = CH_CONNECTING;
-
-    usleep(20);
-  }
+  usleep(20);
 }
 
 
@@ -2114,6 +2034,7 @@ UBYTE     BtSetOnOff(UBYTE On)
   {
     RtnVal = FAIL;
   }
+
   return(RtnVal);
 }
 
@@ -2298,11 +2219,18 @@ UBYTE     Connect(bdaddr_t BdAddr, UBYTE PortNo)
     {
       // Can be the master of up to 7 units
       #ifdef DEBUG
-        ba2str(&BdAddr, Addr);
-        printf("Connecting from MASTER PortIndex = %d, Addr = %s \r\n",PortNo,Addr);
+        ba2str(&(BtInstance.NonVol.DevList[Item].Adr), Addr);
+        printf("Connecting from MASTER PortIndex = %d, Addr = %s \r\n",PortIndex,Addr);
       #endif
 
-      RtnVal = BtConnectTo(PortNo, BdAddr);
+      if (FALSE == BtConnectTo(PortNo, BdAddr))
+      {
+        RtnVal = TRUE;
+      }
+      else
+      {
+        RtnVal = FALSE;
+      }
     }
     else
     {
@@ -2380,6 +2308,8 @@ UBYTE     cBtConnect(UBYTE *pDevName)
 
         if (NO_OF_BT_CHS > PortIndex)
         {
+          // Set Busy flag to signal upwards
+          BtInstance.HciSocket.Busy = HCI_CONNECT;
           BtInstance.OutGoing.ChNo  = PortIndex;
 
           #ifdef DEBUG
@@ -2422,10 +2352,6 @@ UBYTE     cBtConnect(UBYTE *pDevName)
             {
               RtnVal = FAIL;
               BtInstance.HciSocket.Busy = HCI_FAIL;
-            }
-            else
-            {
-              BtInstance.HciSocket.Busy = HCI_CONNECT;
             }
           }
         }
@@ -2918,6 +2844,66 @@ void      cBtInsertDevConnHandle(UBYTE Index, UWORD ConnHandle)
  *  <hr size="1"/>
  *  <b>     write </b>
  */
+/*! \brief    cBtHandleHCI
+ *
+ *
+ *  CONNECTION MANAGEMENT
+ *  ---------------------
+ *
+ *
+ *    Scenarious :
+ *    ------------
+ *
+ *    CONNECTING:
+ *
+ *
+ *          Connecting brick:                                  Remote brick:
+ *          (IDLE state)                                       (SLAVE state)
+ *
+ *
+ *
+ *    Connect to brick (Issued from byte codes)     |
+ *    - Set busy flag                               |
+ *    - Disable page inquiry                        |
+ *    - Open socket                           --->  |  --->    EVT_CONN_REQUEST
+ *                                                  |          - Issue remote name request (might not be known)
+ *                                                  |
+ *                                                  |
+ *    EVT_CONN_COMPLETE                       <---  |  --->    EVT_CONN_COMPLETE
+ *    - Update Device list                          |          - Disable page inquiry
+ *    - Update Search list                          |          - Insert all info in dev list (Except connected)
+ *                                                  |
+ *                                                  |
+ *    Socket write ready (Remote socket open) <---  |  --->    Success on accept listen socket (Socket gives remote address)
+ *    - NoOfConnDevices++                           |          - Set slave mode
+ *    - Update Search list to connected             |          - NoOfConnDevices++
+ *    - Update Device list to connected             |          - Update Device list to connected
+ *                                                  |          - Update Search list to connected
+ *                                                  |
+ *                                                  |
+ *                                                  |
+ *
+ *
+ *    DISCONNECTING:
+ *
+ *
+ *    Disconnecting brick:                          |          Remote brick:
+ *                                                  |
+ *    Disconnect  (Issued from byte codes)          |
+ *    - Close bluetooth socket                      |  --->    Socket indicates remote socket closed
+ *                                                  |          - Close socket
+ *                                                  |
+ *                                                  |
+ *    EVT_DISCONN_COMPLETE                    <---  |  --->    EVT_DISCONN_COMPLETE
+ *    - Update Search list to disconnected          |          - Update Search list to disconnected
+ *    - Update Device list to disconnected          |          - Update Device list to disconnected
+ *    - NoofConnDevices--                           |          - NoofConnDevices--
+ *    - If NoofConnDevices = 0 -> set idle mode     |          - If NoofConnDevices = 0 -> set idle mode
+ *                                                  |
+ *                                                  |
+ *
+ */
+
 UWORD     cBtHandleHCI(void)
 {
   UWORD           RtnVal;
@@ -2948,15 +2934,6 @@ UWORD     cBtHandleHCI(void)
 
         case EVT_PIN_CODE_REQ:
         {
-          remote_name_req_cp  cp;
-
-          memset(&cp, 0, sizeof(cp));
-          bacpy(&cp.bdaddr, &((evt_pin_code_req*)ptr)->bdaddr);
-          cp.pscan_rep_mode = 0x02;
-          hci_send_cmd(BtInstance.HciSocket.Socket, OGF_LINK_CTL,
-              OCF_REMOTE_NAME_REQ, REMOTE_NAME_REQ_CP_SIZE, &cp);
-          NameReqDueToPin = TRUE;
-
 
           if (0 == bacmp(&(BtInstance.TrustedDev.Adr),  &((evt_pin_code_req*)ptr)->bdaddr))
           {
@@ -2974,6 +2951,8 @@ UWORD     cBtHandleHCI(void)
           {
             // Connection from the outside - coming from the listen socket
             // Need to add it to the dev list and search list if possible
+            remote_name_req_cp  cp;
+
             #ifdef DEBUG
               printf("EVT_CONN_REQUEST from outside this is slave..... \r\n");
             #endif
@@ -2982,6 +2961,12 @@ UWORD     cBtHandleHCI(void)
             bacpy(&(BtInstance.Incoming.Adr), &((evt_conn_request*)ptr)->bdaddr);
             memcpy(&(BtInstance.Incoming.DevClass[0]), &(((evt_conn_request*)ptr)->dev_class[0]), 3);
             BtInstance.Incoming.Name[0] = 0; //Clear name, it is not available yet
+
+            // Issue name request because it is coming from the outside
+            memset(&cp, 0, sizeof(cp));
+            bacpy(&cp.bdaddr, &((evt_conn_request*)ptr)->bdaddr);
+            cp.pscan_rep_mode = 0x02;
+            hci_send_cmd(BtInstance.HciSocket.Socket, OGF_LINK_CTL, OCF_REMOTE_NAME_REQ, REMOTE_NAME_REQ_CP_SIZE, &cp);
           }
         }
         break;
@@ -3037,6 +3022,7 @@ UWORD     cBtHandleHCI(void)
                 memcpy(&(BtInstance.NonVol.DevList[DevIndex].DevClass[0]),&(BtInstance.Incoming.DevClass[0]),3);
               }
             }
+
             BtInstance.Incoming.ConnHandle = ((evt_conn_complete*)ptr)->handle;
           }
         }
@@ -3097,12 +3083,16 @@ UWORD     cBtHandleHCI(void)
           {
             if (SCAN_INQ_STATE == BtInstance.ScanState)
             {
+
               // No devices found
               #ifdef DEBUG
-                printf("inquiry done - no devices found.... exiting \r\n");
+                printf("inquiry done.... exiting \r\n");
               #endif
 
-              STOPScanning;
+              BtSetup(BtInstance.OldState);               // Return to previous state
+              BtInstance.HciSocket.Busy   &= ~HCI_SCAN;
+              BtInstance.ScanState         =  SCAN_OFF;
+              BtIssueHciVisible(BtInstance.NonVol.Visible, BtInstance.PageState);
             }
           }
           else
@@ -3111,14 +3101,15 @@ UWORD     cBtHandleHCI(void)
             {
               BtInstance.ScanState = SCAN_NAME_STATE;
               BtRequestName();
-              #ifdef DEBUG
-                printf("inquiry done - requesting names ... exiting \r\n");
-              #endif
             }
             else
             {
+
               // Scan has been terminated
-              STOPScanning;
+              BtSetup(BtInstance.OldState);               // Return to previous state
+              BtInstance.ScanState        =   SCAN_OFF;
+              BtInstance.HciSocket.Busy  &=  ~HCI_SCAN;
+              BtIssueHciVisible(BtInstance.NonVol.Visible, BtInstance.PageState);
             }
           }
         }
@@ -3179,7 +3170,10 @@ UWORD     cBtHandleHCI(void)
                 printf("inquiry done.... exiting \r\n");
               #endif
 
-              STOPScanning;
+              BtSetup(BtInstance.OldState);     // Return to previous state
+              BtInstance.ScanState        =   SCAN_OFF;
+              BtInstance.HciSocket.Busy  &=  ~HCI_SCAN;
+              BtIssueHciVisible(BtInstance.NonVol.Visible, BtInstance.PageState);
             }
             else
             {
@@ -3191,7 +3185,10 @@ UWORD     cBtHandleHCI(void)
               }
               else
               {
-                STOPScanning;
+                BtSetup(BtInstance.OldState);     // Return to previous state
+                BtInstance.ScanState        =   SCAN_OFF;
+                BtInstance.HciSocket.Busy  &=  ~HCI_SCAN;
+                BtIssueHciVisible(BtInstance.NonVol.Visible, BtInstance.PageState);
               }
             }
             BtInstance.NoOfFoundNames++;
@@ -3218,7 +3215,7 @@ UWORD     cBtHandleHCI(void)
                 }
               }
 
-              // Update incoming data if it matches
+              // also update incoming data if it matches
               if (0 == bacmp(&(BtInstance.Incoming.Adr), (bdaddr_t*)&(rn->bdaddr)))
               {
 
@@ -3227,21 +3224,6 @@ UWORD     cBtHandleHCI(void)
                 #endif
                 strcpy(BtInstance.Incoming.Name, (char*)rn->name);
               }
-            }
-
-            for (Cnt = 0, Exit = FALSE; ((Cnt < MAX_DEV_TABLE_ENTRIES) && (FALSE == Exit)); Cnt++)
-            {
-              if (0 == bacmp(&(BtInstance.SearchList[Cnt].Adr), (bdaddr_t*)&(rn->bdaddr)))
-              {
-                strcpy(BtInstance.SearchList[Cnt].Name, (char*)rn->name);
-                Exit = TRUE;
-              }
-            }
-
-            if (TRUE == NameReqDueToPin)
-            {
-              BtInstance.Events  =  1;
-              NameReqDueToPin    =  FALSE;
             }
           }
         }
@@ -3302,8 +3284,8 @@ UWORD     cBtHandleHCI(void)
                 {
                   // Insert COD from search list
                   memcpy(&(BtInstance.NonVol.DevList[DevIndex].DevClass[0]),&(BtInstance.SearchList[SearchIndex].DevClass[0]),3);
-                  strcpy(&(BtInstance.NonVol.DevList[DevIndex].Name[0]),&(BtInstance.SearchList[SearchIndex].Name[0]));
                 }
+
               }
               else
               {
@@ -3312,8 +3294,8 @@ UWORD     cBtHandleHCI(void)
                 BtInstance.NonVol.DevList[DevIndex].ChNo = 0;
                 memcpy(&(BtInstance.NonVol.DevList[DevIndex].DevClass[0]),&(BtInstance.Incoming.DevClass[0]),3);
                 strcpy(&(BtInstance.NonVol.DevList[DevIndex].Name[0]),&(BtInstance.Incoming.Name[0]));
+                BtInstance.NonVol.DevList[DevIndex].ConnHandle = BtInstance.Incoming.ConnHandle;
               }
-              BtInstance.NonVol.DevList[DevIndex].ConnHandle = BtInstance.Incoming.ConnHandle;
             }
           }
         }
@@ -3348,7 +3330,9 @@ UWORD     cBtHandleHCI(void)
             case cmd_opcode_pack(OGF_LINK_CTL, OCF_INQUIRY_CANCEL):
             {
               // Inquiry has been cancelled
-              STOPScanning;
+              BtSetup(BtInstance.OldState);     // Return to previous state
+              BtInstance.HciSocket.Busy  &=  ~HCI_SCAN;
+              BtInstance.ScanState        =   SCAN_OFF;
             }
             break;
 
@@ -3431,28 +3415,6 @@ UWORD     cBtHandleHCI(void)
 
         case EVT_ENCRYPT_CHANGE:
         {
-        }
-        break;
-
-        case EVT_CMD_STATUS:
-        {
-          switch(((evt_cmd_status*)ptr)->opcode)
-          {
-            case cmd_opcode_pack(OGF_LINK_CTL, OCF_REMOTE_NAME_REQ):
-            {
-              if (0 != ((evt_cmd_status*)ptr)->status)
-              {
-                // Error has occured on the remote name request
-                if (I_AM_SCANNING == BtInstance.State)
-                {
-                  STOPScanning;
-                }
-              }
-            }
-            break;
-          }
-          break;
-
         }
         break;
 
@@ -3962,7 +3924,6 @@ static DBusHandlerResult request_pincode_message(DBusConnection *conn, DBusMessa
   else
   {
     reply = dbus_message_new_method_return(msg);
-    RejectReply = dbus_message_new_error(msg, "org.bluez.Error.Rejected", "");
     if (!reply)
     {
       #ifdef DEBUG
@@ -3989,7 +3950,8 @@ static DBusHandlerResult request_pincode_message(DBusConnection *conn, DBusMessa
       }
       else
       {
-        Result  =  DBUS_HANDLER_RESULT_HANDLED;
+        BtInstance.Events  =  1;
+        Result             =  DBUS_HANDLER_RESULT_HANDLED;
       }
     }
   }
@@ -4234,19 +4196,10 @@ UBYTE     cBtSetPin(UBYTE *pPin)
   if (((HCI_CONNECT == BtInstance.HciSocket.Busy) || (HCI_IDLE == BtInstance.HciSocket.Busy) || (HCI_FAIL == BtInstance.HciSocket.Busy)) &&
        (BLUETOOTH_OFF != BtInstance.State))
   {
-    if (0 != pPin[0])
-    {
-      dbus_message_append_args(reply, DBUS_TYPE_STRING, &pPin, DBUS_TYPE_INVALID);
-      dbus_connection_send(conn, reply, NULL);
-      dbus_connection_flush(conn);
-      dbus_message_unref(reply);
-    }
-    else
-    {
-      dbus_connection_send(conn, RejectReply, NULL);
-      dbus_connection_flush(conn);
-      dbus_message_unref(RejectReply);
-    }
+    dbus_message_append_args(reply, DBUS_TYPE_STRING, &pPin, DBUS_TYPE_INVALID);
+    dbus_connection_send(conn, reply, NULL);
+    dbus_connection_flush(conn);
+    dbus_message_unref(reply);
   }
   else
   {

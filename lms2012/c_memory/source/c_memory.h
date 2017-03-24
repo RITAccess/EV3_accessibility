@@ -32,9 +32,9 @@ RESULT    cMemoryClose(PRGID PrgId);
 
 RESULT    cMemoryExit(void);
 
-RESULT    cMemoryRealloc(void *pOldMemory,void **ppMemory,DATA32 Size);
+RESULT    cMemoryMalloc(void **ppMemory,DATA32 Size);
 
-RESULT    cMemoryFree(void *pMemory);
+RESULT    cMemoryRealloc(void *pOldMemory,void **ppMemory,DATA32 Size);
 
 RESULT    cMemoryGetPointer(PRGID PrgId,HANDLER Handle,void **pMemory);
 
@@ -42,7 +42,7 @@ RESULT    cMemoryArraryPointer(PRGID PrgId,HANDLER Handle,void **pMemory);
 
 DATA8     cMemoryGetCacheFiles(void);
 
-RESULT    cMemoryGetCacheName(DATA8 Item,DATA8 MaxLength,char *pFileName,char *pName,DATA8 *pType);
+DATA8     cMemoryGetCacheName(DATA8 Item,DATA8 MaxLength,char *pFileName,char *pName);
 
 DATA8     cMemoryFindSubFolders(char *pFolderName);
 
@@ -144,6 +144,7 @@ typedef struct
   DATA32  SyncTime;
   DATA32  SyncTick;
 
+  //DATA32  BytesUsed;
   DATA8   PathList[MAX_PROGRAMS][vmPATHSIZE];
   POOL    pPoolList[MAX_PROGRAMS][MAX_HANDLES];
 

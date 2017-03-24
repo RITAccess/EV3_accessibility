@@ -1,13 +1,11 @@
-#!/bin/bash
-#echo "This script is being reviewed"
-#exit 1
+#! /bin/bash
 
 source ${PWD}/env_setup
 curdir=${PWD}
 sudo
 
 clear
-echo
+echo 
 echo "*** FORMAT SDCARD ********************************** TCP120706 ***"
 echo
 echo BE SURE SDCARD IS REMOVED
@@ -15,134 +13,144 @@ echo -n and press enter or Ctrl-C to skip" ? "
 read
 
 clear
-echo
+echo 
 echo "*** FORMAT SDCARD ********************************** TCP120706 ***"
 echo
 sleep 2
-before=$(ls /dev)
-#ls mmcblk?
-#ls sd?					# prevented possible wipe of entire Hard Drive lol
+cd /dev
+ls sd?
 cd ${curdir}
+echo
+echo
 echo CHECK LIST - INSERT SDCARD
 echo -n and press enter or Ctrl-C to skip" ? "
 read
 
 clear
-echo
+echo 
 echo "*** FORMAT SDCARD ********************************** TCP120706 ***"
 echo
 sleep 2
-after=$(ls /dev)
-#ls mmcblk?
-#ls sd?					# prevented possible wipe of entire Hard Dive lol
+cd /dev
+ls sd?
 cd ${curdir}
-echo -e "New Devices: \e[32m \e[5m"
-diff -y --suppress-common-lines <(echo "$after") <(echo "$before")
-echo -e "\e[22m \e[0m"
-echo CHECK LIST CHANGES - Type the added partition name \(e.c. mmcblk0\) 
+echo
+echo
+echo CHECK LIST CHANGES - Type the added partition name \(e.c. sdb\) 
 echo -n and press enter or Ctrl-C to skip" ? "
 read drive
 
-# The length of the string is non zero
-if [ -n "$drive" ]; then
-	if [ "$drive" != "sda" ]; then
-		while true
-		do
-			clear
-			echo 
-			echo "*** FORMAT SDCARD ********************************** TCP120706 ***"
-			echo
-			echo
-			echo "!!! ALL DATA ON DRIVE WILL BE LOST !!!"
-			echo
-			echo FORMAT "\""${drive}"\"" 
-			echo -n press enter or Ctrl-C to skip" ? "
-			read
+if [ -n "$drive" ]
+then
 
-			echo
-			echo "  ...."formatting.sdcard
+if [ "$drive" != "sda" ]
+then
 
-			sleep 5
+while true
+do
+clear
+echo 
+echo "*** FORMAT SDCARD ********************************** TCP120706 ***"
+echo
+echo
+echo "!!! ALL DATA ON DRIVE WILL BE LOST !!!"
+echo
+echo FORMAT "\""${drive}"\"" 
+echo -n press enter or Ctrl-C to skip" ? "
+read
 
-			# Unmount and surpress information to the null file
-			sudo umount /dev/${drive}p1 &> /dev/null
-			sudo umount /dev/${drive}p2 &> /dev/null
+echo
+echo "  ...."formatting.sdcard
 
-			# modify drive, echo any errors to error file
-			sudo fdisk /dev/${drive} < fdisk.cmd &>> sdcard.err
+sleep 5
 
-			sleep 2
+sudo umount /dev/${drive}1 &> /dev/null
+sudo umount /dev/${drive}2 &> /dev/null
 
-			echo
-			echo "  ...."making.kernel.partition
-			# Create MSDOS partition, any issues are redirected to stderror file.
-			sudo mkfs.msdos -n LMS2012 /dev/${drive}p1 &>> sdcard.err
+sudo fdisk /dev/${drive} < fdisk.cmd &>> sdcard.err
 
-			sleep 2
+sleep 2
 
-			echo
-			echo "  ...."making.filesystem.partition
-			sudo mkfs.ext3 -L LMS2012_EXT /dev/${drive}p2 &>> sdcard.err
+echo
+echo "  ...."making.kernel.partition
+sudo mkfs.msdos -n LMS2012 /dev/${drive}1 &>> sdcard.err
 
-			echo
-			echo "  ...."checking.partitions
-			sync
+sleep 2
 
-			if [ -e /dev/${drive}p1 ]; then
-			    if [ -e /dev/${drive}p2 ]; then
-				    sudo partprobe /dev/${drive}*
-			        echo
-			        echo SUCCESS
-    			else
-			        echo
-					echo "******************************************************************"
-					cat sdcard.err
-					echo "******************************************************************"
-	        		echo
-	        		echo SDCARD NOT FORMATTED PROPERLY !!!
-			    fi
+echo
+echo "  ...."making.filesystem.partition
+sudo mkfs.ext3 -L LMS2012_EXT /dev/${drive}2 &>> sdcard.err
 
-			else
-		    	echo
-				echo "******************************************************************"
-	    		cat sdcard.err
-				echo "******************************************************************"
-	    		echo
-		    	echo SDCARD NOT FORMATTED PROPERLY !!!
-			fi
-			echo
-			echo REMOVE sdcard
-			echo
-			echo "******************************************************************"
-			echo
+echo
+echo "  ...."checking.partitions
+sync
 
-			echo
-			echo FORMAT ANOTHER ONE
-			echo -n press enter or Ctrl-C to skip" ? "
-			read
+if [ -e /dev/${drive}1 ]
+then
 
-			echo
-			echo
-			echo INSERT SDCARD
-			echo -n and press enter or Ctrl-C to skip" ? "
-			read
-			sleep 5
-		done
+    if [ -e /dev/${drive}2 ]
+    then
 
-	else
-		echo
-		echo YOU MUST NOT SPECIFY "sda" !!!
-		echo
-		echo "******************************************************************"
-		echo
-	fi
+        echo
+        echo SUCCESS
+
+    else
+
+        echo
+echo "******************************************************************"
+	cat sdcard.err
+echo "******************************************************************"
+        echo
+        echo SDCARD NOT FORMATTED PROPERLY !!!
+
+    fi
 
 else
-	echo
-	echo YOU MUST SPECIFY A DRIVE !!!
-	echo
-	echo "******************************************************************"
-	echo
+
+    echo
+echo "******************************************************************"
+    cat sdcard.err
+echo "******************************************************************"
+    echo
+    echo SDCARD NOT FORMATTED PROPERLY !!!
+
+fi
+
+echo
+echo REMOVE sdcard
+echo 
+echo "******************************************************************"
+echo
+
+echo
+echo FORMAT ANOTHER ONE
+echo -n press enter or Ctrl-C to skip" ? "
+read
+
+echo
+echo
+echo INSERT SDCARD
+echo -n and press enter or Ctrl-C to skip" ? "
+read
+sleep 5
+done
+
+else
+
+echo
+echo YOU MUST NOT SPECIFY "sda" !!!
+echo 
+echo "******************************************************************"
+echo
+fi
+
+else
+
+echo
+echo YOU MUST SPECIFY A DRIVE !!!
+echo 
+echo "******************************************************************"
+echo
 fi
 
 

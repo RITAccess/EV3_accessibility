@@ -169,6 +169,7 @@ extern    char *strptime(const char *s, const char *format, struct tm *tm);
 #if       (HARDWARE != SIMULATION)
 
 #include  <sys/stat.h>
+#include  <sys/statvfs.h>
 #include  <sys/types.h>
 #include  <sys/sysinfo.h>
 
@@ -219,72 +220,71 @@ UI_GLOBALS UiInstance;
   //#define __dbg1
   //#define __dbg2
 
-  /*************************** Model parametre *******************************/
-  //~ 6 Varta industrial batteriers initielle interne modstand :
+  /*************************** Model parameters *******************************/
+  //Approx. initial internal resistance of 6 Energizer industrial batteries :
   float R_bat_init = 0.63468;
-  //Bjarkes forslag til fjeder modstand :
+  //Bjarke's proposal for spring resistance :
   //float spring_resistance = 0.42;
-  //Batterisæts varme kapacitet :
+  //Batteries' heat capacity :
   float heat_cap_bat = 136.6598;
-  //Newtons'k afkølings konstant til elektronik :
+  //Newtonian cooling constant for electronics :
   float K_bat_loss_to_elec = -0.0003; //-0.000789767;
-  //Newtons'k opvarmningskonstant fra elektronik :
+  //Newtonian heating constant for electronics :
   float K_bat_gain_from_elec = 0.001242896; //0.001035746;
-  //Newtonsk afkølingskonstant til omgivelser :
+  //Newtonian cooling constant for environment :
   float K_bat_to_room = -0.00012;
-  //Batteri power Boost
+  //Battery power Boost
   float battery_power_boost = 1.7;
-  //Batteri R_bat negativ bidrag
+  //Battery R_bat negative gain
   float R_bat_neg_gain = 1.00;
 
-  //Hældning for elektronikkens tabsfri opvarmningskurve (lineær!!) [deg.C/s] :
+  //Slope of electronics lossless heating curve (linear!!!) [Deg.C / s] :
   float K_elec_heat_slope = 0.0123175;
-  //Newtons'k afkølings konstant til batterisæt :
+  //Newtonian cooling constant for battery packs :
   float K_elec_loss_to_bat = -0.004137487;
-  //Newtons'k opvarmningskonstant fra batterisæt :
+  //Newtonian heating constant for battery packs :
   float K_elec_gain_from_bat = 0.002027574; //0.00152068;
-  //Newtonsk afkølingskonstant til omgivelser :
+  //Newtonian cooling constant for environment :
   float K_elec_to_room = -0.001931431; //-0.001843639;
 
-  // Funktion til estimering af ny batteritemperatur på baggrund af nye målinger på
-  // batterispænding og batteristrøm.
+  // Function for estimating new battery temperature based on measurements
+  // of battery voltage and battery power.
     float new_bat_temp (float V_bat, float I_bat)
     {
 
-      static int   index       = 0; //Holder styr på sample index siden power-on
-      static float I_bat_mean  = 0; //Løbende middel strøm
-      const float sample_period = 0.4; //Algoritme opdaterings periode i sekunder
-      static float T_bat = 0; //Batterisæts temperatur udvikling
-      static float T_elec = 0; //EV3 elektronik temperatur udvikling
+      static int   index       = 0; //Keeps track of sample index since power-on
+      static float I_bat_mean  = 0; //Running mean current
+      const float sample_period = 0.4; //Algorithm update period in seconds
+      static float T_bat = 0; //Battery temperature
+      static float T_elec = 0; //EV3 electronics temperature
 
-      static float R_bat_model_old = 0;//Batterisæts gamle interne modstand i model
-      float R_bat_model;    //Batterisæts interne modstand i model
-      static float R_bat = 0; //Batterisæts interne modstand
-      float slope_A;        //Hældning ved lineær interpolation
-      float intercept_b;    //Offset ved lineær interpolation
-      const float I_1A = 0.05;      //Strømbelastning ved nedre karakteristik
-      const float I_2A = 2.0;      //Strømbelastning ved øvre karakteristik
+      static float R_bat_model_old = 0;//Old internal resistance of the battery model
+      float R_bat_model;    //Internal resistance of the battery model
+      static float R_bat = 0; //Internal resistance of the batteries
+      float slope_A;        //Slope obtained by linear interpolation
+      float intercept_b;    //Offset obtained by linear interpolation
+      const float I_1A = 0.05;      //Current carrying capacity at bottom of the curve
+      const float I_2A = 2.0;      //Current carrying capacity at the top of the curve
 
-      float R_1A = 0.0;          //Batterisæts interne modstand ved 1A og V_bat
-      float R_2A = 0.0;          //Batterisæts interne modstand ved 2A og V_bat
+      float R_1A = 0.0;          //Internal resistance of the batteries at 1A and V_bat
+      float R_2A = 0.0;          //Internal resistance of the batteries at 2A and V_bat
 
+      //Flag that prevents initialization of R_bat when the battery is charging
       static unsigned char has_passed_7v5_flag = 'N';
-      //Flag der hjælper med at undgå modstands initialisering
-      // under batteri regenerering
 
-      float dT_bat_own = 0.0; //Batterisæts egen varme udvikling
-      float dT_bat_loss_to_elec = 0.0; // Batterisæts varmetab til elektronik
-      float dT_bat_gain_from_elec = 0.0; //Batterisæts varmestigning fra elektronik
-      float dT_bat_loss_to_room = 0.0; //Batterisæts afkøling til omgivelser
+      float dT_bat_own = 0.0; //Batteries' own heat
+      float dT_bat_loss_to_elec = 0.0; // Batteries' heat loss to electronics
+      float dT_bat_gain_from_elec = 0.0; //Batteries' heat gain from electronics
+      float dT_bat_loss_to_room = 0.0; //Batteries' cooling from environment
 
-      float dT_elec_own = 0.0; //Elektroniks egen elektriske varme udvikling
-      float dT_elec_loss_to_bat = 0.0;//Elektroniks varmetab til batterisæt
-      float dT_elec_gain_from_bat = 0.0;//Elektroniks varmestigning fra batterisæt
-      float dT_elec_loss_to_room = 0.0; //Elektroniks varmetab til omgivelser
+      float dT_elec_own = 0.0; //Electronics' own heat
+      float dT_elec_loss_to_bat = 0.0;//Electronics' heat loss to the battery pack
+      float dT_elec_gain_from_bat = 0.0;//Electronics' heat gain from battery packs
+      float dT_elec_loss_to_room = 0.0; //Electronics' heat loss to the environment
 
       /***************************************************************************/
 
-      //Opdater middelstrøm : I_bat_mean
+      //Update the average current: I_bat_mean
       if (index > 0)
         {
     I_bat_mean = ((index) * I_bat_mean + I_bat) / (index + 1) ;
@@ -297,54 +297,54 @@ UI_GLOBALS UiInstance;
       index = index + 1;
 
 
-      //Beregn R_1A som funktion af V_bat (intern modstand ved 1A kontinuert)
+      //Calculate R_1A as a function of V_bat (internal resistance at 1A continuous)
       R_1A  =   0.014071 * (V_bat * V_bat * V_bat * V_bat)
         - 0.335324 * (V_bat * V_bat * V_bat)
         + 2.933404 * (V_bat * V_bat)
         - 11.243047 * V_bat
         + 16.897461;
 
-      //Beregn R_2A som funktion af V_bat (intern modstand ved 2A kontinuert)
+      //Calculate R_2A as a function of V_bat (internal resistance at 2A continuous)
       R_2A  =   0.014420 * (V_bat * V_bat * V_bat * V_bat)
         - 0.316728 * (V_bat * V_bat * V_bat)
         + 2.559347 * (V_bat * V_bat)
         - 9.084076 * V_bat
         + 12.794176;
 
-      //Beregn hældning ved lineær interpolation mellem R_1A og R_2A
+      //Calculate the slope by linear interpolation between R_1A and R_2A
       slope_A  =  (R_1A - R_2A) / (I_1A - I_2A);
 
-      //Beregn offset ved lineær interpolation mellem R1_A og R2_A
+      //Calculate intercept by linear interpolation between R1_A and R2_A
       intercept_b  =  R_1A - slope_A * R_1A;
 
-      //Opdater R_bat_model:
+      //Reload R_bat_model:
       R_bat_model  =  slope_A * I_bat_mean + intercept_b;
 
-      //Beregn batterisæts interne modstand: R_bat
+      //Calculate batteries' internal resistance: R_bat
       if ((V_bat > 7.5) && (has_passed_7v5_flag == 'N'))
         {
-    R_bat = R_bat_init; //7,5V ikke passeret en første gang
+    R_bat = R_bat_init; //7.5 V not passed a first time
         }
       else
         {
-    //Opdater kun R_bat med positive udfald af: R_bat_model - R_bat_model_old
-    //R_bat opdateres med ændring i model, R_bat er ikke lig værdi i model!!!
+    //Only update R_bat with positive outcomes: R_bat_model - R_bat_model_old
+    //R_bat updated with the change in model R_bat is not equal value in the model!
     if ((R_bat_model - R_bat_model_old) > 0)
       {
         R_bat = R_bat + R_bat_model - R_bat_model_old;
       }
-      else // Ved negativ udfald af R_bat_model tilføjes kun en del til R_bat
+      else // The negative outcome of R_bat_model added to only part of R_bat
         {
           R_bat = R_bat + ( R_bat_neg_gain * (R_bat_model - R_bat_model_old));
         }
-    //Garder så vi ikke senere initialiserer R_bat
+    //Make sure we initialize R_bat later
     has_passed_7v5_flag = 'Y';
         }
 
-      //Gem R_bat_model til brug ved næste funktionskald
+      //Save R_bat_model for use in the next function call
       R_bat_model_old = R_bat_model;
 
-      //Debug kode:
+      //Debug code:
   #ifdef __dbg1
       if (index < 500)
         {
@@ -353,13 +353,13 @@ UI_GLOBALS UiInstance;
         }
   #endif
 
-      /**********Beregn samtlig 4 batterisæts-temperatur-ændrings-bidrag**********/
+      /*****Calculate the 4 types of temperature change for the batteries******/
 
-      //Beregn batterisæts egen varme udvikling siden sidst
+      //Calculate the batteries' own temperature change
       dT_bat_own = R_bat * I_bat * I_bat * sample_period  * battery_power_boost
                    / heat_cap_bat;
 
-      //Beregn batterisæts afkøling til elektronik siden sidst
+      //Calculate the batteries' heat loss to the electronics
       if (T_bat > T_elec)
         {
     dT_bat_loss_to_elec = K_bat_loss_to_elec * (T_bat - T_elec)
@@ -370,7 +370,7 @@ UI_GLOBALS UiInstance;
     dT_bat_loss_to_elec = 0.0;
         }
 
-      //Beregn batterisæts opvarmning fra elektronik siden sidst
+      //Calculate the batteries' heat gain from the electronics
       if (T_bat < T_elec)
         {
     dT_bat_gain_from_elec = K_bat_gain_from_elec * (T_elec - T_bat)
@@ -381,18 +381,18 @@ UI_GLOBALS UiInstance;
     dT_bat_gain_from_elec = 0.0;
         }
 
-      //Beregn batterisæts afkøling til omgivelser sident sidst
+      //Calculate the batteries' heat loss to environment
       dT_bat_loss_to_room = K_bat_to_room * T_bat * sample_period;
-      /***************************************************************************/
+      /************************************************************************/
 
 
 
-      /*********Beregn samtlig 4 elektronik-temperatur-ændrings-bidrag************/
+      /*****Calculate the 4 types of temperature change for the electronics****/
 
-      //Beregn elektronikkens egen varme udvikling siden sidst
+      //Calculate the electronics' own temperature change
       dT_elec_own = K_elec_heat_slope * sample_period;
 
-      //Beregn elektronikkens afkøling til baterisæt siden sidst
+      //Calculate the electronics' heat loss to the batteries
       if (T_elec > T_bat)
         {
     dT_elec_loss_to_bat =   K_elec_loss_to_bat * (T_elec - T_bat)
@@ -403,7 +403,7 @@ UI_GLOBALS UiInstance;
     dT_elec_loss_to_bat = 0.0;
         }
 
-      //Beregn elektronikkens opvarmning fra batterisæt siden sidst
+      //Calculate the electronics' heat gain from the batteries
       if (T_elec < T_bat)
         {
     dT_elec_gain_from_bat = K_elec_gain_from_bat * (T_bat - T_elec)
@@ -414,11 +414,11 @@ UI_GLOBALS UiInstance;
     dT_elec_gain_from_bat = 0.0;
         }
 
-      //Beregn elektronikkens afkøling til omgivelser sident sidst
+      //Calculate the electronics' heat loss to the environment
       dT_elec_loss_to_room = K_elec_to_room * T_elec * sample_period;
 
       /*****************************************************************************/
-      //Debug kode:
+      //Debug code:
   #ifdef __dbg2
       if (index < 500)
         {
@@ -431,11 +431,11 @@ UI_GLOBALS UiInstance;
 
 
 
-      //Opdater batteri temperatur
+      //Refresh battery temperature
       T_bat =  T_bat + dT_bat_own + dT_bat_loss_to_elec
         + dT_bat_gain_from_elec + dT_bat_loss_to_room;
 
-      //Opdater elektronikkens temparatur
+      //Refresh electronics temperature
       T_elec =  T_elec + dT_elec_own + dT_elec_loss_to_bat
         + dT_elec_gain_from_bat + dT_elec_loss_to_room;
 
@@ -1028,13 +1028,6 @@ void      cUiUpdateButtons(DATA16 Time)
         UiInstance.ButtonState[Button]           |=  BUTTON_BUMBED;
       }
     }
-
-#ifdef ALLOW_DEBUG_PULSE
-    if ((UiInstance.ButtonState[Button] & (BUTTON_ACTIVATED | BUTTON_LONGPRESS)))
-    {
-      VMInstance.Pulse |=  vmPULSE_KEY;
-    }
-#endif
   }
 }
 
@@ -1867,43 +1860,6 @@ void      cUiUpdateTopline(void)
         dLcdFillRect((*UiInstance.pLcd).Lcd,FG_COLOR,X1 + (V * 6),2,5,6);
       }
     }
-#else
-#ifdef ALLOW_DEBUG_PULSE
-/*
-  GUI SLOT running                        1... ....
-  USER SLOT running                       .1.. ....
-  CMD SLOT running                        ..1. ....
-  TRM SLOT running                        ...1 ....
-  DEBUG SLOT running                      .... 1...
-  KEY active                              .... .1..
-  BROWSER running                         .... ..1.
-  UI running background                   .... ...1
-*/
-    if (VMInstance.PulseShow)
-    {
-      if (VMInstance.PulseShow == 1)
-      {
-        X1  =  100;
-        X2  =  102;
-        for (V = 0;V < 8;V++)
-        {
-          if ((VMInstance.Pulse & (0x80 >> V)))
-          {
-            dLcdFillRect((*UiInstance.pLcd).Lcd,FG_COLOR,X1 + (V * 5),2,5,6);
-          }
-
-          dLcdInversePixel((*UiInstance.pLcd).Lcd,X2 + (V * 5),5);
-          dLcdInversePixel((*UiInstance.pLcd).Lcd,X2 + (V * 5),4);
-        }
-        VMInstance.Pulse  =  0;
-        VMInstance.PulseShow  =  2;
-      }
-      else
-      {
-        VMInstance.PulseShow  =  1;
-      }
-    }
-#endif
 #endif
 
     // Calculate number of icons
@@ -2716,15 +2672,6 @@ void      cUiUpdate(UWORD Time)
                   }
                   else
                   {
-                    if (Tmp & WARNING_RAM)
-                    {
-                      dLcdDrawIcon((*UiInstance.pLcd).Lcd,FG_COLOR,vmPOP3_ABS_WARN_ICON_X,vmPOP3_ABS_WARN_ICON_Y,LARGE_ICON,WARNSIGN);
-                      dLcdDrawIcon((*UiInstance.pLcd).Lcd,FG_COLOR,vmPOP3_ABS_WARN_SPEC_ICON_X,vmPOP3_ABS_WARN_SPEC_ICON_Y,LARGE_ICON,WARN_MEMORY);
-                      UiInstance.WarningShowed |=  WARNING_RAM;
-                    }
-                    else
-                    {
-                    }
                   }
                 }
               }
@@ -2781,14 +2728,6 @@ void      cUiUpdate(UWORD Time)
                 }
                 else
                 {
-                  if (Tmp & WARNING_RAM)
-                  {
-                    UiInstance.WarningConfirmed |=  WARNING_RAM;
-                    UiInstance.Warning          &= ~WARNING_RAM;
-                  }
-                  else
-                  {
-                  }
                 }
               }
             }
@@ -3773,10 +3712,6 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
   RESULT  TmpResult;
   HANDLER TmpHandle;
 
-#ifdef ALLOW_DEBUG_PULSE
-  VMInstance.Pulse |=  vmPULSE_BROWSER;
-#endif
-
   PrgId   =  CurrentProgramId();
   ObjId   =  CallingObjectId();
   pB      =  &UiInstance.Browser;
@@ -4264,7 +4199,7 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
 
             Item    =  (*pB).ItemPointer;
 
-            cMemoryGetCacheName(Item,FOLDERNAME_SIZE + SUBFOLDERNAME_SIZE,(char*)(*pB).FullPath,(char*)(*pB).Filename,pType);
+            *pType  =  cMemoryGetCacheName(Item,FOLDERNAME_SIZE + SUBFOLDERNAME_SIZE,(char*)(*pB).FullPath,(char*)(*pB).Filename);
             snprintf((char*)pAnswer,Lng,"%s",(char*)(*pB).FullPath);
             Result  =  OK;
 #ifdef DEBUG
@@ -4318,15 +4253,6 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
       {
         (*pB).ItemStart       =  1;
         (*pB).ItemPointer     =  1;
-      }
-    }
-    else
-    {
-      if (TmpResult == FAIL)
-      {
-        (*pB).ItemPointer     =  TotalItems;
-        (*pB).ItemStart       =  (*pB).ItemPointer;
-        (*pB).NeedUpdate      =  1;
       }
     }
 
@@ -4551,7 +4477,7 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
 
               case BROWSE_CACHE :
               {
-                cMemoryGetCacheName(Item,(*pB).Chars,(char*)(*pB).FullPath,(char*)(*pB).Filename,&TmpType);
+                TmpType  =  cMemoryGetCacheName(Item,(*pB).Chars,(char*)(*pB).FullPath,(char*)(*pB).Filename);
                 dLcdDrawIcon((*UiInstance.pLcd).Lcd,Color,(*pB).IconStartX,(*pB).IconStartY + (Tmp * (*pB).LineHeight),NORMAL_ICON,FiletypeToNormalIcon[TmpType]);
               }
               break;
@@ -5611,18 +5537,6 @@ void      cUiGraphDraw(DATA8 View,DATAF *pActual,DATAF *pLowest,DATAF *pHighest,
  *    -  \param  (DATA8)   VIEW     - Dataset number to view (0=all)\n
  *
  *\n
- *  - CMD = TEXTBOX
- *\n  Draws and controls a text box (one long string containing characters and line delimiters) on the screen\n
- *    -  \param  (DATA16)  X0       - X start cord [0..LCD_WIDTH]\n
- *    -  \param  (DATA16)  Y0       - Y start cord [0..LCD_HEIGHT]\n
- *    -  \param  (DATA16)  X1       - X size [0..LCD_WIDTH]\n
- *    -  \param  (DATA16)  Y1       - Y size [0..LCD_HEIGHT]\n
- *    -  \param  (DATA8)   TEXT     - First character in text box text (must be zero terminated)\n
- *    -  \param  (DATA32)  SIZE     - Maximal text size (including zero termination)\n
- *    -  \param  (DATA8)     \ref delimiters "DEL" - Delimiter code\n
- *    -  \return (DATA16)  LINE     - Selected line number\n
- *
- *\n
  *
  */
 /*! \brief  opUI_DRAW byte code
@@ -5972,15 +5886,10 @@ void      cUiDraw(void)
 
       if (isnan(DataF))
       {
-        if (Figures < 0)
-        {
-          Figures  =  0 - Figures;
-        }
         for (Lng = 0;Lng < Figures;Lng++)
         {
           GBuffer[Lng]  =  '-';
         }
-        GBuffer[Lng]  =  0;
       }
       else
       {
@@ -5998,8 +5907,8 @@ void      cUiDraw(void)
 
           Figures++;
         }
-        GBuffer[Figures]  =  0;
       }
+      GBuffer[Figures]  =  0;
       pText     =  GBuffer;
       if (Blocked == 0)
       {
@@ -6020,10 +5929,6 @@ void      cUiDraw(void)
       if (Blocked == 0)
       {
 
-        if (Figures < 0)
-        {
-          Figures  =  0 - Figures;
-        }
         TmpColor    =  Color;
         CharWidth   =  dLcdGetFontWidth(UiInstance.Font);
         CharHeight  =  dLcdGetFontHeight(UiInstance.Font);
@@ -6128,10 +6033,6 @@ void      cUiDraw(void)
 
       if (Blocked == 0)
       {
-        if (Figures < 0)
-        {
-          Figures  =  0 - Figures;
-        }
         TmpColor    =  Color;
         CharWidth   =  dLcdGetFontWidth(LARGE_FONT);
         CharHeight  =  dLcdGetFontHeight(LARGE_FONT);
@@ -6616,21 +6517,18 @@ void      cUiFlush(void)
  *
  *\n
  *  - CMD = KEY
- *\n  Get key from terminal (used for debugging)\n
  *    -  \return (DATA8)   VALUE    - Key value from lms_cmdin (0 = no key)\n
  *
  *\n
  *  - CMD = GET_ADDRESS
- *\n  Get address from terminal (used for debugging)\n
  *    -  \return (DATA32)  VALUE    - Address from lms_cmdin\n
  *
  *\n
  *  - CMD = GET_CODE
- *\n  Get code snippet from terminal (used for debugging)\n
  *    -  \param  (DATA32)  LENGTH   - Maximal code stream length\n
  *    -  \return (DATA32)  *IMAGE   - Address of image\n
  *    -  \return (DATA32)  *GLOBAL  - Address of global variables\n
- *    -  \return (DATA8)   FLAG     - Flag tells if image is ready to execute [1=ready]\n
+ *    -  \return (DATA8)   FLAG     - Flag tells if image is ready\n
  *
  *\n
  *  - CMD = GET_HW_VERS
@@ -6707,31 +6605,6 @@ void      cUiFlush(void)
  *  - CMD = GET_LBATT
  *\n  Get battery level in %\n
  *    -  \return (DATA8)    PCT      - Battery level [0..100]\n
- *
- *\n
- *  - CMD = GET_EVENT
- *\n  Get event (internal use)\n
- *    -  \return (DATA8)    EVENT    - Event [1,2 = Bluetooth events]\n
- *
- *\n
- *  - CMD = GET_SHUTDOWN
- *\n  Get and clear shutdown flag (internal use)\n
- *    -  \return (DATA8)    FLAG     - Flag [1=want to shutdown]\n
- *
- *\n
- *  - CMD = GET_WARNING
- *\n  Read warning bit field (internal use)\n
- *    -  \return (DATA8) \ref warnings - Bit field containing various warnings\n
- *
- *\n
- *  - CMD = TEXTBOX_READ
- *\n  Read line from text box\n
- *    -  \param  (DATA8)   TEXT        - First character in text box text (must be zero terminated)\n
- *    -  \param  (DATA32)  SIZE        - Maximal text size (including zero termination)\n
- *    -  \param  (DATA8)     \ref delimiters "DEL" - Delimiter code\n
- *    -  \param  (DATA8)   LENGTH      - Maximal length of string returned (-1 = no check)\n
- *    -  \param  (DATA16)  LINE        - Selected line number\n
- *    -  \return (DATA8)   DESTINATION - String variable or handle to string\n
  *
  *\n
  */
@@ -7220,29 +7093,16 @@ void      cUiRead(void)
  *
  *\n
  *  - CMD = INIT_RUN
- *\n  Start the "Mindstorms" "run" screen\n
  *
+ *\n
+ *  - CMD = UPDATE_RUN
  *
  *\n
  *  - CMD = GRAPH_SAMPLE
- *\n  Update tick to scroll graph horizontally in memory when drawing graph in "scope" mode\n
  *
  *\n
  *  - CMD = DOWNLOAD_END
  *\n  Send to brick when file down load is completed (plays sound and updates the UI browser)\n
- *
- *\n
- *  - CMD = SCREEN_BLOCK
- *\n  Set or clear screen block status (if screen blocked - all graphical screen action are disabled)\n
- *    -  \param  (DATA8)   STATUS   - Value [0 = normal,1 = blocked]\n
- *
- *\n
- *  - CMD = TEXTBOX_APPEND
- *\n  Append line of text at the bottom of a text box\n
- *    -  \param  (DATA8)   TEXT        - First character in text box text (must be zero terminated)\n
- *    -  \param  (DATA32)  SIZE        - Maximal text size (including zero termination)\n
- *    -  \param  (DATA8)     \ref delimiters "DEL" - Delimiter code\n
- *    -  \param  (DATA8)   SOURCE      - String variable or handle to string to append\n
  *
  *\n
  *
@@ -7526,26 +7386,6 @@ void      cUiWrite(void)
     }
     break;
 
-    case ALLOW_PULSE :
-    {
-      Data8  =  *(DATA8*)PrimParPointer();
-#ifdef ALLOW_DEBUG_PULSE
-      VMInstance.PulseShow  =  Data8;
-#endif
-      DspStat  =  NOBREAK;
-    }
-    break;
-
-    case SET_PULSE :
-    {
-      Data8  =  *(DATA8*)PrimParPointer();
-#ifdef ALLOW_DEBUG_PULSE
-      VMInstance.Pulse     |=  Data8;
-#endif
-      DspStat  =  NOBREAK;
-    }
-    break;
-
     default :
     {
       DspStat  =  FAILBREAK;
@@ -7591,6 +7431,7 @@ void      cUiWrite(void)
  *    -  \return (DATA8)   STATE    - Button has been pressed (0 = no, 1 = yes)\n
  *
  *\n
+ *
  *  - CMD = GET_BUMBED
  *    -  \param  (DATA8)   BUTTON   - \ref buttons \n
  *    -  \return (DATA8)   STATE    - Button has been pressed (0 = no, 1 = yes)\n
@@ -7636,11 +7477,6 @@ void      cUiWrite(void)
  *  - CMD = TESTLONGPRESS
  *    -  \param  (DATA8)   BUTTON   - \ref buttons \n
  *    -  \return (DATA8)   STATE    - Button has been hold down(0 = no, 1 = yes)\n
- *
- *\n
- *  - CMD = GET_CLICK
- *\n  Get and clear click sound request (internal use only)\n
- *    -  \return (DATA8)   CLICK    - Click sound request (0 = no, 1 = yes)\n
  *
  *\n
  *

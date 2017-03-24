@@ -1,15 +1,14 @@
-EVA - EV3 Accessiblity 
------------------------------------
-This project is intended provide additional functionality to the existing lego firmware. 
-
-#### LEGO MINDSTORMS EV3 source code
+LEGO MINDSTORMS EV3 source code
+===============================
 
 See [the release announcement on BotBench][1] for more information.
 
-#### Things you will need
+## Things you will need
 
-* A Linux (virtual) installation. Currently, a native Linux Mint 18.1 isntallation is being used for development.   
+* A Linux (virtual) installation.  I used Ubuntu 13.04 on VMware Workstation, but I am sure other combinations also work.   
 The reason for the Linux installation requirement is due to the case-sensitive filenames used by the Linux kernel source repository. Attempting to clone the source repository to a non-case sensitive file system such as Mac OSX HFS+ or Windows FAT would result in a corrupted repository.
+* Eclipse.  I used Helios Service Release 1, but I know more recent versions will also work.
+* Java JRE (for Eclipse)
 * Code Sourcery Lite for ARM version 2009q1-203.  You can [download here directly][4].
 * The mkimage program from u-boot-tools package to compile kernel.
 * The convert program from imagemagick package.
@@ -18,14 +17,15 @@ The reason for the Linux installation requirement is due to the case-sensitive f
 * A pair of flat-nosed pliers, for removing the SD card
 * A Netgear WNA1100 WiFi dongle.  It is currently the only WiFi dongle that is supported by the EV3’s firmware.
 
+## Getting Started
 
-#### Initial Getting Started
+Use Git to clone this repo:
 
-The scripts provided by logo  expect the source code to live in a projects folder in your home directory. You will need to symlink the repository into a project folder in your home.
+    git clone https://github.com/mindboards/ev3sources.git
+
+The scripts in the EV3 sources expect the source code to live in a projects folder in your home directory. You will need to create a  projects symlink to the ev3sources folder that was created when you cloned the Git repo.
 
 To import this project in Eclipse, check out the [Wiki article][6]
-
-For a more in depth look at getting started see [here][7].
 
 ## Contributing
 
@@ -38,4 +38,4 @@ If you want to make a change to this shared repo, submit a **Pull Request**, whi
   [3]: https://help.github.com/articles/using-pull-requests
   [4]: http://go.mentor.com/2ig4q
   [5]: http://botbench.com/blog/2013/08/15/ev3-creating-console-cable/
-  [7]: https://wiki.qut.edu.au/display/cyphy/EV3+Build+Environment+and+Compilation
+  [6]: https://github.com/mindboards/ev3sources/wiki/Eclipse-import

@@ -74,23 +74,23 @@
 /*
 
 INPUT
-**************************************************************************************************************************************************************************************************************************
+*********************************************************************************************************************************************************************************************************************
 
-MICRO                             CIRCUIT                               CONNECTION        EV3 UART DEVICE           EV3 DUMB INPUT DEVICE           NXT SENSOR                TACHO MOTOR           EV3 DUMB OUTPUT DEVICE
-----------------------            ----------------------------------    ----------        ---------------------     ------------------------        --------------------      ----------------      ----------------------
+MICRO                             CIRCUIT                               CONNECTION        NEW UART DEVICE           NEW DUMB SENSOR                 OLD SENSOR                TACHO MOTOR           NEW DUMP ACTUATOR
+----------------------            ----------------------------------    ----------        ---------------------     ------------------------        --------------------      ----------------      -----------------
 Analogue I                        10K pull up to ADC_REF                    1             Short circuit to ground   ID resistor to ground           Analogue value            Motor +               Motor +
 
 Digital I                         6K4 impedance to NEAR_PIN2 voltage        2             Open                      Open                            Short to ground           Motor -               Motor -
 
-Ground                            Ground                                    3             Ground                    Ground                          Ground                    Ground                Ground
+Ground                            Ground                                    3             Ground                    Ground                          Ground                    Ground                ?
 
-Supply                            Supply                                    4             Supply                    Supply                          Supply                    Supply                Supply
+Supply                            Supply                                    4             Supply                    Supply                          Supply                    Supply                ?
 
-Digital I/O (float)               100K pull up to 3.3V                      5             RXD (float)               Short to ground                 ?                         Tacho A               ID resistor to ground
+Digital I/O (float)               100K pull up to 3.3V                      5             RXD (float)               Short to ground                 ?                         Tacho A               ID resistor to 5
 
-Analogue I + Digital I/O (float)  220K pull down to ground                  6             TXD (low)                 Analogue value                  ?                         Tacho B               Float or low
+Analogue I + Digital I/O (float)  220K pull down to ground                  6             TXD (low)                 Analogue value                  ?                         Tacho B               ID resistor to 6
 
-**************************************************************************************************************************************************************************************************************************
+*********************************************************************************************************************************************************************************************************************
 
 
 
@@ -100,7 +100,7 @@ ID VALUE ON CONNECTION 1:
   IN1_NEAR_5V     -----
                     |
                     |
-                    |   TACHO MOTOR and EV3 DUMB OUTPUT DEVICE
+                    |   TACHO MOTOR and NEW DUMB ACTUATOR
                     |
                     |
   IN1_NEAR_PIN2   -----
@@ -111,20 +111,18 @@ ID VALUE ON CONNECTION 1:
                     |
                     |
                     |
-                    |   EV3 INPUT DEVICE ID's
+                    |   NEW SENSOR ID's
                     |
                     |
                     |
                     |
                     |
                     |
-                    |   EV3 UART DEVICE
+                    |   NEW UART SENSOR
   0.0V            -----
 
 
-\endverbatim
-\anchor inputdevicerules
-\verbatim
+
 IMPLEMENTED DETECTION RULES (sequence matters):
 
 I.      Connection 2 low
@@ -138,8 +136,8 @@ I.      Connection 2 low
 
 II.     Connection 1 loaded
             1.  Connection 1 higher than IN1_NEAR_PIN2                    -> ERROR
-            2.  Connection 1 lower than IN1_NEAR_GND                      -> EV3 UART DEVICE
-            3.  else (value on connection 1 is ID)                        -> EV3 DUMB INPUT DEVICE
+            2.  Connection 1 lower than IN1_NEAR_GND                      -> NEW UART DEVICE
+            3.  else (value on connection 1 is ID)                        -> NEW DUMB DEVICE
 
 
 III.    Connection 6 high                                                 -> NXT IIC TEMP SENSOR
@@ -149,31 +147,13 @@ IV.     Connection 5 low                                                  -> ERR
 
 
 
+NEW ID's:
+
+The range from 0mV to just beneath the voltage on connection 2 is free to be used for the new sensor ID's - recommendations:
+
+I.  Use a short circuit to ground to identify the UART device.
+
 \endverbatim
-\anchor inputdeviceresistor
-\verbatim
-EV3 DUMB INPUT DEVICE ID's:
-
-The range from 0mV to just beneath the voltage on connection 2 is free to be used for the EV3 dumb input device ID's:
-
-0R        <100mV        Intelligent input device (UART sensor)
-
-430R       206mV        I-#01 - RESERVED for LEGO EV3 input device
-910R       427mV        LEGO EV3 Touch sensor
-1K3        575mV        I-#03 - RESERVED for LEGO EV3 input device
-2K0        833mV        I-#04 - RESERVED for LEGO EV3 input device
-2K7       1063mV        I-#05 - RESERVED for LEGO EV3 input device
-3K3       1241mV        I-#06 - RESERVED for LEGO EV3 input device
-3K9       1403mV        LEGO EV3 Test
-4K7       1599mV        I-#07 - RESERVED for LEGO EV3 input device
-5K6       1795mV        I-#08 - RESERVED for LEGO EV3 input device
-6K8       2024mV        I-#10 - RESERVED for LEGO EV3 input device
-7K87      2202mV        I-#11 - RESERVED for LEGO EV3 input device
-9K1       2382mV        I-#12 - RESERVED for LEGO EV3 input device
-11K       2619mV        I-#13 - RESERVED for LEGO EV3 input device
-13K       2826mV        Third party input device
-
-\endverbatim The hysteresis is defined by IN1_ID_HYSTERESIS (see \ref system "System Defines")
  *
  *  \n
  */
@@ -198,70 +178,56 @@ The range from 0mV to just beneath the voltage on connection 2 is free to be use
 #define   OUT5_IIC_HIGH                 3700  //  [mV]  values in between these limits means that an old IIC sensor or color sensor is connected
 #define   OUT5_IIC_LOW                  2800  //  [mV]
 
+#define   OUT5_MINITACHO_HIGH1          2000  //  [mV]  values in between these limits means that a mini tacho motor is pulling high when pin5 is pulling low
+#define   OUT5_MINITACHO_LOW1           1600  //  [mV]
+
 #define   OUT5_BALANCE_HIGH             2600  //  [mV]  values in between these limits means that connection 5 is floating
 #define   OUT5_BALANCE_LOW              2400  //  [mV]
 
 #define   OUT5_LIGHT_HIGH                850  //  [mV]  values in between these limits means that an old light sensor is connected
 #define   OUT5_LIGHT_LOW                 650  //  [mV]
 
-#define   OUT5_NEAR_GND                  100  //  [mV]  lower  values mean that connection 5 is shorted to ground
-
-
-#define   OUT5_DUMP_HIGH                2350
-#define   OUT5_DUMP_LOW                 1150
-
-
-#define   OUT5_MINITACHO_HIGH1          2000  //  [mV]  values in between these limits means that a mini tacho motor is pulling high when pin5 is pulling low
-#define   OUT5_MINITACHO_LOW1           1600  //  [mV]
-
-#define   OUT5_NEWTACHO_HIGH1           1600  //  [mV]  values in between these limits means that a new tacho motor is pulling high when pin5 is pulling low
-#define   OUT5_NEWTACHO_LOW1            1200  //  [mV]
-
-#define   OUT5_INTELLIGENT_HIGH1        1150
-#define   OUT5_INTELLIGENT_LOW1          850
-
-#define   OUT5_INTELLIGENT_HIGH2        1150
-#define   OUT5_INTELLIGENT_LOW2          850
-
-#define   OUT5_NEWTACHO_HIGH2            650  //  [mV]  values in between these limits means that a new tacho motor is pulling low when pin5 floats
-#define   OUT5_NEWTACHO_LOW2             450  //  [mV]
-
 #define   OUT5_MINITACHO_HIGH2           450  //  [mV]  values in between these limits means that a mini tacho motor is pulling low when pin5 floats
 #define   OUT5_MINITACHO_LOW2            250  //  [mV]
+
+#define   OUT5_NEAR_GND                  100  //  [mV]  lower  values mean that connection 5 is shorted to ground
 
 /*
 
 
 OUTPUT
-**************************************************************************************************************************************************************************************************************************
+*********************************************************************************************************************************************************************************************************************
 
-MICRO                             CIRCUIT                               CONNECTION        EV3 UART DEVICE           EV3 DUMB INPUT DEVICE           NXT SENSOR                TACHO MOTOR           EV3 DUMB OUTPUT DEVICE
-----------------------            -------------------------------       ----------        ---------------------     ------------------------        --------------------      ----------------      ----------------------
+MICRO                             CIRCUIT                               CONNECTION        NEW UART DEVICE           NEW DUMB SENSOR                 OLD SENSOR                TACHO MOTOR           NEW DUMP ACTUATOR
+----------------------            -------------------------------       ----------        ---------------------     ------------------------        --------------------      ----------------      -----------------
 Motor driver +                    Connected to motor driver                 1             ID resistor to ground     ID resistor to ground           Analogue value            Motor +               Motor +
 
 Motor driver -                    100K pull up to ADC_REF                   2             Open                      Open                            Short to ground           Motor -               Motor -
 
-Ground                            Ground                                    3             Ground                    Ground                          Ground                    Ground                Ground
+Ground                            Ground                                    3             Ground                    Ground                          Ground                    Ground                ?
 
-Supply                            Supply                                    4             Supply                    Supply                          Supply                    Supply                Supply
+Supply                            Supply                                    4             Supply                    Supply                          Supply                    Supply                ?
 
-Analogue I + Digital I/O          50K impedance to OUT5_BALANCE             5             RXD (float)               Short to ground                 ?                         Tacho A               ID resistor to ground
+Analogue I + Digital I/O          50K impedance to OUT5_BALANCE             5             RXD (float)               Short to ground                 ?                         Tacho A               ID resistor to 5
 
-Digital I/O (low)                 100K pull up to connection 2              6             TXD (low)                 Analogue value                  ?                         Tacho B               ?
+Digital I/O (low)                 100K pull up to connection 2              6             TXD (low)                 Analogue value                  ?                         Tacho B               ID resistor to 6
 
-**************************************************************************************************************************************************************************************************************************
+*********************************************************************************************************************************************************************************************************************
 
 
 
 ID VALUE ON CONNECTION 5:
 
-  ADC_REF           ---------------------------------------------------------------------
+  Connection 6 floating                                                                                       Connection 6 low and value on connection 5 changed
+  ---------------------------------------------------------------------------------------                     --------------------------------------------------
+
+  ADC_REF           -------------------------------------------------------------------------------------------------
   NEAR_5V           -----                                           |
                       |                                             |
                       |                                             |
-  3.3               - | - - - - - - - - - - - - - - - - - - - - - - | - - - - - - - - - - - - FUTURE ADC reference voltage
+  3.3               - | - - - - - - - - - - - - - - - - - - - - - - | - - - - - - - - - - - - - - - - - - - - - - - -   2014 ADC reference voltage
                       |     LARGE TACHO MOTOR                       -
-                      |     MINI TACHO MOTOR                        -     OLD TACHO MOTOR
+                      |     MINI TACHO MOTOR, NEW DUMB MOTOR        -     OLD TACHO MOTOR
                       |     NEW TACHO MOTOR                         -
   OUT5_IIC_HIGH     -----                                           |
                       |     OLD IIC SENSOR                          -
@@ -270,37 +236,35 @@ ID VALUE ON CONNECTION 5:
   OUT5_BALANCE_HIGH -----                                           |
                       |     OPEN                                    -
   OUT5_BALANCE_LOW  -----                                           |
-  OUT5_DUMB_HIGH    -----                                           |
-                      |                       (390K   2250mV)       |
-                      |                       (180K   2000mV)       |
-                      |     NEW DUMB OUTPUT   (120K   1750mV)       |
-                      |                       (68K    1500mV)       |
-                      |                       (47K    1250mV
-  OUT5_DUMB_LOW     -----                                           |
-                      |     NEW INTELIGENT    (33K    1050mV)       |
-                    -----                                           |
+                      |                                             |                                           -----
+                      |                                             |                                             |
+                      |                                             |                                             |
+                      |                                             |                                             |     NEW ACTUATOR ID's
+                      |                                             |                                             |
+                      |                                             |                                             |
+                      |                                             |                                           -----
   OUT5_LIGHT_HIGH   -----                                           |
                       |     OLD LIGHT SENSOR                        -
   OUT5_LIGHT_LOW    -----                                           |
-                      |     NEW TACHO MOTOR   (12K7 =  506mV)       -
-                      |     MINI TACHO MOTOR  ( 6K8 =  299mV)       -
-                      |     LARGE TACHO MOTOR ( 3K3 =  155mV)       -
+                      |     NEW TACHO MOTOR                         -
+                      |     MINI TACHO MOTOR                        -
+                      |     LARGE TACHO MOTOR                       -
   OUT5_NEAR_GND     -----                                         -----
-                      |     EV3 DUMB INPUT DEVICE
-  0.0V              ---------------------------------------------------------------------
+                      |     NEW DUMB SENSOR
+  0.0V              -------------------------------------------------------------------------------------------------
+
+When something is connected: the value on connection 5 is stored as Value5Float. Connection 6 is driven low and the value on connection 5 is then stored as Value5Low.
+Connection 6 is set floating again.
+The two stored values is used to determine the type of the attached device.
 
 
-
-\endverbatim
-\anchor outputdevicerules
-\verbatim
 IMPLEMENTED DETECTION RULES (sequence matters):
 
-I.
-            1.  Value5Float is between OUT5_BALANCE_LOW and OUT5_BALANCE_HIGH and Connection 6 is low   -> ERROR        (NXT TOUCH SENSOR, NXT SOUND SENSOR, EV3 UART DEVICE)
-            2.  Value5Float is lower than OUT5_NEAR_GND                                                 -> ERROR        (EV3 DUMP INPUT DEVICE)
-            3.  Value5Float is between OUT5_LIGHT_LOW and OUT5_LIGHT_HIGH                               -> ERROR        (NXT IIC SENSOR)
-            4.  Value5Float is between OUT5_IIC_LOW and OUT5_IIC_HIGH                                   -> ERROR        (NXT TEMP SENSOR)
+I.      Value5Float is equal to Value5Low
+            1.  Value5Float is between OUT5_BALANCE_LOW and OUT5_BALANCE_HIGH and Connection 6 is low   -> ERROR        (NXT TOUCH SENSOR, NXT SOUND SENSOR, NEW UART SENSOR)
+            2.  Value5Float is lower than OUT5_NEAR_GND                                                 -> ERROR        (NEW DUMP SENSOR)
+            3.  Value5Float is between OUT5_LIGHT_LOW and OUT5_LIGHT_HIGH                               -> ERROR        (OLD IIC SENSOR)
+            4.  Value5Float is between OUT5_IIC_LOW and OUT5_IIC_HIGH                                   -> ERROR        (OLD TEMP SENSOR)
             5.  Value5Float is lower than OUT5_BALANCE_LOW
                     Value5Float is higher than OUT5_MINITACHO_HIGH2                                     -> NEW TACHO
                     Value5Float is higher than OUT5_MINITACHO_LOW2                                      -> MINI TACHO   (NEW MINI TACHO MOTOR)
@@ -310,31 +274,24 @@ I.
                     VALUE5Low is lower than OUT5_MINITACHO_HIGH1                                        -> MINI TACHO   (NEW MINI TACHO MOTOR)
                     else                                                                                -> TACHO MOTOR
 
-
-\endverbatim
-\anchor tachodeviceresistor
-\verbatim
-EV3 TACHO OUTPUT DEVICE ID's:
-
-3K3       155mV         LARGE TACHO MOTOR
-6K8       299mV         MEDIUM TACHO MOTOR
-12K7      506mV         RESERVED for LEGO EV3 TACHO MOTOR
+II.     Value5Float is NOT equal to Value5Low
+            1.  Value5Low is between OUT5_NEAR_GND and OUT5_BALANCE_LOW                                 -> NEW DUMP ACTUATOR  (ID is Value5Low)
+            2.  else                                                                                    -> ERROR
 
 
-\endverbatim
-\anchor outputdeviceresistor
-\verbatim
-EV3 DUMB OUTPUT DEVICE ID's:
 
+NEW ID's:
 
-33K       1000mV +-100  Intelligent output device
+The range from 800mV to OUT5_BALANCE_LOW is free to be used for the new sensor ID's - recommendations:
 
-47K       1250mV +-100  O-#01 - RESERVED for LEGO EV3 output device
-68K       1500mV +-100  O-#02 - RESERVED for LEGO EV3 output device
-120K      1750mV +-100  O-#03 - RESERVED for LEGO EV3 output device
-180K      2000mV +-100  O-#04 - RESERVED for LEGO EV3 output device
+I.    Use a short circuit between connection 5 and connection 6 to identify the cheapest device
 
-390K      2250mV +-100  Third party output device
+II.   Remember to reserve one id for the smart actuator (maybe the highest resistance = 500K)
+
+III.  Remember that the ID resistor must get connection 5 out of balance
+
+IV.   Remember the voltage on pin 1 when connected to an input port
+
 
 \endverbatim
  *
@@ -2752,7 +2709,7 @@ static enum hrtimer_restart Device3TimerInterrupt1(struct hrtimer *pTimer)
                 }
                 else
                 {
-                  if (InputPort[Port].Event & (0x01 << INPUT_PORT_PIN5))
+                  if (InputPort[Port].Event & (0x01 << INPUT_PORT_PIN6))
                   { // pin 5 is low
 
                     InputPort[Port].State  =  DCM_PIN5_LOW;
@@ -3040,7 +2997,7 @@ static enum hrtimer_restart Device3TimerInterrupt1(struct hrtimer *pTimer)
 
           case DCM_CONNECTED_WAITING_FOR_PIN5_HIGH :
           {
-            if ((PINRead(Port,INPUT_PORT_PIN5)))
+            if (!(PINRead(Port,INPUT_PORT_PIN5)))
             {
               if (++(InputPort[Port].Timer) >= (DCM_EVENT_STABLE_DELAY / DCM_TIMER_RESOLUTION))
               {
@@ -3143,8 +3100,8 @@ static enum hrtimer_restart Device3TimerInterrupt1(struct hrtimer *pTimer)
 
                 OutputPort[Port].Value5Float  =  CtoV((*pAnalog).OutPin5[Port]);
                 OutputPort[Port].Timer        =  0;
+                POUTLow(Port,OUTPUT_PORT_PIN6);
                 OutputPort[Port].State        =  DCM_WAITING_FOR_PIN6_LOW;
-                POUTFloat(Port,OUTPUT_PORT_PIN6);
               }
             }
           }
@@ -3210,41 +3167,22 @@ static enum hrtimer_restart Device3TimerInterrupt1(struct hrtimer *pTimer)
                     {
                       if (OutputPort[Port].Value5Float < OUT5_BALANCE_LOW)
                       {
-                        if ((OutputPort[Port].Value5Float >= OUT5_DUMP_LOW) && (OutputPort[Port].Value5Float < OUT5_DUMP_HIGH))
+                        if (OutputPort[Port].Value5Float > OUT5_MINITACHO_HIGH2)
                         {
-                          (*pAnalog).OutPin5Low[Port]  =  OutputPort[Port].Value5Float;
-                          (*pAnalog).OutDcm[Port]      =  TYPE_UNKNOWN;
-                          (*pAnalog).OutConn[Port]     =  CONN_OUTPUT_DUMB;
+                          (*pAnalog).OutDcm[Port]     =  TYPE_NEWTACHO;
                         }
                         else
                         {
-                          if ((OutputPort[Port].Value5Float >= OUT5_INTELLIGENT_LOW2) && (OutputPort[Port].Value5Float < OUT5_INTELLIGENT_HIGH2))
+                          if (OutputPort[Port].Value5Float > OUT5_MINITACHO_LOW2)
                           {
-                            (*pAnalog).OutDcm[Port]      =  TYPE_UNKNOWN;
-                            (*pAnalog).OutConn[Port]     =  CONN_OUTPUT_INTELLIGENT;
+                            (*pAnalog).OutDcm[Port]   =  TYPE_MINITACHO;
                           }
                           else
                           {
-                            if ((OutputPort[Port].Value5Float >= OUT5_NEWTACHO_LOW2) && (OutputPort[Port].Value5Float < OUT5_NEWTACHO_HIGH2))
-                            {
-                              (*pAnalog).OutDcm[Port]     =  TYPE_NEWTACHO;
-                              (*pAnalog).OutConn[Port]    =  CONN_OUTPUT_TACHO;
-                            }
-                            else
-                            {
-                              if ((OutputPort[Port].Value5Float >= OUT5_MINITACHO_LOW2) && (OutputPort[Port].Value5Float < OUT5_MINITACHO_HIGH2))
-                              {
-                                (*pAnalog).OutDcm[Port]   =  TYPE_MINITACHO;
-                                (*pAnalog).OutConn[Port]  =  CONN_OUTPUT_TACHO;
-                              }
-                              else
-                              {
-                                (*pAnalog).OutDcm[Port]   =  TYPE_TACHO;
-                                (*pAnalog).OutConn[Port]  =  CONN_OUTPUT_TACHO;
-                              }
-                            }
+                            (*pAnalog).OutDcm[Port]   =  TYPE_TACHO;
                           }
                         }
+                        (*pAnalog).OutConn[Port]      =  CONN_OUTPUT_TACHO;
                         OutputPort[Port].Connected    =  1;
                       }
                       else
@@ -3291,26 +3229,24 @@ static enum hrtimer_restart Device3TimerInterrupt1(struct hrtimer *pTimer)
           {
             if (++(OutputPort[Port].Timer) >= (DCM_LOW_DELAY / DCM_TIMER_RESOLUTION))
             {
-              OutputPort[Port].Value5Low      =  CtoV((*pAnalog).OutPin5[Port]);
-              OutputPort[Port].State          =  DCM_CONNECTION;
+              OutputPort[Port].Value5Low    =  CtoV((*pAnalog).OutPin5[Port]);
+              OutputPort[Port].State        =  DCM_CONNECTION;
               POUTLow(Port,OUTPUT_PORT_PIN5W);
-
-              if ((OutputPort[Port].Value5Low >= OUT5_NEWTACHO_LOW1) && (OutputPort[Port].Value5Low < OUT5_NEWTACHO_HIGH1))
+              (*pAnalog).OutConn[Port]      =  CONN_OUTPUT_TACHO;
+              if (OutputPort[Port].Value5Low < OUT5_MINITACHO_LOW1)
               {
-                (*pAnalog).OutDcm[Port]       =  TYPE_NEWTACHO;
-                (*pAnalog).OutConn[Port]      =  CONN_OUTPUT_TACHO;
+                (*pAnalog).OutDcm[Port]     =  TYPE_ERROR;
+                (*pAnalog).OutConn[Port]    =  CONN_ERROR;
               }
               else
               {
-                if ((OutputPort[Port].Value5Low >= OUT5_MINITACHO_LOW1) && (OutputPort[Port].Value5Low < OUT5_MINITACHO_HIGH1))
+                if (OutputPort[Port].Value5Low < OUT5_MINITACHO_HIGH1)
                 {
-                  (*pAnalog).OutDcm[Port]     =  TYPE_MINITACHO;
-                  (*pAnalog).OutConn[Port]    =  CONN_OUTPUT_TACHO;
+                  (*pAnalog).OutDcm[Port]   =  TYPE_MINITACHO;
                 }
                 else
                 {
-                  (*pAnalog).OutDcm[Port]     =  TYPE_TACHO;
-                  (*pAnalog).OutConn[Port]    =  CONN_OUTPUT_TACHO;
+                  (*pAnalog).OutDcm[Port]   =  TYPE_TACHO;
                 }
               }
               OutputPort[Port].Connected    =  1;

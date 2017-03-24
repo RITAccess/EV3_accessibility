@@ -13,11 +13,6 @@
 #   rm -R /mnt/tmpdrv_ud
 #fi
 
-if [[ $EUID != 0 ]]; then
-    echo "Please run script as root!"
-    exit 1;
-fi
-
 CURRENTPATH=${PWD}
 PATH1=~/projects/lms2012
 PATH2=open_first
@@ -59,12 +54,10 @@ ln -s /mnt/ramdisk/prjs/ $PATH4/prjs
 ln -s /mnt/ramdisk/settings/ $PATH4/sys/settings
 
 rm $PATH4/../.ash_history
-rm $PATH4/d_iic_test
-#rm $PATH4/lms2012
-rm $PATH4/makefile
-rm $PATH4/objects.mk
-rm $PATH4/sources.mk
-rm $PATH4/source/subdir.mk
+rm $PATH4/lms2012
+rm $PATH4/Makefile
+rm $PATH4/*.o
+rm $PATH4/*.d
 rm $PATH4/sys/10-lms.rules
 rm $PATH4/sys/gdbinit
 rm $PATH4/sys/lib/dummy
@@ -87,18 +80,18 @@ chmod 644 /mnt/tmpdrv_ud/settings/BrickName
 if [ -f $PATH5/def_sett.tgz ];
 then
    rm $PATH5/def_sett.tgz
-   echo -e "Remove Old Files\t: [ DONE ]"
+   echo "Remove Old Files\t: [ DONE ]"
 fi
 cd /mnt/tmpdrv_ud/
 tar zcf $PATH5/def_sett.tgz ./
-echo -e "New DefSettFile Created\t: [ DONE ]"
+echo "New DefSettFile Created\t: [ DONE ]"
 
 mkfs.cramfs /mnt/tmpdrv_fs/ $PATH1/$PATH2/EV3.cramfs.bin
-echo -e "CRAMFS File Created\t: [ DONE ]"
+echo "CRAMFS File Created\t: [ DONE ]"
 
 #rm $PATH1/$PATH2/EV3.squashfs.bin
 #mksquashfs /mnt/tmpdrv_fs/ $PATH1/$PATH2/EV3.squashfs.bin
-#echo -e "SQUASHFS File Created\t: [ DONE ]"
+#echo "SQUASHFS File Created\t: [ DONE ]"
 
 cd $CURRENTPATH
 rm -R /mnt/tmpdrv_fs/
