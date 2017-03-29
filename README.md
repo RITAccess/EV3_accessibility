@@ -1,5 +1,11 @@
 EVA - EV3 Accessiblity
 ===============================
+This project focuses on increasing accessibility in the LEGO Mindstorms EV3 for visually impaired users.
+
+## Sources
+To find out a little bit more about the Lego source host see [the Mindboards Repo][6].
+To see the original [release announcement on BotBench][5] for more information.
+
 ## Things you will need
 
 * A Linux installation (Virtual or Native).  I used Linux Mint 18.1 running natively on a dual boot machine.    
@@ -33,3 +39,5 @@ Verified running 3-24-2017
   [2]: https://help.github.com/articles/using-pull-requests
   [3]: https://sourcery.mentor.com/GNUToolchain/package4571/public/arm-none-linux-gnueabi/arm-2009q1-203-arm-none-linux-gnueabi-i686-pc-linux-gnu.tar.bz2
   [4]: http://botbench.com/blog/2013/08/15/ev3-creating-console-cable/
+  [5]: http://botbench.com/blog/2013/07/31/lego-mindstorms-ev3-source-code-available/
+  [6]: https://github.com/mindboards/ev3sources
