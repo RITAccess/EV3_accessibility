@@ -1,5 +1,5 @@
 SUBDIRS = Bluetooth Brick+Datalog Brick+Info Brick+Program IR+Control \
-          Motor+Control Port+View Sleep Volume WiFi ui c_ui
+          Motor+Control Port+View Sleep Volume WiFi ui c_ui Accessibility
 SUBDIRS_DISABLED = TEST SelfTest tst Debug Demo Test
 
 # Make is not friend with spaces, so we have to be creative to handle them.
