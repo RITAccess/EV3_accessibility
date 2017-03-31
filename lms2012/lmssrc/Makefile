@@ -1,6 +1,6 @@
 SUBDIRS = Bluetooth Brick+Datalog Brick+Info Brick+Program IR+Control \
-          Motor+Control Port+View Sleep Volume WiFi ui c_ui Accessibility
-SUBDIRS_DISABLED = TEST SelfTest tst Debug Demo Test
+          Motor+Control Port+View Sleep Volume WiFi ui c_ui
+SUBDIRS_DISABLED = TEST SelfTest tst Debug Demo Test Accessibility b_ui
 
 # Make is not friend with spaces, so we have to be creative to handle them.
 space = $(subst +,\ ,$1)

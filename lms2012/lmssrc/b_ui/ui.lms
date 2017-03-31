@@ -481,6 +481,7 @@ NotEvent2:                                                            //    }
 //******************************************************************************************************
 // StartupScreen
 //******************************************************************************************************
+                                                                      //
 define    STARTUPSCREEN 'startup_screen'                              //
                                                                       //
 subcall   StartupScreen                                               //  void StartupScreen(void)
@@ -501,97 +502,48 @@ subcall   StartupScreen                                               //  void S
 //******************************************************************************************************
 // Scheduler
 //******************************************************************************************************
-define    PLAYRECENTSCREEN 'playrecent_screen'                        //
-define    FILESCREEN  'file_screen'                                   //
-define    APPSSCREEN 'apps_screen'                                    //
-define    SETTINGSSCREEN 'settings_screen'                            //
                                                                       //
 subcall   Scheduler                                                   //  void Scheduler(void)
 {                                                                     //  {
   DATA32  Timer                                                       //
   DATA16  Tmp                                                         //    DATA16  Tmp 
   DATA16  OldState                                                    //    DATA16  OldState
-  DATA16  confirmTMP												  //	DATA16  confirmTMP			// ENTER button confirmation retreival
-  DATA16  confirmFlag												  //    DATA16  confirmFlag			// Confirmation set
                                                                       //
   MOVE16_16(STATE_PLAYRECENT,State)                                   //    State     =  STATE_PLAYRECENT
   MOVE16_16(STATE_PLAYRECENT,OldState)                                //    OldState  =  STATE_PLAYRECENT
   MOVE16_16(SUBSTATE_NOT_INIT,SubState)                               //    SubState  =  SUBSTATE_NOT_INIT
   MOVE8_8(0,TurnOff)                                                  //    TurnOff   =  0
-  MOVE16_16(0,confirmTMP)                                             //    confirmTMP    =  0
-  MOVE16_16(0,confirmFlag)                                            //    confirmFlag   =  0
-																	  //
-  UI_DRAW(FILLWINDOW,BG_COLOR,0,0)                                    //    UI_DRAW(FILLWINDOW,BG_COLOR,0,0)
-  UI_DRAW(UPDATE)													  //    UI_DRAW(UPDATE)  // CLEAN SLATE 
-																	  //
+                                                                      //
                                                                       //    do
 Loop:                                                                 //    {
                                                                       //
   TIMER_WAIT(50,Timer)                                                //      TIMER_WAIT(50,Timer)
   TIMER_READY(Timer)                                                  //      TIMER_READY(Timer)
-																	  //
-ConfirmSelect:														  //	  // Test for ENTER
-  UI_BUTTON(SHORTPRESS,ENTER_BUTTON,confirmTMP)                       //      UI_BUTTON(SHORTPRESS,ENTER_BUTTON,confirm)
-  JR_EQ16(confirmTMP,0, NotSelected)                                  //      if ( confirm )
-Selected:															  //      {
-  MOVE16_16(1, confirmFlag )										  //        confirmFlag = 1;
-  JR(SelectDone)													  //      }
-NotSelected:														  //      else
-  MOVE16_16(0, confirmFlag )										  //         confirmFlag = 0;
-SelectDone:															  //
-                                                                      //
+                                                                      //                                                                      
                                                                       //      switch (State)
                                                                       //      {
 SwitchState1:                                                         //                                                                    
   JR_NEQ16(State,STATE_PLAYRECENT,SwitchState2)                       //        case STATE_PLAYRECENT :
                                                                       //        {
-  UI_DRAW(FILLWINDOW,BG_COLOR,0,0)                                    //          UI_DRAW(FILLWINDOW,BG_COLOR,0,0)
-  UI_DRAW(BMPFILE,FG_COLOR,0,13,PLAYRECENTSCREEN)                     //          UI_DRAW(BMPFILE, FG_COLOR, 0, 13, PLAYRECENTSCREEN ) // where 128 is height of LCD
-  UI_DRAW(UPDATE)                                                     //          UI_DRAW(UPDATE)
-																	  //
-  JR_NEQ16(confirmFlag, 1, SwitchStateEnd);							  //          if( confirmFlag )
-  CALL(PlayrecentScreen)                                              //            CALL(FileScreen)
-																	  //          else
-																	  //            break;
+  CALL(PlayrecentScreen)                                              //          CALL(PlayrecentScreen)
                                                                       //        }
   JR(SwitchStateEnd)                                                  //        break;
 SwitchState2:                                                         //                                                                    
   JR_NEQ16(State,STATE_FILE,SwitchState3)                             //        case STATE_FILE :
                                                                       //        {
-  UI_DRAW(FILLWINDOW,BG_COLOR,0,0)                                    //          UI_DRAW(FILLWINDOW,BG_COLOR,0,0)
-  UI_DRAW(BMPFILE,FG_COLOR,0,13,FILESCREEN)                           //		  UI_DRAW(BMPFILE, FG_COLOR, 0, 13, FILESCREEN )		// where 128 is height of LCD
-  UI_DRAW(UPDATE)                                                     //          UI_DRAW(UPDATE)
-                                                                      //
-  JR_NEQ16(confirmFlag, 1, SwitchStateEnd);							  //          if( confirmFlag )
-  CALL(FileScreen)                                                    //            CALL(FileScreen)
-																	  //          else
-																	  //            break;
+  CALL(FileScreen)                                                    //          CALL(FileScreen)
                                                                       //        }
   JR(SwitchStateEnd)                                                  //        break;
 SwitchState3:                                                         //                                                                    
   JR_NEQ16(State,STATE_APPS,SwitchState4)                             //        case STATE_APPS :
                                                                       //        {
-  UI_DRAW(FILLWINDOW,BG_COLOR,0,0)                                    //          UI_DRAW(FILLWINDOW,BG_COLOR,0,0)
-  UI_DRAW(BMPFILE,FG_COLOR,0,13,APPSSCREEN)                           //		  UI_DRAW(BMPFILE, FG_COLOR, 0, 13, APPSCREEN )		// where 128 is height of LCD
-  UI_DRAW(UPDATE)                                                     //          UI_DRAW(UPDATE)
-                                                                      //
-  JR_NEQ16(confirmFlag, 1, SwitchStateEnd);							  //          if( confirmFlag )																	  
-  CALL(AppsScreen)                                                    //            CALL(AppsScreen)
-																	  //          else
-																	  //            break;
+  CALL(AppsScreen)                                                    //          CALL(AppsScreen)
                                                                       //        }
   JR(SwitchStateEnd)                                                  //        break;
 SwitchState4:                                                         //                                                                    
   JR_NEQ16(State,STATE_SETTINGS,SwitchState5)                         //        case STATE_SETTINGS :
                                                                       //        {
-  UI_DRAW(FILLWINDOW,BG_COLOR,0,0)                                    //          UI_DRAW(FILLWINDOW,BG_COLOR,0,0)
-  UI_DRAW(BMPFILE,FG_COLOR,0,13,SETTINGSSCREEN)                       //		  UI_DRAW(BMPFILE, FG_COLOR, 0, 13, SETTINGSSCREEN )		// where 13 is start
-  UI_DRAW(UPDATE)                                                     //          UI_DRAW(UPDATE)
-																	  //
-  JR_NEQ16(confirmFlag, 1, SwitchStateEnd);							  //          if( confirmFlag )
-  CALL(SettingsScreen)                                                //            CALL(SettingsScreen)
-																	  //          else
-																	  //			break;
+  CALL(SettingsScreen)                                                //          CALL(SettingsScreen)
                                                                       //        }
   JR(SwitchStateEnd)                                                  //        break;
 SwitchState5:                                                         //                                                                    
@@ -649,6 +601,7 @@ StateNoChange:                                                        //      }
                                                                       //
   CALL(ErrorPopup)                                                    //      CALL(ErrorPopup)                                                                
                                                                       //
+                                                                      //
                                                                       //    }
   JR(Loop)                                                            //    while (1)
 }                                                                     //  }
@@ -658,7 +611,6 @@ StateNoChange:                                                        //      }
 //******************************************************************************************************
                                                                       //
 define    PLAYRECENTSCREEN 'playrecent_screen'                        //
-define	  PLAYRECENTBANNER 'playrecent_banner'						  //
                                                                       //
 subcall   PlayrecentScreen                                            //  void PlayRecentScreen(void)
 {                                                                     //  {
@@ -679,11 +631,8 @@ Initialized:                                                          //    }
                                                                       //
   UI_BUTTON(FLUSH)                                                    //    UI_BUTTON(FLUSH)                                                                      
   UI_DRAW(FILLWINDOW,BG_COLOR,0,0)                                    //    UI_DRAW(FILLWINDOW,BG_COLOR,0,0)
-//  UI_DRAW(BMPFILE,FG_COLOR,0,13,PLAYRECENTSCREEN)                   //
-//  UI_DRAW(BMPFILE,FG_COLOR,0,39,SCREEN)                             //	// 39 seems to be the height from the top of screen ( due to status bar and tab )
-  UI_DRAW(BMPFILE,FG_COLOR,0,13,PLAYRECENTBANNER)                     //
-  UI_DRAW(BMPFILE,FG_COLOR,0,29,SCREEN)                               //	// Write screen starting at old location of tab + 16 to accomadate + 16 px icon
-  UI_DRAW(UPDATE)													  //    // Refresh screen to include the banner, I hope
+  UI_DRAW(BMPFILE,FG_COLOR,0,13,PLAYRECENTSCREEN)                     //
+  UI_DRAW(BMPFILE,FG_COLOR,0,39,SCREEN)                               //	39 seems to be the height from the top of screen ( due to status bar )
                                                                       //
   MOVE8_8(TYPE_RESTART_BROWSER,Type)                                  //    Type = TYPE_RESTART_BROWSER
   STRINGS(DUPLICATE,'?',String)                                       //    STRINGS(DUPLICATE,PRJS_DIR,String)
@@ -735,9 +684,8 @@ subcall   FileScreen                                                  //  void F
 Initialized:                                                          //    }
                                                                       //
   UI_DRAW(FILLWINDOW,BG_COLOR,0,0)                                    //    UI_DRAW(FILLWINDOW,BG_COLOR,0,0)
-//  UI_DRAW(BMPFILE,FG_COLOR,0,13,FILESCREEN)                         //    UI_DRAW(BMPFILE,FG_COLOR,0,13,FILESCREEN)
-//  UI_DRAW(BMPFILE,FG_COLOR,0,39,SCREEN)                             //    UI_DRAW(BMPFILE,FG_COLOR,0,39,SCREEN)
-  UI_DRAW(BMPFILE,FG_COLOR,0,13,SCREEN)                               //    UI_DRAW(BMPFILE,FG_COLOR,0,29,SCREEN)    // starting at old location of tab + 16 ( to accomdate for 16px ICON )
+  UI_DRAW(BMPFILE,FG_COLOR,0,13,FILESCREEN)                           //    UI_DRAW(BMPFILE,FG_COLOR,0,13,FILESCREEN)
+  UI_DRAW(BMPFILE,FG_COLOR,0,39,SCREEN)                               //    UI_DRAW(BMPFILE,FG_COLOR,0,39,SCREEN)
                                                                       //
   UI_BUTTON(FLUSH)                                                    //    UI_BUTTON(FLUSH)                                                                      
   UI_DRAW(BROWSE,BROWSE_FOLDS_FILES,BROWSER_STARTX,BROWSER_STARTY,BROWSER_WIDTH,BROWSER_HEIGHT,FILENAMESIZE,Type,String) // UI_DRAW(BROWSE,BROWSE_FOLDS_FILES,BROWSER_STARTX,BROWSER_STARTY,BROWSER_WIDTH,BROWSER_HEIGHT,FILENAMESIZE,Type,String)
@@ -886,9 +834,8 @@ AppsInitialized:                                                      //    }
                                                                       //
   UI_BUTTON(FLUSH)                                                    //    UI_BUTTON(FLUSH)                                                                      
   UI_DRAW(FILLWINDOW,BG_COLOR,0,0)                                    //    UI_DRAW(FILLWINDOW,BG_COLOR,0,0)
-//  UI_DRAW(BMPFILE,FG_COLOR,0,13,APPSSCREEN)                         //
-//  UI_DRAW(BMPFILE,FG_COLOR,0,39,SCREEN)                             //
-  UI_DRAW(BMPFILE,FG_COLOR,0,29,SCREEN)                               //    // Draw starting at old location of tab + 16 to allow for 16px icon
+  UI_DRAW(BMPFILE,FG_COLOR,0,13,APPSSCREEN)                           //
+  UI_DRAW(BMPFILE,FG_COLOR,0,39,SCREEN)                               //
                                                                       //
   STRINGS(DUPLICATE,APPS_DIR,String)                                  //    STRINGS(DUPLICATE,APPS_DIR,String)
                                                                       //
@@ -940,9 +887,8 @@ SettingsInitialized:                                                  //    }
                                                                       //
   UI_BUTTON(FLUSH)                                                    //    UI_BUTTON(FLUSH)                                                                      
   UI_DRAW(FILLWINDOW,BG_COLOR,0,0)                                    //    UI_DRAW(FILLWINDOW,BG_COLOR,0,0)
-//  UI_DRAW(BMPFILE,FG_COLOR,0,13,SETTINGSSCREEN)                     //
-//  UI_DRAW(BMPFILE,FG_COLOR,0,39,SCREEN)                             //
-  UI_DRAW(BMPFILE,FG_COLOR,0,29,SCREEN)                               //	// draw at old location of TAB + 16 to allow for 16px icon
+  UI_DRAW(BMPFILE,FG_COLOR,0,13,SETTINGSSCREEN)                       //
+  UI_DRAW(BMPFILE,FG_COLOR,0,39,SCREEN)                               //
                                                                       //
   MOVE8_8(0,Type)                                                     //    Type = 0
   STRINGS(DUPLICATE,TOOLS_DIR,String)                                 //    STRINGS(DUPLICATE,TOOLS_DIR,String)
