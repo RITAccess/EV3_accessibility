@@ -253,8 +253,8 @@ NoChanges:                                                            //      }
 //******************************************************************************************************
                                                                       //
 define    EVENT1_STARTX                 16                            //
-define    EVENT1_STARTY                 50                            //
-define    EVENT1_LINE_STARTX            48                            //
+define    EVENT1_STARTY                 50                            //  CONFIGURE THESE VALUES TO MAKE POP UPS
+define    EVENT1_LINE_STARTX            48                            //  MORE VIEWABLE
 define    EVENT1_LINE_STARTY            60                            //
 define    EVENT1_LINE_SPACEY            17                            //
 define    EVENT1_NOX                    56                            //
@@ -658,8 +658,7 @@ StateNoChange:                                                        //      }
 //******************************************************************************************************
                                                                       //
 define    PLAYRECENTSCREEN 'playrecent_screen'                        //
-define	  PLAYRECENTBANNER 'playrecent_banner'						  //
-                                                                      //
+define    PLAYBANNER 'playlast'                                       //
 subcall   PlayrecentScreen                                            //  void PlayRecentScreen(void)
 {                                                                     //  {
   DATA32  pFile                                                       //    DATA32  pFile
@@ -679,11 +678,9 @@ Initialized:                                                          //    }
                                                                       //
   UI_BUTTON(FLUSH)                                                    //    UI_BUTTON(FLUSH)                                                                      
   UI_DRAW(FILLWINDOW,BG_COLOR,0,0)                                    //    UI_DRAW(FILLWINDOW,BG_COLOR,0,0)
-//  UI_DRAW(BMPFILE,FG_COLOR,0,13,PLAYRECENTSCREEN)                   //
+  UI_DRAW(BMPFILE,FG_COLOR,0,13,PLAYBANNER)                           //
 //  UI_DRAW(BMPFILE,FG_COLOR,0,39,SCREEN)                             //	// 39 seems to be the height from the top of screen ( due to status bar and tab )
-  UI_DRAW(BMPFILE,FG_COLOR,0,13,PLAYRECENTBANNER)                     //
-  UI_DRAW(BMPFILE,FG_COLOR,0,29,SCREEN)                               //	// Write screen starting at old location of tab + 16 to accomadate + 16 px icon
-  UI_DRAW(UPDATE)													  //    // Refresh screen to include the banner, I hope
+  UI_DRAW(BMPFILE,FG_COLOR,0,29,SCREEN)                               //	// Write screen starting at old location of tab+16 for new tab
                                                                       //
   MOVE8_8(TYPE_RESTART_BROWSER,Type)                                  //    Type = TYPE_RESTART_BROWSER
   STRINGS(DUPLICATE,'?',String)                                       //    STRINGS(DUPLICATE,PRJS_DIR,String)
@@ -711,7 +708,7 @@ FileNotProgram:                                                       //    }
 //******************************************************************************************************
                                                                       //
 define    FILESCREEN  'file_screen'                                   //
-                                                                      //
+define	  FILEBANNER  'file'                                          //
 subcall   FileScreen                                                  //  void FileScreen(void)
 {                                                                     //  {
   DATA32  pFile                                                       //    DATA32  pFile
@@ -735,9 +732,10 @@ subcall   FileScreen                                                  //  void F
 Initialized:                                                          //    }
                                                                       //
   UI_DRAW(FILLWINDOW,BG_COLOR,0,0)                                    //    UI_DRAW(FILLWINDOW,BG_COLOR,0,0)
-//  UI_DRAW(BMPFILE,FG_COLOR,0,13,FILESCREEN)                         //    UI_DRAW(BMPFILE,FG_COLOR,0,13,FILESCREEN)
+  UI_DRAW(BMPFILE,FG_COLOR,0,13,FILEBANNER)                           //    UI_DRAW(BMPFILE,FG_COLOR,0,13,FILEBANNER)  // new indicator tab
 //  UI_DRAW(BMPFILE,FG_COLOR,0,39,SCREEN)                             //    UI_DRAW(BMPFILE,FG_COLOR,0,39,SCREEN)
-  UI_DRAW(BMPFILE,FG_COLOR,0,13,SCREEN)                               //    UI_DRAW(BMPFILE,FG_COLOR,0,29,SCREEN)    // starting at old location of tab + 16 ( to accomdate for 16px ICON )
+  UI_DRAW(BMPFILE,FG_COLOR,0,29,SCREEN)                               //    UI_DRAW(BMPFILE,FG_COLOR,0,29,SCREEN)    // starting at old location of tab + 16 ( to accomdate for 16px ICON )
+  UI_DRAW(UPDATE)													  //	
                                                                       //
   UI_BUTTON(FLUSH)                                                    //    UI_BUTTON(FLUSH)                                                                      
   UI_DRAW(BROWSE,BROWSE_FOLDS_FILES,BROWSER_STARTX,BROWSER_STARTY,BROWSER_WIDTH,BROWSER_HEIGHT,FILENAMESIZE,Type,String) // UI_DRAW(BROWSE,BROWSE_FOLDS_FILES,BROWSER_STARTX,BROWSER_STARTY,BROWSER_WIDTH,BROWSER_HEIGHT,FILENAMESIZE,Type,String)
@@ -863,7 +861,8 @@ NoType:                                                               //    }
 //******************************************************************************************************
                                                                       //
 define    APPSSCREEN 'apps_screen'                                    //
-                                                                      //
+define    APPBANNER  'brickapp'		                                  //
+
 subcall   AppsScreen                                                  //  void AppsScreen(void)
 {                                                                     //  {
   DATA32  pFile                                                       //    DATA32  pFile
@@ -886,9 +885,10 @@ AppsInitialized:                                                      //    }
                                                                       //
   UI_BUTTON(FLUSH)                                                    //    UI_BUTTON(FLUSH)                                                                      
   UI_DRAW(FILLWINDOW,BG_COLOR,0,0)                                    //    UI_DRAW(FILLWINDOW,BG_COLOR,0,0)
-//  UI_DRAW(BMPFILE,FG_COLOR,0,13,APPSSCREEN)                         //
+  UI_DRAW(BMPFILE,FG_COLOR,0,13,APPBANNER)                            //
 //  UI_DRAW(BMPFILE,FG_COLOR,0,39,SCREEN)                             //
   UI_DRAW(BMPFILE,FG_COLOR,0,29,SCREEN)                               //    // Draw starting at old location of tab + 16 to allow for 16px icon
+  UI_DRAW(UPDATE)													  //	
                                                                       //
   STRINGS(DUPLICATE,APPS_DIR,String)                                  //    STRINGS(DUPLICATE,APPS_DIR,String)
                                                                       //
@@ -920,6 +920,7 @@ AppsNotBytecode:                                                      //    }
 //******************************************************************************************************
                                                                       //
 define    SETTINGSSCREEN 'settings_screen'                            //
+define    SETTINGBANNER  'settings'									  //
                                                                       //
 subcall   SettingsScreen                                              //  void SettingsScreen(void)
 {                                                                     //  {
@@ -940,9 +941,10 @@ SettingsInitialized:                                                  //    }
                                                                       //
   UI_BUTTON(FLUSH)                                                    //    UI_BUTTON(FLUSH)                                                                      
   UI_DRAW(FILLWINDOW,BG_COLOR,0,0)                                    //    UI_DRAW(FILLWINDOW,BG_COLOR,0,0)
-//  UI_DRAW(BMPFILE,FG_COLOR,0,13,SETTINGSSCREEN)                     //
+  UI_DRAW(BMPFILE,FG_COLOR,0,13,SETTINGBANNER)                        //
 //  UI_DRAW(BMPFILE,FG_COLOR,0,39,SCREEN)                             //
   UI_DRAW(BMPFILE,FG_COLOR,0,29,SCREEN)                               //	// draw at old location of TAB + 16 to allow for 16px icon
+  UI_DRAW(UPDATE)													  //	
                                                                       //
   MOVE8_8(0,Type)                                                     //    Type = 0
   STRINGS(DUPLICATE,TOOLS_DIR,String)                                 //    STRINGS(DUPLICATE,TOOLS_DIR,String)
@@ -1958,8 +1960,8 @@ subcall   TurnOffExec                                                 //  void T
   UI_WRITE(SCREEN_BLOCK,0)                                            //    UI_WRITE(SCREEN_BLOCK,0)
   UI_DRAW(TOPLINE,0)                                                  //    UI_DRAW(TOPLINE,0)
   UI_DRAW(FILLWINDOW,BG_COLOR,0,0)                                    //    UI_DRAW(FILLWINDOW,BG_COLOR,0,0)
-  UI_DRAW(BMPFILE,FG_COLOR,8,39,'mindstorms')                         //    UI_DRAW(BMPFILE,FG_COLOR,8,39,'mindstorms')
-  UI_DRAW(BMPFILE,FG_COLOR,8,65,'Ani1x')                              //    UI_DRAW(BMPFILE,FG_COLOR,8,65,'Ani1x')
+  UI_DRAW(BMPFILE,FG_COLOR,8,39,'mindstorms')                       //    UI_DRAW(BMPFILE,FG_COLOR,8,39,'mindstorms')
+  UI_DRAW(BMPFILE,FG_COLOR,8,65,'Ani1x')                            //    UI_DRAW(BMPFILE,FG_COLOR,8,65,'Ani1x')
 //  UI_DRAW(SELECT_FONT,1)                                            //    UI_DRAW(SELECT_FONT,1)
   UI_DRAW(SELECT_FONT, 2 )											  //	UI_DRAW(SELECT_FONT, 2)						// Select the large font. 
   UI_DRAW(TEXT,FG_COLOR,8,79,'Goodbye')                               //    UI_DRAW(TEXT,FG_COLOR,8,79,1,'Goodbye')		// Instead of Shutting Down to accomadate large font
