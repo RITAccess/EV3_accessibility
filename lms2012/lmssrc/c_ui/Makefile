@@ -4,7 +4,7 @@ INSTALL_TO = source
 GRAPHICS_XBM = small_icons menu_icons normal_icons large_icons arrow_icons \
                small_font normal_font large_font tiny_font keyboardc keyboardn \
                keyboards mindstorms Ani1x Ani2x Ani3x Ani4x Ani5x Ani6x POP2 \
-               POP3 PCApp
+               POP3 PCApp Access_large_font
 
 small_icons_SOURCE = 16x8_TopBar_Icons
 menu_icons_SOURCE = 16x12_MenuItems
@@ -22,5 +22,8 @@ mindstorms_SOURCE = mindstorms
 POP2_SOURCE = 144x48_POP2
 POP3_SOURCE = 144x65_POP3
 PCApp_SOURCE = 24x12_PCApp
+
+# Font additions.
+access_large_font_SOURCE = Access_large_font
 
 include ../rules.mk
