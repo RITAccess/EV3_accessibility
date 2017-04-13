@@ -1962,9 +1962,8 @@ subcall   TurnOffExec                                                 //  void T
   UI_DRAW(FILLWINDOW,BG_COLOR,0,0)                                    //    UI_DRAW(FILLWINDOW,BG_COLOR,0,0)
   UI_DRAW(BMPFILE,FG_COLOR,8,39,'mindstorms')                         //    UI_DRAW(BMPFILE,FG_COLOR,8,39,'mindstorms')
   UI_DRAW(BMPFILE,FG_COLOR,8,65,'Ani1x')                              //    UI_DRAW(BMPFILE,FG_COLOR,8,65,'Ani1x')
-//  UI_DRAW(SELECT_FONT,1)                                            //    UI_DRAW(SELECT_FONT,1)
-  UI_DRAW(SELECT_FONT, 2 )											  //	UI_DRAW(SELECT_FONT, 2)						// Select the large font. 
-  UI_DRAW(TEXT,FG_COLOR,8,79,'Goodbye')                               //    UI_DRAW(TEXT,FG_COLOR,8,79,1,'Goodbye')		// Instead of Shutting Down to accomadate large font
+  UI_DRAW(SELECT_FONT, 4 )											  //	UI_DRAW(SELECT_FONT, 2)						// Select the large font. 
+  UI_DRAW(TEXT,FG_COLOR,33,79,'Goodbye')                              //    UI_DRAW(TEXT,FG_COLOR,33,79,1,'Goodbye')		// Instead of Shutting Down to accomadate large font
   UI_DRAW(UPDATE)                                                     //    UI_DRAW(UPDATE)
   UI_WRITE(SCREEN_BLOCK,1)                                            //    UI_WRITE(SCREEN_BLOCK,1) 
                                                                       //
@@ -1977,6 +1976,6 @@ subcall   TurnOffExec                                                 //  void T
   // Do power down                                                    //
   UI_WRITE(POWER,0)                                                   //    UI_WRITE(POWER,0)
   PROGRAM_STOP(0)                                                     //    PROGRAM_STOP(0)
-}                                                          //
+}                                                                     //
                                                                       //
 //! \endverbatim
