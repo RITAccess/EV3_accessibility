@@ -1083,8 +1083,10 @@ typedef   enum
   SMALL_FONT                    = 1,
   LARGE_FONT                    = 2,
   TINY_FONT                     = 3,
+  AL_FONT						= 4,
 
   FONTTYPES                             //!< Maximum font types supported by the VM
+										// The AL_FONT (access Large FONT) was added for easy selections.
 }
 FONTTYPE;
 

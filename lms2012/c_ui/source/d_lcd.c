@@ -747,7 +747,7 @@ FONTINFO;
 #include  "small_font.xbm"
 #include  "large_font.xbm"
 #include  "tiny_font.xbm"
-
+#include  "Access_large_font.xbm"
 
 FONTINFO  FontInfo[] =
 {
@@ -779,6 +779,14 @@ FONTINFO  FontInfo[] =
                     .pFontBits    = (const char*)tiny_font_bits,
                     .FontHeight   = 7,
                     .FontWidth    = 5,
+                    .FontHorz     = 16,
+                    .FontFirst    = 0x20,
+                    .FontLast     = 0x7F
+                  },
+  [AL_FONT] =  {
+                    .pFontBits    = (const char*)Access_large_font_bits,
+                    .FontHeight   = 16,
+                    .FontWidth    = 16,
                     .FontHorz     = 16,
                     .FontFirst    = 0x20,
                     .FontLast     = 0x7F
