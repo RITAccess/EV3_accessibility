@@ -100,7 +100,7 @@ Loop:                                                                 //    {
   UI_DRAW(BMPFILE,FG_COLOR,24,60,'icon')                              //      Draw bitmap
                                                                       //
   // Write text                                                       //                                                                      
-  UI_DRAW(TEXT,FG_COLOR,48,62,'Accessibility')                               //      UI_DRAW(TEXT,FG_COLOR,48,62,"Volume")
+  UI_DRAW(TEXT,FG_COLOR,48,62,'Accessibility')                        //      UI_DRAW(TEXT,FG_COLOR,48,62,"Volume")
                                                                       //
   // Get left and right arrows                                        //
   UI_BUTTON(GET_HORZ,Inc)                                             //      UI_BUTTON(GET_HORZ,Inc) 
