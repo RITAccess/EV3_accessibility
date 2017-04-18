@@ -3795,17 +3795,19 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
     (*pB).ScreenWidth   =  X1;
     (*pB).ScreenHeight  =  Y1;
 
+	// SO far these lines have not modified the text used. 
     // calculate lines on screen
-    (*pB).LineSpace     =  5;
-    (*pB).IconHeight    =  dLcdGetIconHeight(NORMAL_ICON);
+    (*pB).LineSpace     =  1;			// Default is 5, modified to reduce size to 1
+    (*pB).IconHeight    =  dLcdGetIconHeight(LARGE_ICON);			// Large Icon to correspond with the Large Font
     (*pB).LineHeight    =  (*pB).IconHeight + (*pB).LineSpace;
     (*pB).Lines         =  ((*pB).ScreenHeight / (*pB).LineHeight);
 
+	// CharWidth and CharHeight have been modified such that the intializing function uses the AL_FONT.
     // calculate chars and lines on screen
-    (*pB).CharWidth     =  dLcdGetFontWidth(NORMAL_FONT);
-    (*pB).CharHeight    =  dLcdGetFontHeight(NORMAL_FONT);
-    (*pB).IconWidth     =  dLcdGetIconWidth(NORMAL_ICON);
-    (*pB).Chars         =  (((*pB).ScreenWidth - (*pB).IconWidth) / (*pB).CharWidth);
+    (*pB).CharWidth     =  dLcdGetFontWidth(AL_FONT);				// Size for characters
+    (*pB).CharHeight    =  dLcdGetFontHeight(AL_FONT);				//	''
+    (*pB).IconWidth     =  dLcdGetIconWidth(LARGE_ICON);			// Large icons have the same size as the AL_FONT, substituted.
+    (*pB).Chars         =  (((*pB).ScreenWidth - (*pB).IconWidth) / (*pB).CharWidth);	// Since the Chars is dependent n icon and characters sub IconWidth with LARGE_ICON
 
     // calculate start of icon
     (*pB).IconStartX    =  cUiAlignX((*pB).ScreenStartX);
@@ -4425,8 +4427,9 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
 
                   default :
                   {
+					// After careful examination, it would seem at this location NORMAL_FONT will be changed to AL_FONT    search: BROWSERFONT
                     Indent  =  (((*pB).Chars - 1) - (DATA16)strlen((char*)(*pB).Text)) * (*pB).CharWidth;
-                    dLcdDrawText((*UiInstance.pLcd).Lcd,Color,(*pB).TextStartX + Indent,(*pB).TextStartY + (Tmp * (*pB).LineHeight),NORMAL_FONT,(*pB).Text);
+                    dLcdDrawText((*UiInstance.pLcd).Lcd,Color,(*pB).TextStartX + Indent,(*pB).TextStartY + (Tmp * (*pB).LineHeight),AL_FONT,(*pB).Text); // NORMAL_FONT -> AL_FONT
                   }
                   break;
 
@@ -4490,8 +4493,9 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
               break;
 
             }
-            // Draw folder name
-            dLcdDrawText((*UiInstance.pLcd).Lcd,Color,(*pB).TextStartX,(*pB).TextStartY + (Tmp * (*pB).LineHeight),NORMAL_FONT,(*pB).Filename);
+
+            // Draw folder name	 BROWSERFONT - FOLDER NAMES
+            dLcdDrawText((*UiInstance.pLcd).Lcd,Color,(*pB).TextStartX,(*pB).TextStartY + (Tmp * (*pB).LineHeight),AL_FONT,(*pB).Filename);  //  Folder titles to Access Font
 
             // Draw open folder
             if (Item == (*pB).OpenFolder)
@@ -4502,7 +4506,9 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
             // Draw selection
             if ((*pB).ItemPointer == (Tmp + (*pB).ItemStart))
             {
-              dLcdInverseRect((*UiInstance.pLcd).Lcd,(*pB).SelectStartX,(*pB).SelectStartY + (Tmp * (*pB).LineHeight),(*pB).SelectWidth + 1,(*pB).SelectHeight);
+              // Draw folder name	 BROWSERFONT - FOLDER NAMES find some method of scrolling?
+              dLcdDrawText((*UiInstance.pLcd).Lcd,Color,(*pB).TextStartX,(*pB).TextStartY + (Tmp * (*pB).LineHeight),AL_FONT,(*pB).Filename);  //  Folder titles to Access Font
+	          dLcdInverseRect((*UiInstance.pLcd).Lcd,(*pB).SelectStartX,(*pB).SelectStartY + (Tmp * (*pB).LineHeight),(*pB).SelectWidth + 1,(*pB).SelectHeight);
             }
 
             // Draw end line
@@ -4548,7 +4554,7 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
             dLcdDrawIcon((*UiInstance.pLcd).Lcd,Color,(*pB).IconStartX + (*pB).CharWidth,(*pB).IconStartY + (Tmp * (*pB).LineHeight),NORMAL_ICON,FiletypeToNormalIcon[TmpType]);
 
             // Draw file name
-            dLcdDrawText((*UiInstance.pLcd).Lcd,Color,(*pB).TextStartX + (*pB).CharWidth,(*pB).TextStartY + (Tmp * (*pB).LineHeight),NORMAL_FONT,(*pB).Filename);
+            dLcdDrawText((*UiInstance.pLcd).Lcd,Color,(*pB).TextStartX + (*pB).CharWidth,(*pB).TextStartY + (Tmp * (*pB).LineHeight),AL_FONT,(*pB).Filename);
 
             // Draw folder line
             if ((Tmp == ((*pB).Lines - 1)) || (Item == (*pB).Files))

@@ -820,6 +820,7 @@ void      dLcdDrawChar(UBYTE *pImage,DATA8 Color,DATA16 X0,DATA16 Y0,DATA8 Font,
   CharWidth   =  FontInfo[Font].FontWidth;
   CharHeight  =  FontInfo[Font].FontHeight;
 
+  // Check to see if FONT character exits.
   if ((Char >= FontInfo[Font].FontFirst) && (Char <= FontInfo[Font].FontLast))
   {
     Char -=  FontInfo[Font].FontFirst;
