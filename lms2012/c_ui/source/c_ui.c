@@ -2925,7 +2925,7 @@ DATA8     cUiNotification(DATA8 Color,DATA16 X,DATA16 Y,DATA8 Icon1,DATA8 Icon2,
 
   if ((*pQ).NeedUpdate)
   {
-//* UPDATE ***************************************************************************************************
+//* UPDATE ***************************************************************************************************/
     (*pQ).NeedUpdate    =  0;
 
     dLcdDrawPicture((*UiInstance.pLcd).Lcd,Color,(*pQ).ScreenStartX,(*pQ).ScreenStartY,POP3_width,POP3_height,(UBYTE*)POP3_bits);
@@ -3028,7 +3028,7 @@ DATA8     cUiQuestion(DATA8 Color, DATA16 X,DATA16 Y,DATA8 Icon1,DATA8 Icon2,DAT
 
   if ((*pQ).NeedUpdate)
   {
-//* UPDATE ***************************************************************************************************
+//* UPDATE ***************************************************************************************************/
     (*pQ).NeedUpdate    =  0;
 
     dLcdDrawPicture((*UiInstance.pLcd).Lcd,Color,(*pQ).ScreenStartX,(*pQ).ScreenStartY,POP3_width,POP3_height,(UBYTE*)POP3_bits);
@@ -3196,7 +3196,7 @@ RESULT    cUiIconQuestion(DATA8 Color,DATA16 X,DATA16 Y,DATA8 *pState,DATA32 *pI
 
   if ((*pQ).NeedUpdate)
   {
-//* UPDATE ***************************************************************************************************
+//* UPDATE ***************************************************************************************************/
     (*pQ).NeedUpdate    =  0;
 
     dLcdDrawPicture((*UiInstance.pLcd).Lcd,Color,(*pQ).ScreenStartX,(*pQ).ScreenStartY,POP2_width,POP2_height,(UBYTE*)POP2_bits);
@@ -3471,7 +3471,7 @@ DATA8     cUiKeyboard(DATA8 Color,DATA16 X,DATA16 Y,DATA8 Icon,DATA8 Lng,DATA8 *
 
   if ((*pK).NeedUpdate)
   {
-//* UPDATE ***************************************************************************************************
+//* UPDATE ***************************************************************************************************/
     (*pK).NeedUpdate    =  0;
 
     switch ((*pK).Layout)
@@ -3787,7 +3787,7 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
 
   if (((*pB).PrgId == 0) && ((*pB).ObjId == 0))
   {
-//* INIT *****************************************************************************************************
+//* INIT *****************************************************************************************************/
 
     // Define screen
     (*pB).ScreenStartX  =  X;
@@ -3848,7 +3848,7 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
 
   if (((*pB).PrgId == PrgId) && ((*pB).ObjId == ObjId))
   {
-//* CTRL *****************************************************************************************************
+//* CTRL *****************************************************************************************************/
 
 
     if (UiInstance.UiUpdate)
@@ -3881,7 +3881,7 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
       #ifdef DEBUG
             printf("\r\n%d %d Opening browser in %s\r\n",PrgId,ObjId,(char*)(*pB).TopFolder);
       #endif
-//******************************************************************************************************
+//******************************************************************************************************/
             if ((*pB).OpenFolder)
             {
               cMemoryGetItem((*pB).PrgId,(*pB).hFolders,(*pB).OpenFolder,FOLDERNAME_SIZE + SUBFOLDERNAME_SIZE,(*pB).SubFolder,&TmpType);
@@ -3915,7 +3915,7 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
                 }
               }
             }
-//******************************************************************************************************
+//******************************************************************************************************/
           }
           else
           {
@@ -4294,7 +4294,7 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
 
     if ((*pB).NeedUpdate)
     {
-//* UPDATE ***************************************************************************************************
+//* UPDATE ***************************************************************************************************/
       (*pB).NeedUpdate    =  0;
 
 #ifdef DEBUG
@@ -4351,7 +4351,7 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
           }
 #endif
 
-//*** Graphics ***********************************************************************************************
+//*** Graphics ***********************************************************************************************/
 
           if (Folder)
           { // Show folder
@@ -4578,7 +4578,7 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
 
           }
 
-//************************************************************************************************************
+//************************************************************************************************************/
         }
 #ifdef DEBUG
         else
@@ -4666,7 +4666,7 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
 
   if (Result != BUSY)
   {
-//* EXIT *****************************************************************************************************
+//* EXIT *****************************************************************************************************/
 
 #ifdef DEBUG
     printf("%d %d Return from browser with [%s] type [0x%02X]\r\n\n",PrgId,ObjId,(char*)pAnswer,*pType);
@@ -4869,7 +4869,7 @@ RESULT    cUiTextbox(DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 *pText,DATA32 S
 
   if (*pLine < 0)
   {
-//* INIT *****************************************************************************************************
+//* INIT *****************************************************************************************************/
     // Define screen
     (*pB).ScreenStartX  =  X;
     (*pB).ScreenStartY  =  Y;
@@ -4967,7 +4967,7 @@ RESULT    cUiTextbox(DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 *pText,DATA32 S
 
   if ((*pB).NeedUpdate)
   {
-//* UPDATE ***************************************************************************************************
+//* UPDATE ***************************************************************************************************/
     (*pB).NeedUpdate    =  0;
 
     // clear screen
