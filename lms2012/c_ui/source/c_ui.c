@@ -71,6 +71,7 @@
                             PROJECTS
 
     lms2012-------prjs-----,----xxxxxxxx------icon file       (icon.rgf)
+
                   |        |                  byte code file  (xxxxxxxx.rbf)
                   |        |                  sound files     (.rsf)
                   |        |                  graphics files  (.rgf)
@@ -4507,7 +4508,6 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
             if ((*pB).ItemPointer == (Tmp + (*pB).ItemStart))
             {
               // Draw folder name	 BROWSERFONT - FOLDER NAMES find some method of scrolling?
-              dLcdDrawText((*UiInstance.pLcd).Lcd,Color,(*pB).TextStartX,(*pB).TextStartY + (Tmp * (*pB).LineHeight),AL_FONT,(*pB).Filename);  //  Folder titles to Access Font
 	          dLcdInverseRect((*UiInstance.pLcd).Lcd,(*pB).SelectStartX,(*pB).SelectStartY + (Tmp * (*pB).LineHeight),(*pB).SelectWidth + 1,(*pB).SelectHeight);
             }
 
