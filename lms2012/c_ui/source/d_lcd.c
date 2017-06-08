@@ -956,6 +956,60 @@ void      dLcdDrawText(UBYTE *pImage,DATA8 Color,DATA16 X0,DATA16 Y0,DATA8 Font,
 }
 
 
+void      dLcdDrawTextSelect(UBYTE *pImage,DATA8 Color,DATA16 X0,DATA16 Y0,DATA8 Font,DATA8 *pText)
+{
+  FILE *FP;
+  int segDone = 0;
+  int Offset;
+  char *line = NULL;
+  char *Num = NULL;
+  size_t len = MAX_FILENAME_SIZE;
+  int status;
+
+  // Open file, and read text.
+  FP = fopen("/home/root/lms2012/sys/settings/offset.rtf","w+");
+  status = getline(&line, &len, FP );
+
+  // If the new selection is not the old one that was stored, write out line, or failure.
+  if( strcmp( (char *) pText, line ) || status < 0 ){
+	fprintf(FP, "%s\n", line );
+  }
+  // IF it same, or once it has written new string, continue, and get offset.
+  status = getline( &Num, &len, FP );
+
+  if( status < 0 )
+	Offset = 0;
+  else
+    Offset = atoi( Num );
+
+  if( Offset  > MAX_FILENAME_SIZE )
+	Offset = 0;
+
+
+  while (!segDone)
+  {
+    if (X0 < (LCD_WIDTH - FontInfo[Font].FontWidth))
+    {
+      dLcdDrawChar(pImage,Color,X0,Y0,Font, *(pText + Offset) );
+      X0 +=  FontInfo[Font].FontWidth;
+      Offset++;		    // Update, and write to file once complete.
+
+    }
+    segDone = 1;		// Toggle flag to end segment.
+
+  }
+
+  fseek(FP, 0, SEEK_SET);		// return to start of file
+  fprintf(FP, "%s\n", line );	// Overwrite
+  fprintf(FP, "%i", Offset);    // Add offset
+  free(line);
+  free(Num);
+  fclose(FP);
+  sync();
+
+}
+
+
 typedef   struct
 {
   const   char    *pIconBits;

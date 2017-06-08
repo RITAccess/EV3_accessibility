@@ -693,13 +693,6 @@ RESULT    cUiInit(void)
   UiInstance.Browser.PrgId      =  0;
   UiInstance.Browser.ObjId      =  0;
 
-  // Initialize scrolling values in browser
-  UiInstance.Browser.ScrollOffset = 0;
-  UiInstance.Browser.SelectLength = 0;
-  memset( UiInstance.Browser.SelectText, 0 , MAX_FILENAME_SIZE);
-  UiInstance.Browser.DeltaT     = 0;
-  UiInstance.Browser.Reverse    = 0;
-
   UiInstance.Tbatt              =  0.0;
   UiInstance.Vbatt              =  9.0;
   UiInstance.Ibatt              =  0.0;
@@ -4515,40 +4508,8 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
             // Draw selection
             if ((*pB).ItemPointer == (Tmp + (*pB).ItemStart))
             {
-			  /*
-			  // Find a method of storin a value in UiInstance that increments each time display is updated
-			  // to provide a new 'start' in the filename string.
-			  // Store String pointer assuming they are not the same
-			  if( (strcmp((char *) UiInstance.Browser.SelectText, (char *) (*pB).Filename )) ){
-			    strcpy( (char *)UiInstance.Browser.SelectText, (char *)(*pB).Filename);		// Copy filename to slecected text
-				UiInstance.Browser.ScrollOffset = 0;		// Set/Reset to 0.
-				UiInstance.Browser.DeltaT = 0;			// Set/Reset to 0.
-				UiInstance.Browser.SelectLength = strlen( (char*)(*pB).Filename );		// Get length of string.
-			  }
-			  // Otherwise, file and selection still same, increment DeltaT and check to see
-			  // if the necessary DELTA has passed to increment offset
-			  else{
-				if( !( UiInstance.Browser.Reverse ) )
-				    UiInstance.Browser.DeltaT++;		// Increment Delta.
-				else
-					UiInstance.Browser.DeltaT--;
-
-				UiInstance.Browser.ScrollOffset = UiInstance.Browser.DeltaT / SCROLLDELAY ;  // Generate increment.
-
-				// Check to see if the last portion of the string is contained in print Frame
-				// If so reverse scroll
-				if( UiInstance.Browser.ScrollOffset > ( UiInstance.Browser.SelectLength - SCROLLFRAME ) )
-					UiInstance.Browser.Reverse = 1;
-
-				if( UiInstance.Browser.ScrollOffset <= 0 )
-					UiInstance.Browser.Reverse = 0;
-			  }
-			  */
-
-  			  // Get length of String
-			  (*pB).SelectLength = strlen( (char *) (*pB).Filename );
-			  (*pB).ScrollOffset = ( (*pB).SelectLength - SCROLLFRAME ); 
-              dLcdDrawText((*UiInstance.pLcd).Lcd,Color,(*pB).TextStartX,(*pB).TextStartY + (Tmp * (*pB).LineHeight),AL_FONT, (*pB).Filename + (*pB).ScrollOffset );  //  Folder titles to Access Font
+			  // SELECTED TEXT
+              dLcdDrawTextSelect((*UiInstance.pLcd).Lcd,Color,(*pB).TextStartX,(*pB).TextStartY + (Tmp * (*pB).LineHeight),AL_FONT, (*pB).Filename );  //  Folder titles to Access Font
               // Draw folder name	 BROWSERFONT - FOLDER NAMES find some method of scrolling?
               dLcdInverseRect((*UiInstance.pLcd).Lcd,(*pB).SelectStartX,(*pB).SelectStartY + (Tmp * (*pB).LineHeight),(*pB).SelectWidth + 1,(*pB).SelectHeight);
 
@@ -4614,7 +4575,7 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
             {
 			  // Find a way to store an incrementer that increments each time the screen refreshes so that text can be offset by this value
               // Draw file name
-              dLcdDrawText((*UiInstance.pLcd).Lcd,Color,(*pB).TextStartX + (*pB).CharWidth,(*pB).TextStartY + (Tmp * (*pB).LineHeight),AL_FONT,(*pB).Filename);
+              dLcdDrawTextSelect((*UiInstance.pLcd).Lcd,Color,(*pB).TextStartX + (*pB).CharWidth,(*pB).TextStartY + (Tmp * (*pB).LineHeight),AL_FONT,(*pB).Filename);
 
               dLcdInverseRect((*UiInstance.pLcd).Lcd,(*pB).SelectStartX + (*pB).CharWidth,(*pB).SelectStartY + (Tmp * (*pB).LineHeight),(*pB).SelectWidth + 1 - (*pB).CharWidth,(*pB).SelectHeight);
             }
