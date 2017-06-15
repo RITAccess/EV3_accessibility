@@ -221,6 +221,7 @@ void*     I2cCtrl(void *ptr)
   UWORD   Size;
   UBYTE   Buf[200];
   UWORD   Check;
+  UWORD ByteCnt;
 
   I2cFile  =  -1;
 
@@ -475,7 +476,6 @@ void*     I2cCtrl(void *ptr)
             }
             else
             {
-              UWORD ByteCnt;
 
               // Check for LEGO App data to the mode2 decoding
               // ByteCnt can be bigger than i2c buffer size, if that is the case
@@ -508,7 +508,7 @@ void*     I2cCtrl(void *ptr)
                 else
                 {
                   #ifdef DEBUG
-                    printf("\r\n.... Application data to the Pic, Bytes to send %d\r\n",ByteCnt);
+                    printf("\r\n.... Application data to the Pic, Bytes to send %d\r\n", ByteCnt);
                   #endif
                 }
 

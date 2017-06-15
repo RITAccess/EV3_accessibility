@@ -1898,7 +1898,7 @@ DATA8     CheckSdcard(DATA8 *pChanged,DATA32 *pTotal,DATA32 *pFree,DATA8 Force)
         printf("f_frsize  %ld\r\n",Status.f_frsize);
         printf("f_blocks  %ld\r\n",Status.f_blocks);
         printf("f_bavail  %ld\r\n",Status.f_bavail);
-        printf("f_files   %ld\r\n",Status.f_files);
+		printf("f_files   %ld\r\n",Status.f_files);
         printf("f_ffree   %ld\r\n",Status.f_ffree);
         printf("f_favail  %ld\r\n",Status.f_favail);
         printf("f_fside   %ld\r\n",Status.f_fsid);
