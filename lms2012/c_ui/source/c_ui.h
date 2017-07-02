@@ -23,6 +23,7 @@
 #define C_UI_H_
 
 #include  "lms2012.h"
+#include  "d_terminal.h"
 
 #define   IMAGEBUFFER_SIZE              1000
 #define   KEYBUF_SIZE                   100

@@ -163,7 +163,7 @@ extern    char *strptime(const char *s, const char *format, struct tm *tm);
 
 
 #ifdef    DEBUG_C_UI
-#define   DEBUG
+  #define   DEBUG
 #endif
 
 
@@ -4509,7 +4509,9 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
             if ((*pB).ItemPointer == (Tmp + (*pB).ItemStart))
             {
 			  // SELECTED TEXT
-			  printf("Filename: %s\r\nText: %s\r\nPath: %s\r\n", (*pB).Filename, (*pB).Text, (*pB).FullPath );
+		 	  #ifdef DEBUG
+			    printf("Filename: %s\r\nText: %s\r\nPath: %s\r\n", (*pB).Filename, (*pB).Text, (*pB).FullPath );
+			  #endif
               dLcdDrawTextSelect((*UiInstance.pLcd).Lcd,Color,(*pB).TextStartX,(*pB).TextStartY + (Tmp * (*pB).LineHeight),AL_FONT, (*pB).Filename );  //  Folder titles to Access Font
               // Draw folder name	 BROWSERFONT - FOLDER NAMES find some method of scrolling?
               dLcdInverseRect((*UiInstance.pLcd).Lcd,(*pB).SelectStartX,(*pB).SelectStartY + (Tmp * (*pB).LineHeight),(*pB).SelectWidth + 1,(*pB).SelectHeight);
@@ -4576,7 +4578,9 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
             {
 			  // Find a way to store an incrementer that increments each time the screen refreshes so that text can be offset by this value
               // Draw file name
-			  printf("Filename: %s\r\nText: %s\r\nPath: %s\r\n", (*pB).Filename, (*pB).Text, (*pB).FullPath );
+			  #ifdef DEBUG
+			    printf("Filename: %s\r\nText: %s\r\nPath: %s\r\n", (*pB).Filename, (*pB).Text, (*pB).FullPath );
+			  #endif
               dLcdDrawTextSelect((*UiInstance.pLcd).Lcd,Color,(*pB).TextStartX + (*pB).CharWidth,(*pB).TextStartY + (Tmp * (*pB).LineHeight),AL_FONT,(*pB).Filename);
               dLcdInverseRect((*UiInstance.pLcd).Lcd,(*pB).SelectStartX + (*pB).CharWidth,(*pB).SelectStartY + (Tmp * (*pB).LineHeight),(*pB).SelectWidth + 1 - (*pB).CharWidth,(*pB).SelectHeight);
             }

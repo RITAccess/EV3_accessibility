@@ -958,55 +958,20 @@ void      dLcdDrawText(UBYTE *pImage,DATA8 Color,DATA16 X0,DATA16 Y0,DATA8 Font,
 
 void      dLcdDrawTextSelect(UBYTE *pImage,DATA8 Color,DATA16 X0,DATA16 Y0,DATA8 Font,DATA8 *pText)
 {
-  FILE *FP;
-  int segDone = 0;
-  int Offset;
-  char *line = NULL;
-  char *Num = NULL;
-  size_t len = MAX_FILENAME_SIZE;
-  int status;
-
-  // Open file, and read text.
-  FP = fopen("/home/root/lms2012/sys/settings/offset.rtf","w+");
-  status = getline(&line, &len, FP );
-
-  // If the new selection is not the old one that was stored, write out line, or failure.
-  if( strcmp( (char *) pText, line ) || status < 0 ){
-	fprintf(FP, "%s\n", line );
-  }
-  // IF it same, or once it has written new string, continue, and get offset.
-  status = getline( &Num, &len, FP );
-
-  if( status < 0 )
-	Offset = 0;
-  else
-    Offset = atoi( Num );
-
-  if( Offset  > MAX_FILENAME_SIZE )
-	Offset = 0;
-
-
-  while (!segDone)
+  // Atempt to use VmPrint
+  VmPrint((char *)pText);		// Pass the string ( don't forget to cast )
+  // Attempt to use System Log stored in /var/log/*
+  //openlog(PROJECT,LOG_NDELAY,LOG_USER);			// Open ( doesn't seem to be a closelog )
+  //syslog(LOG_INFO,pText);						// Write out
+  while (*pText)
   {
     if (X0 < (LCD_WIDTH - FontInfo[Font].FontWidth))
     {
-      dLcdDrawChar(pImage,Color,X0,Y0,Font, *(pText + Offset) );
+      dLcdDrawChar(pImage,Color,X0,Y0,Font,*pText);
       X0 +=  FontInfo[Font].FontWidth;
-      Offset++;		    // Update, and write to file once complete.
-
     }
-    segDone = 1;		// Toggle flag to end segment.
-
+    pText++;
   }
-
-  fseek(FP, 0, SEEK_SET);		// return to start of file
-  fprintf(FP, "%s\n", line );	// Overwrite
-  fprintf(FP, "%i", Offset);    // Add offset
-  free(line);
-  free(Num);
-  fclose(FP);
-  sync();
-
 }
 
 
