@@ -2983,7 +2983,7 @@ DATA8     cUiNotification(DATA8 Color,DATA16 X,DATA16 Y,DATA8 Icon1,DATA8 Icon2,
   return (Result);
 }
 
-
+// cUiQuestion: acts as a method of prompting the user via popups. 
 DATA8     cUiQuestion(DATA8 Color, DATA16 X,DATA16 Y,DATA8 Icon1,DATA8 Icon2,DATA8 *pText,DATA8 *pState,DATA8 *pAnswer)
 {
   RESULT  Result = BUSY;
