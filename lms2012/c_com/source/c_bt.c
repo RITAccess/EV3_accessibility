@@ -1667,6 +1667,7 @@ void      BtUpdate(void)
                 pReadBuf->Status = READ_BUF_FULL;
 
                 #ifdef DEBUG
+			      int Cnt = 0;
                   for (Cnt = 0; Cnt < BytesRead; Cnt++)
                   {
                     printf("\r\n Rx byte nr %02d = %02X",Cnt,pReadBuf->Buf[Cnt]);
@@ -2191,6 +2192,8 @@ UBYTE     Connect(bdaddr_t BdAddr, UBYTE PortNo)
 
   #ifdef DEBUG
     char    Addr[20];
+	int		Item = 0;		// Unsure where these values are pulled
+	int		PortIndex = 0;	//	Only going to define and init to 0.
   #endif
 
   RtnVal = FALSE;
@@ -2220,7 +2223,7 @@ UBYTE     Connect(bdaddr_t BdAddr, UBYTE PortNo)
       // Can be the master of up to 7 units
       #ifdef DEBUG
         ba2str(&(BtInstance.NonVol.DevList[Item].Adr), Addr);
-        printf("Connecting from MASTER PortIndex = %d, Addr = %s \r\n",PortIndex,Addr);
+       printf("Connecting from MASTER PortIndex = %d, Addr = %s \r\n",PortIndex,Addr);
       #endif
 
       if (FALSE == BtConnectTo(PortNo, BdAddr))

@@ -23,6 +23,7 @@
 #define C_UI_H_
 
 #include  "lms2012.h"
+#include  "d_terminal.h"
 
 #define   IMAGEBUFFER_SIZE              1000
 #define   KEYBUF_SIZE                   100
@@ -251,13 +252,6 @@ typedef   struct
   DATA8   Filename[MAX_FILENAME_SIZE];
   DATA8   Text[TEXTSIZE];
 
-
-  DATA16   ScrollOffset;             // The 'counter', utilized to start the text printout at the given start.
-  DATA16   SelectLength;             // The length of the currently selected 
-  DATA8    SelectText[MAX_FILENAME_SIZE];    // The value of the selected text, to determine states of counter.
-  DATA16   DeltaT;                    // Storage that increments continuously, divided by constant (500?) to 
-                                      //    Determing the ScrollOffset.
-  DATA8    Reverse;					  // Reverese increment
 }
 BROWSER;
 

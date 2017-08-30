@@ -956,6 +956,25 @@ void      dLcdDrawText(UBYTE *pImage,DATA8 Color,DATA16 X0,DATA16 Y0,DATA8 Font,
 }
 
 
+void      dLcdDrawTextSelect(UBYTE *pImage,DATA8 Color,DATA16 X0,DATA16 Y0,DATA8 Font,DATA8 *pText)
+{
+  // Atempt to use VmPrint
+  VmPrint((char *)pText);		// Pass the string ( don't forget to cast )
+  // Attempt to use System Log stored in /var/log/*
+  //openlog(PROJECT,LOG_NDELAY,LOG_USER);			// Open ( doesn't seem to be a closelog )
+  //syslog(LOG_INFO,pText);						// Write out
+  while (*pText)
+  {
+    if (X0 < (LCD_WIDTH - FontInfo[Font].FontWidth))
+    {
+      dLcdDrawChar(pImage,Color,X0,Y0,Font,*pText);
+      X0 +=  FontInfo[Font].FontWidth;
+    }
+    pText++;
+  }
+}
+
+
 typedef   struct
 {
   const   char    *pIconBits;

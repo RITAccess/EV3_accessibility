@@ -56,6 +56,8 @@ void      dLcdDrawChar(UBYTE *pImage,DATA8 Color,DATA16 X0,DATA16 Y0,DATA8 Font,
 
 void      dLcdDrawText(UBYTE *pImage,DATA8 Color,DATA16 X0,DATA16 Y0,DATA8 Font,DATA8 *pText);
 
+void      dLcdDrawTextSelect(UBYTE *pImage,DATA8 Color,DATA16 X0,DATA16 Y0,DATA8 Font,DATA8 *pText);
+
 DATA16    dLcdGetIconWidth(DATA8 Type);
 
 DATA16    dLcdGetIconHeight(DATA8 Type);

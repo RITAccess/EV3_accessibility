@@ -55,7 +55,7 @@ Development with debug messages:    DEBUG defined, TERMINAL_ENABLED = 1, DEBUG_U
 //#define   DEBUG_C_MEMORY_FILE
 //#define   DEBUG_C_MEMORY_LOW
 //#define   DEBUG_C_SOUND
-//#define   DEBUG_C_UI
+#define   DEBUG_C_UI
 
 //#define   DEBUG_D_ANALOG
 //#define   DEBUG_D_POWER
