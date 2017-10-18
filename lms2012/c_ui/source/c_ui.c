@@ -1927,6 +1927,7 @@ void      cUiUpdateLcd(void)
 #include  "Ani6x.xbm"
 #include  "POP2.xbm"
 #include  "POP3.xbm"
+#include  "POP4.xbm"
 #include  "PCApp.xbm"
 
 
@@ -2761,6 +2762,7 @@ const     DATA8 FiletypeToNormalIcon[FILETYPES] =
   [TYPE_TEXT]         =  ICON_TEXT
 };
 
+// cUiNotification: Acts as a method of notifying the user. 
 DATA8     cUiNotification(DATA8 Color,DATA16 X,DATA16 Y,DATA8 Icon1,DATA8 Icon2,DATA8 Icon3,DATA8 *pText,DATA8 *pState)
 {
   RESULT  Result = BUSY;
@@ -3032,9 +3034,14 @@ DATA8     cUiQuestion(DATA8 Color, DATA16 X,DATA16 Y,DATA8 Icon1,DATA8 Icon2,DAT
 //* UPDATE ***************************************************************************************************/
     (*pQ).NeedUpdate    =  0;
 
-    dLcdDrawPicture((*UiInstance.pLcd).Lcd,Color,(*pQ).ScreenStartX,(*pQ).ScreenStartY,POP3_width,POP3_height,(UBYTE*)POP3_bits);
-    (*pQ).ScreenWidth   =  POP3_width;
-    (*pQ).ScreenHeight  =  POP3_height;
+
+	// Likley need to manually define pop4 size, and get pop4 bits
+    dLcdDrawPicture((*UiInstance.pLcd).Lcd,Color,(*pQ).ScreenStartX,(*pQ).ScreenStartY,POP4_width,POP4_height,(UBYTE*)POP4_bits);
+    //dLcdDrawPicture((*UiInstance.pLcd).Lcd,Color,(*pQ).ScreenStartX,(*pQ).ScreenStartY,POP3_width,POP3_height,(UBYTE*)POP3_bits);		// original
+    //(*pQ).ScreenWidth   =  POP3_width;		// Original
+    //(*pQ).ScreenHeight  =  POP3_height;		// Original
+    (*pQ).ScreenWidth   =  POP4_width;
+    (*pQ).ScreenHeight  =  POP4_height;
 
     (*pQ).IconStartX    =  (*pQ).ScreenStartX + ((*pQ).ScreenWidth / 2);
     if ((*pQ).NoOfIcons > 1)
@@ -3054,10 +3061,10 @@ DATA8     cUiQuestion(DATA8 Color, DATA16 X,DATA16 Y,DATA8 Icon1,DATA8 Icon2,DAT
     (*pQ).YesNoStartX  -=  (*pQ).IconWidth;
     (*pQ).YesNoStartX   =  cUiAlignX((*pQ).YesNoStartX);
     (*pQ).YesNoSpaceX   =  (*pQ).IconWidth + 16;
-    (*pQ).YesNoStartY   =  (*pQ).ScreenStartY + 40;
+    (*pQ).YesNoStartY   =  (*pQ).ScreenStartY + 55;
 
     (*pQ).LineStartX    =  (*pQ).ScreenStartX + 5;
-    (*pQ).LineStartY    =  (*pQ).ScreenStartY + 39;
+    (*pQ).LineStartY    =  (*pQ).ScreenStartY + 53;
     (*pQ).LineEndX      =  (*pQ).LineStartX + 134;
 
     switch ((*pQ).NoOfIcons)
@@ -3065,6 +3072,8 @@ DATA8     cUiQuestion(DATA8 Color, DATA16 X,DATA16 Y,DATA8 Icon1,DATA8 Icon2,DAT
       case 1 :
       {
         dLcdDrawIcon((*UiInstance.pLcd).Lcd,Color,(*pQ).IconStartX,(*pQ).IconStartY,LARGE_ICON,Icon1);
+		// ADD TEXT TO DRAW, in the case of one icon, draw on the line below it.
+    	dLcdDrawTextPU((*UiInstance.pLcd).Lcd,Color,(*pQ).ScreenStartX + 10 ,(*pQ).IconStartY + (*pQ).IconHeight, AL_FONT,pText,1 );
       }
       break;
 
@@ -3072,9 +3081,15 @@ DATA8     cUiQuestion(DATA8 Color, DATA16 X,DATA16 Y,DATA8 Icon1,DATA8 Icon2,DAT
       {
         dLcdDrawIcon((*UiInstance.pLcd).Lcd,Color,(*pQ).IconStartX,(*pQ).IconStartY,LARGE_ICON,Icon1);
         dLcdDrawIcon((*UiInstance.pLcd).Lcd,Color,(*pQ).IconStartX + (*pQ).IconSpaceX,(*pQ).IconStartY,LARGE_ICON,Icon2);
+		// ADD TEXT TO DRAW, however in the case of two icons, draw on the line below them.
+    	dLcdDrawTextPU((*UiInstance.pLcd).Lcd,Color, (*pQ).ScreenStartX + 10 ,(*pQ).IconStartY + (*pQ).IconHeight, AL_FONT,pText, 1);
       }
       break;
-
+      default:
+	  {
+		// When there are no icons, there is room for 2 rows of text ( about 8 characters )
+    	dLcdDrawTextPU((*UiInstance.pLcd).Lcd,Color,(*pQ).ScreenStartX + 10,(*pQ).IconStartY, AL_FONT,pText, 2);
+      }
     }
 
     if (*pAnswer == 0)
@@ -3110,7 +3125,7 @@ DATA8     cUiQuestion(DATA8 Color, DATA16 X,DATA16 Y,DATA8 Icon1,DATA8 Icon2,DAT
   return (Result);
 }
 
-
+// cUiIconQuestion: A method of utilizing icons in selections to provide universality.
 RESULT    cUiIconQuestion(DATA8 Color,DATA16 X,DATA16 Y,DATA8 *pState,DATA32 *pIcons)
 {
   RESULT  Result = BUSY;
@@ -3712,7 +3727,9 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
   DATA32  Free;
   RESULT  TmpResult;
   HANDLER TmpHandle;
-
+  //DATA8  State = 0;
+  //DATA8  Answer = 0;
+ 
   PrgId   =  CurrentProgramId();
   ObjId   =  CallingObjectId();
   pB      =  &UiInstance.Browser;		// Since Pb Is UiInstance.Browser, perhaps I an use this as a method of incrementing through the frame UiInstance.Browser
@@ -4091,13 +4108,22 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
       (*pB).NeedUpdate  =  1;
     }
 
+	// AO - Browser -> User Selects item: Handler portion *********************************
     if (cUiGetShortPress(ENTER_BUTTON))
     {
+
       (*pB).OldFiles      =  0;
+	  // Handles Opening of Folders at start of program OpenFolder is set to 0, address value is written into OpenFolder I believe.
       if ((*pB).OpenFolder)
       {
+		// AO - Check to see if Item memory space exists within the the bounds of the folder -> end of folder files
         if (((*pB).ItemPointer > (*pB).OpenFolder) && ((*pB).ItemPointer <= ((*pB).OpenFolder + (*pB).Files)))
         { // File selected
+
+		  // Add cUiQuestion here check result, conditionally execute the next 3 lines.
+		  // This will handle selection of File.
+		  // 1st 0 = white color,x ,y , icon1, icon2, string text, state, answer
+		  //cUiQuestion(FG_COLOR, 16, 50, WARNSIGN, OFF, "Folder", &State, &Answer);
 
           Item    =  (*pB).ItemPointer - (*pB).OpenFolder;
           Result  =  cMemoryGetItem((*pB).PrgId,(*pB).hFiles,Item,Lng,(*pB).FullPath,pType);
@@ -4109,6 +4135,8 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
           printf("Select file %3d\r\n",Item);
 #endif
         }
+
+		// AO -Else portion handles selection of the actual folder.
         else
         { // Folder selected
 
@@ -4137,7 +4165,10 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
             (*pB).Files       =  0;
           }
         }
-      }
+      } // Scope of ENTER Button IF
+
+	  // ***********************
+
       if ((*pB).OpenFolder == 0)
       { // Open folder
 
@@ -4496,6 +4527,7 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
 
             }
 
+		    // Handle graphical drawing of highlighted content prior to selection.
             // Draw folder name	 BROWSERFONT - FOLDER NAMES
             dLcdDrawText((*UiInstance.pLcd).Lcd,Color,(*pB).TextStartX,(*pB).TextStartY + (Tmp * (*pB).LineHeight),AL_FONT,(*pB).Filename);  //  Folder titles to Access Font
 
@@ -4512,7 +4544,7 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
 		 	  #ifdef DEBUG
 			    printf("Filename: %s\r\nText: %s\r\nPath: %s\r\n", (*pB).Filename, (*pB).Text, (*pB).FullPath );
 			  #endif
-              dLcdDrawTextSelect((*UiInstance.pLcd).Lcd,Color,(*pB).TextStartX,(*pB).TextStartY + (Tmp * (*pB).LineHeight),AL_FONT, (*pB).Filename );  //  Folder titles to Access Font
+              dLcdDrawText((*UiInstance.pLcd).Lcd,Color,(*pB).TextStartX,(*pB).TextStartY + (Tmp * (*pB).LineHeight),AL_FONT, (*pB).Filename );  //  Folder titles to Access Font
               // Draw folder name	 BROWSERFONT - FOLDER NAMES find some method of scrolling?
               dLcdInverseRect((*UiInstance.pLcd).Lcd,(*pB).SelectStartX,(*pB).SelectStartY + (Tmp * (*pB).LineHeight),(*pB).SelectWidth + 1,(*pB).SelectHeight);
 
@@ -4581,7 +4613,7 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
 			  #ifdef DEBUG
 			    printf("Filename: %s\r\nText: %s\r\nPath: %s\r\n", (*pB).Filename, (*pB).Text, (*pB).FullPath );
 			  #endif
-              dLcdDrawTextSelect((*UiInstance.pLcd).Lcd,Color,(*pB).TextStartX + (*pB).CharWidth,(*pB).TextStartY + (Tmp * (*pB).LineHeight),AL_FONT,(*pB).Filename);
+              dLcdDrawText((*UiInstance.pLcd).Lcd,Color,(*pB).TextStartX + (*pB).CharWidth,(*pB).TextStartY + (Tmp * (*pB).LineHeight),AL_FONT,(*pB).Filename);
               dLcdInverseRect((*UiInstance.pLcd).Lcd,(*pB).SelectStartX + (*pB).CharWidth,(*pB).SelectStartY + (Tmp * (*pB).LineHeight),(*pB).SelectWidth + 1 - (*pB).CharWidth,(*pB).SelectHeight);
             }
 
@@ -4621,6 +4653,7 @@ RESULT    cUiBrowser(DATA8 Type,DATA16 X,DATA16 Y,DATA16 X1,DATA16 Y1,DATA8 Lng,
         Tmp  =  0;
       }
 
+	  // Exiting browser
       if ((Tmp != 0) || (cUiTestShortPress(BACK_BUTTON)) || (cUiTestLongPress(BACK_BUTTON)))
       {
         if (Type != BROWSE_CACHE)

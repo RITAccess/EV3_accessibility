@@ -955,23 +955,40 @@ void      dLcdDrawText(UBYTE *pImage,DATA8 Color,DATA16 X0,DATA16 Y0,DATA8 Font,
   }
 }
 
-
-void      dLcdDrawTextSelect(UBYTE *pImage,DATA8 Color,DATA16 X0,DATA16 Y0,DATA8 Font,DATA8 *pText)
+// Exclusively for drawing text in the popups POP4, since POP4 can fit 8 characters using the
+// AL_FONT ( 8 * 16 = 128 ), minimum is 40 ( 8 * 5 for tiny font ).
+void      dLcdDrawTextPU(UBYTE *pImage,DATA8 Color,DATA16 X0,DATA16 Y0,DATA8 Font,DATA8 *pText, DATA8 Lines)
 {
-  // Atempt to use VmPrint
-  VmPrint((char *)pText);		// Pass the string ( don't forget to cast )
-  // Attempt to use System Log stored in /var/log/*
-  //openlog(PROJECT,LOG_NDELAY,LOG_USER);			// Open ( doesn't seem to be a closelog )
-  //syslog(LOG_INFO,pText);						// Write out
-  while (*pText)
+  DATA16 MAXCHAR_WIDTH = 128;		// Max characters using AL_FONT width is 8.
+  DATA16 XI = X0;					// X incrementer set to X naught.
+  DATA16 YI = Y0;					// Y incrementer set to X naught.
+  DATA8  Instance = Lines;			// Increment when first line is printed.
+  DATA8  LineSpacing = 2;			// Line Spacing between lines.
+
+  if( Instance > 0 )
   {
-    if (X0 < (LCD_WIDTH - FontInfo[Font].FontWidth))
-    {
-      dLcdDrawChar(pImage,Color,X0,Y0,Font,*pText);
-      X0 +=  FontInfo[Font].FontWidth;
-    }
-    pText++;
-  }
+	  // While the value of pText is not NULL ('\0')
+	  while( *pText )
+	  {
+	    // If X increment is within the pop up width, print line until Instance is 0
+	    // Original if ( (XI < (MAXCHAR_WIDTH - FontInfo[Font].FontWidth) ) && Instance )
+	    if ( (XI < (MAXCHAR_WIDTH + FontInfo[Font].FontWidth)) && Instance )
+	    {
+	      dLcdDrawChar(pImage,Color,XI,YI,Font,*pText);
+	      XI +=  FontInfo[Font].FontWidth;
+		  pText++;
+	    }
+		// Once exceding the print line, Remove an instance, reset XI to X0
+		// 	Decrement YI by height of the line + 2
+		else{
+	      Instance = Instance - 1;	// Decrement since a line has printed.
+		  XI = X0;					// Reset to start of placement.
+		  YI = YI + FontInfo[Font].FontHeight + LineSpacing;  // Increment by Height of Font + 2
+		}
+
+	  }
+
+	}
 }
 
 

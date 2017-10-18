@@ -691,14 +691,14 @@ Initialized:                                                          //    }
   JR_FALSE(Flag,FileNotBytecode)                                      //    {
   FILE(PUT_CACHE_FILE,String)                                         //      FILE(PUT_CACHE_FILE,String)
                                                                       //
-  CALL(RunBytecodefile,USER_SLOT,String)                              //      RunBytecodefile(USER_SLOT,String)
+  CALL(RunBytecodefilePU,USER_SLOT,String)                            //      RunBytecodefilePU(USER_SLOT,String)    // modifed to be pop up
                                                                       //
 FileNotBytecode:                                                      //    }
   CP_EQ8(Type,TYPE_PROGRAM,Flag)                                      //    if (Type == TYPE_PROGRAM)
   JR_FALSE(Flag,FileNotProgram)                                       //    {
   FILE(PUT_CACHE_FILE,String)                                         //      FILE(PUT_CACHE_FILE,String)
                                                                       //
-  CALL(RunBytecodefile,USER_SLOT,String)                              //      RunBytecodefile(USER_SLOT,String)
+  CALL(RunBytecodefilePU,USER_SLOT,String)                            //      RunBytecodefilePU(USER_SLOT,String)    // Modified to be pop up
                                                                       //
 FileNotProgram:                                                       //    }
 }                                                                     //  }
@@ -810,7 +810,7 @@ FileNotGraphics:                                                      //        
   STRINGS(ADD,String,EXT_BYTECODE,Name)                               //              STRINGS(ADD,String,EXT_BYTECODE,Name)
   FILE(PUT_CACHE_FILE,Name)                                           //              FILE(PUT_CACHE_FILE,Name)
                                                                       //
-  CALL(RunBytecodefile,USER_SLOT,Name)                                //              CALL(RunBytecodefile,USER_SLOT,Name)
+  CALL(RunBytecodefilePU,USER_SLOT,Name)                              //              CALL(RunBytecodefilePU,USER_SLOT,Name)		// modified to be popup
                                                                       //
 FileNotBytecode:                                                      //            }
   CP_EQ8(Type,TYPE_PROGRAM,Flag)                                      //            if (Type == TYPE_PROGRAM)
@@ -819,7 +819,7 @@ FileNotBytecode:                                                      //        
   STRINGS(ADD,String,EXT_PROGRAM,Name)                                //              STRINGS(ADD,String,EXT_PROGRAM,Name)
   FILE(PUT_CACHE_FILE,Name)                                           //              FILE(PUT_CACHE_FILE,Name)
                                                                       //
-  CALL(RunBytecodefile,USER_SLOT,Name)                                //              CALL(RunBytecodefile,USER_SLOT,Name)
+  CALL(RunBytecodefilePU,USER_SLOT,Name)                              //              CALL(RunBytecodefilePU,USER_SLOT,Name)		// Modifed to be popup
                                                                       //
 FileNotProgram:                                                       //            }
                                                                       //
@@ -909,7 +909,7 @@ AppsNotDebug:                                                         //      }
                                                                       //
   STRINGS(ADD,String,EXT_BYTECODE,Name)                               //      STRINGS(ADD,String,EXT_BYTECODE,Name)
                                                                       //
-  CALL(RunBytecodefile,Slot,Name)                                     //
+  CALL(RunBytecodefilePU,Slot,Name)                                   //	  CALL(RunBytecodefilePU, slot, name )			// modified to be pop up
                                                                       //
 AppsNotBytecode:                                                      //    }
                                                                       //
@@ -965,7 +965,7 @@ AppsNotDebug:                                                         //      }
                                                                       //
   STRINGS(ADD,String,EXT_BYTECODE,Name)                               //      STRINGS(ADD,String,EXT_BYTECODE,Name)
                                                                       //
-  CALL(RunBytecodefile,Slot,Name)                                     //      RunBytecodefile(Slot,Name)
+  CALL(RunBytecodefile,Slot,Name)                                     //      RunBytecodefile(Slot,Name)		// Kept original to keep UX clean.
                                                                       //
 SettingsNotBytecode:                                                  //    }
                                                                       //
@@ -983,7 +983,8 @@ subcall   TurnOffPopup                                                //  void T
                                                                       //
   MOVE8_8(0,Stat)                                                     //    Stat  =  0
   MOVE8_8(0,Off)                                                      //    Off   =  0
-  UI_DRAW(QUESTION,FG_COLOR,16,50,OFF,ICON_NONE,'',Stat,Off)          //    UI_DRAW(QUESTION,FG_COLOR,17,52,OFF,ICON_NONE,'',Stat,Off)
+  // Change PopUp to 16 x and 41 y (52 y original)					  //
+  UI_DRAW(QUESTION,FG_COLOR,16,41,OFF,ICON_NONE,'',Stat,Off)          //    UI_DRAW(QUESTION,FG_COLOR,16,16,OFF,ICON_NONE,'',Stat,Off)
                                                                       //
   JR_NEQ8(Off,1,NotOff)                                               //    if (Off == 1)
                                                                       //    {
@@ -1015,7 +1016,7 @@ subcall   ErrorPopup                                                  //  void E
   MOVE8_8(0,State)                                                    //      State   =  0
   RL32(1,WARNSIGN,Icons)                                              //      Tmp     =  1 << WARNSIGN
   INFO(ERRORTEXT,Error,ERR_STRING_SIZE,Text)                          //      INFO(ERRORTEXT,Error,ERR_STRING_SIZE,Text)
-  UI_DRAW(NOTIFICATION,FG_COLOR,16,50,WARNSIGN,ICON_NONE,ICON_NONE,Text,State) // UI_DRAW(NOTIFICATION,FG_COLOR,16,50,WARNSIGN,ICON_NONE,ICON_NONE,ErrorText,State)
+  UI_DRAW(NOTIFICATION,FG_COLOR,16,41,WARNSIGN,ICON_NONE,ICON_NONE,Text,State) // UI_DRAW(NOTIFICATION,FG_COLOR,16,50,WARNSIGN,ICON_NONE,ICON_NONE,ErrorText,State)
   MOVE16_16(SUBSTATE_NOT_INIT,SubState)                               //      SubState = SUBSTATE_NOT_INIT                                                                      
                                                                       //                                                                      
 NoError:                                                              //    }                                                                                                                                                                                           
@@ -1263,7 +1264,8 @@ MoreThanRun:                                                          //    }
                                                                       //
   JR_EQ32(Icons,0,Skip)                                               //    if (Icons)
                                                                       //    {
-  UI_DRAW(ICON_QUESTION,FG_COLOR,16,50,Init,Icons)                    //      UI_DRAW(ICON_QUESTION,FG_COLOR,16,50,Init,Icons)
+  // Change y from 50 to 29											  //
+  UI_DRAW(ICON_QUESTION,FG_COLOR,16,41,Init,Icons)                    //      UI_DRAW(ICON_QUESTION,FG_COLOR,16,16,Init,Icons)
                                                                       //
   RL32(1,TO_TRASH,Tmp)                                                //      Tmp     =  1 << TO_TRASH
   JR_NEQ32(Icons,Tmp,NotDelete)                                       //      if (Icons == Tmp)
@@ -1271,7 +1273,9 @@ MoreThanRun:                                                          //    }
   // Move to trash                                                    //
   MOVE8_8(0,Stat)                                                     //        Stat  =  0
   MOVE8_8(0,Yes)                                                      //        Yes   =  0
-  UI_DRAW(QUESTION,FG_COLOR,16,50,WARNSIGN,TO_TRASH,'',Stat,Yes)      //        UI_DRAW(QUESTION,FG_COLOR,16,50,WARNSIGN,TO_TRASH,'',Stat,Yes)
+  //UI_DRAW(QUESTION,FG_COLOR,16,41,WARNSIGN,TO_TRASH,'',Stat,Yes)    //        UI_DRAW(QUESTION,FG_COLOR,16,50,WARNSIGN,TO_TRASH,'',Stat,Yes)
+  // Write out name into popup change y to 41 from 50 ^v			  //
+  UI_DRAW(QUESTION,FG_COLOR,16,41,WARNSIGN,TO_TRASH,Name,Stat,Yes)    //        UI_DRAW(QUESTION,FG_COLOR,16,50,WARNSIGN,TO_TRASH, Name,Stat,Yes)
                                                                       //
   JR_NEQ8(Yes,1,NotYes1)                                              //        if (Yes == 1)
                                                                       //        {
@@ -1288,7 +1292,8 @@ NotDelete:                                                            //      }
   // Move to bluetooth                                                //
   MOVE8_8(0,Stat)                                                     //        Stat  =  0
   MOVE8_8(0,Yes)                                                      //        Yes   =  0
-  UI_DRAW(QUESTION,FG_COLOR,16,50,TO_BLUETOOTH,ICON_NONE,'',Stat,Yes) //        UI_DRAW(QUESTION,FG_COLOR,16,50,TO_BLUETOOTH,ICON_NONE,'',Stat,Yes)
+  // y to 41 from 50												  //
+  UI_DRAW(QUESTION,FG_COLOR,16,41,TO_BLUETOOTH,ICON_NONE,'',Stat,Yes) //        UI_DRAW(QUESTION,FG_COLOR,16,50,TO_BLUETOOTH,ICON_NONE,'',Stat,Yes)
   JR_NEQ8(Yes,1,NotYes2)                                              //        if (Yes == 1)
                                                                       //        {
                                                                       //
@@ -1304,7 +1309,8 @@ NotToBluetooth:                                                       //      }
   // Move to sdcard                                                   //
   MOVE8_8(0,Stat)                                                     //        Stat  =  0
   MOVE8_8(0,Yes)                                                      //        Yes   =  0
-  UI_DRAW(QUESTION,FG_COLOR,16,50,TO_SDCARD,ICON_NONE,'',Stat,Yes)    //        UI_DRAW(QUESTION,FG_COLOR,16,50,TO_SDCARD,ICON_NONE,'',Stat,Yes)
+  // y to 41 from 50												  //
+  UI_DRAW(QUESTION,FG_COLOR,16,41,TO_SDCARD,ICON_NONE,'',Stat,Yes)    //        UI_DRAW(QUESTION,FG_COLOR,16,50,TO_SDCARD,ICON_NONE,'',Stat,Yes)
   JR_NEQ8(Yes,1,NotYes4)                                              //        if (Yes == 1)
                                                                       //        {
   CALL(Copy,Name,TYPE_SDCARD,FileType)                                //          CALL(Copy,Name,TYPE_SDCARD,FileType)                                                               
@@ -1318,7 +1324,8 @@ NotToSdcard:                                                          //      }
   // Move to usbstick                                                 //
   MOVE8_8(0,Stat)                                                     //        Stat  =  0
   MOVE8_8(0,Yes)                                                      //        Yes   =  0
-  UI_DRAW(QUESTION,FG_COLOR,16,50,TO_USBSTICK,ICON_NONE,'',Stat,Yes)  //        UI_DRAW(QUESTION,FG_COLOR,16,50,TO_USBSTICK,ICON_NONE,'',Stat,Yes)
+  // y = 41, from 50												  //
+  UI_DRAW(QUESTION,FG_COLOR,16,41,TO_USBSTICK,ICON_NONE,'',Stat,Yes)  //        UI_DRAW(QUESTION,FG_COLOR,16,50,TO_USBSTICK,ICON_NONE,'',Stat,Yes)
   JR_NEQ8(Yes,1,NotYes4)                                              //        if (Yes == 1)
                                                                       //        {
   CALL(Copy,Name,TYPE_USBSTICK,FileType)                              //          CALL(Copy,Name,TYPE_USBSTICK,Media,FileType)                                                               
@@ -1332,7 +1339,8 @@ NotToUsbstick:                                                        //      }
   // Move to brick                                                    //
   MOVE8_8(0,Stat)                                                     //        Stat  =  0
   MOVE8_8(0,Yes)                                                      //        Yes   =  0
-  UI_DRAW(QUESTION,FG_COLOR,16,50,TO_BRICK,ICON_NONE,'',Stat,Yes)     //        UI_DRAW(QUESTION,FG_COLOR,16,50,TO_BRICK,ICON_NONE,'',Stat,Yes)
+  // y to 41, from 50												  //
+  UI_DRAW(QUESTION,FG_COLOR,16,41,TO_BRICK,ICON_NONE,'',Stat,Yes)     //        UI_DRAW(QUESTION,FG_COLOR,16,50,TO_BRICK,ICON_NONE,'',Stat,Yes)
   JR_NEQ8(Yes,1,NotYes3)                                              //        if (Yes == 1)
                                                                       //        {
   CALL(Copy,Name,0,FileType)                                          //          CALL(Copy,Name,0,FileType)                                                               
@@ -1426,7 +1434,8 @@ NotFile:                                                              //    }
   SOUND(PLAY,Volume,'GeneralAlarm')                                   //      SOUND(PLAY,Volume,'GeneralAlarm')
   MOVE8_8(0,State)                                                    //      State  =  0
   MOVE8_8(0,Yes)                                                      //      Yes    =  0
-  UI_DRAW(QUESTION,FG_COLOR,16,50,WARNSIGN,TO_COPY,'',State,Yes)      //      UI_DRAW(QUESTION,FG_COLOR,16,50,WARNSIGN,TO_COPY,'',State,Yes)
+  // y to 41 from 50												  //
+  UI_DRAW(QUESTION,FG_COLOR,16,41,WARNSIGN,TO_COPY,'',State,Yes)      //      UI_DRAW(QUESTION,FG_COLOR,16,50,WARNSIGN,TO_COPY,'',State,Yes)
 ExecCopy:                                                             //    }                                                                                                                                        
                                                                       //    
   JR_NEQ8(Yes,1,NotYes)                                               //    if (Yes == 1)
@@ -1441,7 +1450,7 @@ NoSpace:                                                              //      {
   MOVE8_8(0,State)                                                    //        State  =  0
   INFO(GET_VOLUME,Volume)                                             //        INFO(GET_VOLUME,Volume)
   SOUND(PLAY,Volume,'GeneralAlarm')                                   //        SOUND(PLAY,Volume,'GeneralAlarm')
-  UI_DRAW(NOTIFICATION,FG_COLOR,16,50,WARNSIGN,COPY_ERROR,ICON_NONE,'',State) // UI_DRAW(NOTIFICATION,FG_COLOR,16,50,WARNSIGN,COPY_ERROR,ICON_NONE,'',State)
+  UI_DRAW(NOTIFICATION,FG_COLOR,16,41,WARNSIGN,COPY_ERROR,ICON_NONE,'',State) // UI_DRAW(NOTIFICATION,FG_COLOR,16,50,WARNSIGN,COPY_ERROR,ICON_NONE,'',State)
                                                                       //
 SpaceEnd:                                                             //      }                                                                      
                                                                       //
@@ -1500,7 +1509,7 @@ FileNotDatalog:                                                       //    }
 }                                                                     //
                                                                       //
 //******************************************************************************************************
-// RunBytecodefile
+// RunBytecodefile: Original LEGO subcall
 //******************************************************************************************************
                                                                       //
 subcall   RunBytecodefile                                             //  void RunBytecodefile
@@ -1575,6 +1584,100 @@ FileNotStopped:                                                       //        
                                                                       //
   PROGRAM_STOP(USER_SLOT)                                             //      PROGRAM_STOP(USER_SLOT)
   PROGRAM_STOP(Slot)                                                  //      PROGRAM_STOP(Slot)
+}
+//******************************************************************************************************
+// RunBytecodefilePU: Modified subcall to provide popup capabilites
+//******************************************************************************************************
+                                                                      //
+subcall   RunBytecodefilePU                                           //  void RunBytecodefile
+{                                                                     //  {
+  IN_16   Slot                                                        //
+  IN_S    Name FILENAMESIZE                                           //
+                                                                      //
+  DATA32  Timer                                                       //    DATA32  Timer
+  DATA32  pFile                                                       //    DATA32  pFile
+  DATA32  Size                                                        //    DATA32  Size
+  DATA8   Stat														  //    DATA8   Stat  // Question status.
+  DATA8   Yes														  //    DATA8   Yes   // Response
+  DATA8   Status                                                      //    DATA8   Status
+  DATA8   Flag                                                        //    DATA8   Flag
+  DATA8   Tmp                                                         //    DATA8   Tmp
+  DATA8   Valid_OK													  //    DATA8   Valid_OK
+  DATA8   Blocked                                                     //    DATA8   Blocked
+  DATAS   Path FILENAMESIZE                                           //
+  DATAS   Filename FILENAMESIZE                                       //
+  DATAS   Ext FILENAMESIZE                                            //
+                                                                      //
+  MOVE8_8(0,Stat)													  //    Stat = 0
+  MOVE8_8(0,Yes)													  //    Yes = 0
+  MOVE8_8(0, Valid_OK )												  //    Valid_OK = 0
+  UI_DRAW(STORE,0)                                                    //    UI_DRAW(STORE,0)
+  UI_BUTTON(SHORTPRESS,BACK_BUTTON,Flag)                              //    UI_BUTTON(SHORTPRESS,BACK_BUTTON,Flag)
+  UI_BUTTON(TESTLONGPRESS,BACK_BUTTON,Flag)                           //    UI_BUTTON(TESTLONGPRESS,BACK_BUTTON,Flag)
+                                                                      //  
+  FILENAME(EXIST,Name,Flag)                                           //    FILENAME(EXIST,Name,Flag)
+  JR_TRUE(Flag,FileFound)                                             //    if (!Flag)
+                                                                      //    {
+  FILE(REMOVE,Name)                                                   //      FILE(REMOVE,Name)
+                                                                      //
+  CALL(ShowError)                                                     //      ShowError()
+                                                                      //
+FileFound:                                                            //    }
+  // Based off opCode description, Filename is the text in question   //
+  FILENAME(SPLIT,Name,FILENAMESIZE,Path,Filename,Ext)                 //    FILENAME(SPLIT,Name,FILENAMESIZE,Path,Filename,Ext)
+  STRINGS(COMPARE,Filename,'Debug',Flag)                              //    STRINGS(COMPARE,Filename,'Debug',Flag)
+                                                                      //
+  JR_FALSE(Flag,NotDebug)                                             //    if (Flag)
+                                                                      //    {
+  MOVE8_8(DEBUG_SLOT,Slot)                                            //      Slot  =  DEBUG_SLOT
+                                                                      //
+NotDebug:                                                             //    }
+                                                                      //
+// Insert question prompt                                             //    do
+StillPressed:                                                         //    {
+  UI_BUTTON(PRESSED,ENTER_BUTTON,Flag)                                //      UI_BUTTON(PRESSED,ENTER_BUTTON,Flag)
+  // While user is holding ENTER go back to button test.			  //
+  JR_TRUE(Flag,StillPressed)										  //	} while( Flag )
+  // Initial press ^, next question prompt with name of file		  //
+  // Selection handled within QUESTION prompt, only check return (YES)//
+  UI_DRAW(QUESTION,FG_COLOR,16,41,ICON_NONE, ICON_NONE, Filename, Stat, Yes )
+  // Need to still handle pressing back button						  //	UI_DRAW( QUESTION, FG_COLOR, 16, 50, ICON_NONE, ICON_NONE, Filename, Stat, Yes )
+  // When Yes =  1, Valid_OK set high								  //
+  CP_EQ8(Yes,1,Valid_OK)											  //
+  // When Valid_OK is high, fall though else JR						  //    if( Yes != 1 )
+  JR_FALSE(Valid_OK,end)											  //		goto end
+																	  //    // implicit else vvvvvv
+                                                                      //
+  FILE(LOAD_IMAGE,Slot,Name,Size,pFile)                               //    FILE(LOAD_IMAGE,Slot,Name,Size,pFile)
+  PROGRAM_START(Slot,0,pFile,0)                                       //    PROGRAM_START(Slot,0,pFile,0)
+                                                                      //
+  MOVE8_8(0,Tmp)                                                      //      Tmp  =  0
+                                                                      //      do
+FileRunning:                                                          //      {
+  SLEEP()                                                             //        SLEEP
+  UI_BUTTON(TESTLONGPRESS,BACK_BUTTON,Tmp)                            //        UI_BUTTON(TESTLONGPRESS,BACK_BUTTON,Tmp)
+  MOVE8_8(Tmp,TurnOff)                                                //        TurnOff  =  Tmp
+  UI_BUTTON(GET_BACK_BLOCK,Blocked)                                   //        UI_BUTTON(GET_BACK_BLOCK,Blocked)
+  JR_TRUE(Blocked,BackBlocked)                                        //        if (!Blocked)
+                                                                      //        {
+  UI_BUTTON(SHORTPRESS,BACK_BUTTON,Tmp)                               //          UI_BUTTON(SHORTPRESS,BACK_BUTTON,Tmp)
+BackBlocked:                                                          //        }
+  SLEEP()                                                             //        SLEEP
+  PROGRAM_INFO(GET_STATUS,Slot,Status)                                //        PROGRAM_INFO(GET_STATUS,Slot,Status1)
+                                                                      //
+  CP_EQ8(Status,STOPPED,Flag)                                         //        if (Status == STOPPED)
+  JR_FALSE(Flag,FileNotStopped)                                       //        {
+                                                                      //
+  MOVE8_8(1,Tmp)                                                      //          Tmp = 1
+                                                                      //
+FileNotStopped:                                                       //        }
+                                                                      //      }
+  JR_FALSE(Tmp,FileRunning)                                           //      while (Tmp == 0)
+  PROGRAM_STOP(USER_SLOT)                                             //      PROGRAM_STOP(USER_SLOT)
+  PROGRAM_STOP(Slot)                                                  //      PROGRAM_STOP(Slot)
+end:                                                                  //
+  PROGRAM_STOP(USER_SLOT)											  //
+  PROGRAM_STOP(Slot)												  //      
 }                                                                     //  }
                                                                       //
 //******************************************************************************************************
