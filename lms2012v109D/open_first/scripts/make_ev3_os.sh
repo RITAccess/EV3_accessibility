@@ -14,7 +14,7 @@
 #fi
 
 CURRENTPATH=${PWD}
-PATH1=~/projects/lms2012
+PATH1=~/projects/lms2012v109D
 PATH2=open_first
 PATH3=lms2012/Linux_AM1808
 PATH4=/mnt/tmpdrv_fs/home/root/lms2012
@@ -49,10 +49,12 @@ ln -s /mnt/ramdisk/settings/ $PATH4/sys/settings
 ln -s /mnt/ramdisk/settings/ /mnt/tmpdrv_fs/var/lib/dropbear
 
 rm $PATH4/../.ash_history
-rm $PATH4/lms2012
-rm $PATH4/Makefile
-rm $PATH4/*.o
-rm $PATH4/*.d
+rm $PATH4/d_iic_test
+#rm $PATH4/lms2012
+rm $PATH4/makefile
+rm $PATH4/objects.mk
+rm $PATH4/sources.mk
+rm $PATH4/source/subdir.mk
 rm $PATH4/sys/10-lms.rules
 rm $PATH4/sys/gdbinit
 rm $PATH4/sys/lib/dummy

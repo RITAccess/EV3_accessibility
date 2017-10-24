@@ -133,7 +133,7 @@ help:
 	@echo
 	@echo 'Execute "make doc.view" to view the documentation in a web'
 	@echo 'browser'
-	@echo 
+	@echo
 	@echo 'Execute "make TARGET.clean" to clean an individual target'
 	@echo 'or "make clean" to clean everything'
 	@echo
@@ -143,4 +143,8 @@ help:
 clean: lms2012.clean modules.clean programs.clean kernel.clean u-boot.clean \
 	doc.clean
 
-.PHONY: help clean
+all: u-boot kernel programs module lms2012
+
+all.X86:
+
+.PHONY: help clean all
