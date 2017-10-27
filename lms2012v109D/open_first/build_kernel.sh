@@ -11,10 +11,11 @@ echo ---------------------------------------------------------------------------
 echo
 sleep 1
 
-project=~/projects/lms2012/open_first
+project=~/projects/lms2012v109D/open_first
 
 source ${project}/env_setup
 
+# Temporary modify path to include compiler
 PATH=${AM1808_COMPILER}:$PATH
 PATH=${AM1808_UBOOT_DIR}/tools:$PATH
 
