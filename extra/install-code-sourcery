@@ -14,16 +14,24 @@ fi
 
 echo "Adding Code Sourcey to path..."
 
-if [ -e $profile0 ]
+
+echo "Sourcing profile"
+check=`cat ~/.profile | grep -o "CodeSourcery"`
+
+if [ -n '$check' ]
 then
-	echo "Found profile definition, appending"
-	echo 'PATH=$PATH:~/CodeSourcery/Sourcery_G++_Lite/bin' >> $profile0
+	echo "Code Sourcery found in path, no need to source"
+	echo "Done."
 else
-	echo "No profile found, creating $profile0"
-	echo 'PATH=$PATH:~/CodeSourcery/Sourcery_G++_Lite/bin' > $profile0
+	if [ -e $profile0 ]
+	then
+		echo "Found profile definition, appending"
+		echo 'PATH=$PATH:~/CodeSourcery/Sourcery_G++_Lite/bin' >> $profile0
+	else
+		echo "No profile found, creating $profile0"
+		echo 'PATH=$PATH:~/CodeSourcery/Sourcery_G++_Lite/bin' > $profile0
+	fi
+	source $profile0
 fi
 
-source $profile0
-
 echo "Done."
-echo "Please restart terminal to ensure path update."
